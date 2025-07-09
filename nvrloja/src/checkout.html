@@ -861,9 +861,9 @@
       });
     }
 
-    function validateSingleField(fieldName: string): boolean {
-      const element = document.getElementById(fieldName) as HTMLInputElement | null;
-      const value = element && typeof element.value === 'string' ? element.value.trim() : '';
+    function validateSingleField(fieldName) {
+      const element = document.getElementById(fieldName);
+      const value = element.value.trim();
       
       let rules = [validationRules.required];
       
@@ -877,7 +877,7 @@
         case 'telefone':
           rules.push(validationRules.phone);
           break;
-        case 'idJogador':
+        case 'case 'idJogador':
           rules.push(validationRules.number);
           break;
       }
