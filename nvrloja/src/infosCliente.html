@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informações do Cliente — Nova Vibe RP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #121216;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: #1c1e28;
+      border-radius: 10px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid #2f3a5a;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #3f92f7;
+      margin-bottom: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .logo:hover {
+      color: #2f3a5a;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #ccc;
+      font-size: 1rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .form-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .customer-form {
+      background: #2a2a2e;
+      border-radius: 10px;
+      padding: 30px;
+      border: 1px solid #2f3a5a;
+    }
+
+    .order-summary {
+      background: #1e1e22;
+      border-radius: 10px;
+      padding: 30px;
+      border: 1px solid #2f3a5a;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #3f92f7;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #2f3a5a;
+      border-radius: 5px;
+      background: #1a1a1e;
+      color: #fff;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #3f92f7;
+      box-shadow: 0 0 0 2px rgba(63, 146, 247, 0.2);
+    }
+
+    .form-group input::placeholder {
+      color: #666;
+    }
+
+    .form-group.error input {
+      border-color: #e74c3c;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .order-summary h3 {
+      color: #3f92f7;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #2f3a5a;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #3f92f7;
+      margin-top: 10px;
+      padding-top: 15px;
+      border-top: 2px solid #2f3a5a;
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .item-quantity {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .item-price {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px;
+      color: #ccc;
+    }
+
+    .empty-cart h3 {
+      color: #fff;
+      margin-bottom: 15px;
+    }
+
+    .empty-cart-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #2f3a5a;
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .back-link, .continue-btn {
+      display: inline-flex;
+      align-items: center;
+      color: #3f92f7;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 12px 24px;
+      border: 2px solid #3f92f7;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .back-link:hover, .continue-btn:hover {
+      background: #3f92f7;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .continue-btn {
+      background: #3f92f7;
+      color: #fff;
+    }
+
+    .continue-btn:hover {
+      background: #4f5d9e;
+    }
+
+    .continue-btn:disabled {
+      background: #2f3a5a;
+      border-color: #2f3a5a;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .required {
+      color: #e74c3c;
+    }
+
+    .info-note {
+      background: #2a2a2e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid #3f92f7;
+    }
+
+    .info-note h4 {
+      color: #3f92f7;
+      margin-bottom: 10px;
+    }
+
+    .info-note p {
+      color: #ccc;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+    }
+
+    .cpf-mask {
+      font-family: monospace;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      .form-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo" onclick="voltarParaLoja()">Nova Vibe RP</div>
+    
+    <h1>Informações do Cliente</h1>
+    <p class="subtitle">Preencha seus dados para prosseguir com a compra</p>
+
+    <div class="info-note">
+      <h4>📋 Dados Necessários</h4>
+      <p>• Todos os campos são obrigatórios para processar seu pedido</p>
+      <p>• Seus dados são protegidos e usados apenas para identificação no jogo</p>
+      <p>• O ID do jogador é necessário para entrega dos itens no servidor</p>
+    </div>
+    
+    <div class="form-section">
+      <div class="customer-form">
+        <h3 style="color: #3f92f7; margin-bottom: 20px; text-align: center;">Seus Dados</h3>
+        
+        <form id="cliente-form">
+          <div class="form-group">
+            <label for="fullName">Nome Completo <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="fullName" 
+              name="fullName" 
+              placeholder="Digite seu nome completo"
+              required
+            />
+            <div class="error-message" id="fullNameError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="cpf">CPF <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="cpf" 
+              name="cpf" 
+              placeholder="000.000.000-00"
+              class="cpf-mask"
+              maxlength="14"
+              required
+            />
+            <div class="error-message" id="cpfError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="playerId">ID do Jogador <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="playerId" 
+              name="playerId" 
+              placeholder="Seu ID no servidor Nova Vibe RP"
+              required
+            />
+            <div class="error-message" id="playerIdError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email (opcional)</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="seu@email.com"
+            />
+            <div class="error-message" id="emailError"></div>
+          </div>
+
+          <button type="submit" class="continue-btn" id="continueBtn">
+            Prosseguir para Pagamento →
+          </button>
+        </form>
+      </div>
+
+      <div class="order-summary">
+        <h3>Resumo do Pedido</h3>
+        <div id="orderContent">
+          <!-- Conteúdo será carregado via JavaScript -->
+        </div>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <a href="#" class="back-link" onclick="voltarParaLoja()">← Voltar à Loja</a>
+    </div>
+  </div>
+
+  <script>
+    let orderData = [];
+    let orderTotal = 0;
+
+    function loadOrderData() {
+      const savedCart = localStorage.getItem('carrinho');
+      
+      if (savedCart) {
+        try {
+          orderData = JSON.parse(savedCart);
+          orderTotal = orderData.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+          
+          if (orderData.length > 0) {
+            displayOrderSummary();
+          } else {
+            displayEmptyCart();
+          }
+        } catch (error) {
+          console.error('Erro ao carregar dados do carrinho:', error);
+          displayEmptyCart();
+        }
+      } else {
+        displayEmptyCart();
+      }
+    }
+
+    function displayOrderSummary() {
+      const orderContent = document.getElementById('orderContent');
+      
+      let summaryHTML = '';
+      
+      orderData.forEach(item => {
+        const subtotal = item.preco * item.quantidade;
+        summaryHTML += `
+          <div class="order-item">
+            <div class="item-details">
+              <div class="item-name">${item.produto}</div>
+              <div class="item-quantity">Quantidade: ${item.quantidade}</div>
+            </div>
+            <div class="item-price">R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+          </div>
+        `;
+      });
+      
+      summaryHTML += `
+        <div class="order-item">
+          <div class="item-details">
+            <div class="item-name">Total</div>
+          </div>
+          <div class="item-price">R$ ${orderTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+        </div>
+      `;
+      
+      orderContent.innerHTML = summaryHTML;
+    }
+
+    function displayEmptyCart() {
+      const orderContent = document.getElementById('orderContent');
+      orderContent.innerHTML = `
+        <div class="empty-cart">
+          <div class="empty-cart-icon">🛒</div>
+          <h3>Carrinho Vazio</h3>
+          <p>Adicione itens ao carrinho para prosseguir.</p>
+        </div>
+      `;
+      
+      // Desabilitar botão de continuar
+      document.getElementById('continueBtn').disabled = true;
+    }
+
+    function formatCPF(cpf) {
+      return cpf.replace(/\D/g, '')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d)/, '$1.$2')
+                .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+                .replace(/(-\d{2})\d+?$/, '$1');
+    }
+
+    function validateCPF(cpf) {
+      cpf = cpf.replace(/[^\d]+/g, '');
+      
+      if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+      
+      let soma = 0;
+      for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(9))) return false;
+      
+      soma = 0;
+      for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      resto = (soma * 10) % 11;
+      if (resto === 10 || resto === 11) resto = 0;
+      if (resto !== parseInt(cpf.charAt(10))) return false;
+      
+      return true;
+    }
+
+    function validateForm() {
+      const fullName = document.getElementById('fullName').value.trim();
+      const cpf = document.getElementById('cpf').value.trim();
+      const playerId = document.getElementById('playerId').value.trim();
+      const email = document.getElementById('email').value.trim();
+      
+      let isValid = true;
+      
+      // Limpar erros anteriores
+      document.querySelectorAll('.form-group').forEach(group => {
+        group.classList.remove('error');
+      });
+      document.querySelectorAll('.error-message').forEach(msg => {
+        msg.textContent = '';
+      });
+      
+      // Validar nome completo
+      if (!fullName || fullName.length < 3) {
+        document.getElementById('fullNameError').textContent = 'Nome completo é obrigatório (mínimo 3 caracteres)';
+        document.querySelector('[for="fullName"]').parentElement.classList.add('error');
+        isValid = false;
+      }
+      
+      // Validar CPF
+      if (!cpf) {
+        document.getElementById('cpfError').textContent = 'CPF é obrigatório';
+        document.querySelector('[for="cpf"]').parentElement.classList.add('error');
+        isValid = false;
+      } else if (!validateCPF(cpf)) {
+        document.getElementById('cpfError').textContent = 'CPF inválido';
+        document.querySelector('[for="cpf"]').parentElement.classList.add('error');
+        isValid = false;
+      }
+      
+      // Validar ID do jogador
+      if (!playerId || playerId.length < 2) {
+        document.getElementById('playerIdError').textContent = 'ID do jogador é obrigatório';
+        document.querySelector('[for="playerId"]').parentElement.classList.add('error');
+        isValid = false;
+      }
+      
+      // Validar email (se preenchido)
+      if (email && !/\S+@\S+\.\S+/.test(email)) {
+        document.getElementById('emailError').textContent = 'Email inválido';
+        document.querySelector('[for="email"]').parentElement.classList.add('error');
+        isValid = false;
+      }
+      
+      return isValid;
+    }
+
+    document.getElementById('cliente-form').onsubmit = function(e) {
+      e.preventDefault();
+      const data = {
+        fullName: this.fullName.value,
+        cpf: this.cpf.value,
+        playerId: this.playerId.value,
+        email: this.email.value
+      };
+      localStorage.setItem('customerData', JSON.stringify(data));
+      window.location.href = 'checkout.html';
+    };
+
+    function voltarParaLoja() {
+      const indexPage = 'index.html';
+      
+      try {
+        window.location.href = indexPage;
+      } catch (error) {
+        window.location.reload();
+      }
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      loadOrderData();
+      
+      // Máscara para CPF
+      const cpfInput = document.getElementById('cpf');
+      cpfInput.addEventListener('input', function(e) {
+        e.target.value = formatCPF(e.target.value);
+      });
+      
+      // Validação em tempo real
+      const inputs = document.querySelectorAll('input[required]');
+      inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+          if (this.value.trim()) {
+            validateForm();
+          }
+        });
+      });
+      
+      // Prevenir envio do formulário
+      document.getElementById('customerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        prosseguirCheckout();
+      });
+    });
+
+    // Tecla ESC para voltar
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        voltarParaLoja();
+      }
+    });
+
+    // Tecla Enter para prosseguir
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        prosseguirCheckout();
+      }
+    });
+  </script>
+</body>
+</html>

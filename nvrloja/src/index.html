@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nova Vibe RP — Sua Jornada Começa Aqui</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #121216 0%, #1c1e28 100%);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(18, 18, 22, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(47, 58, 90, 0.3);
+      z-index: 1000;
+      padding: 15px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #2f3a5a;
+    }
+    
+    .btn-secondary:hover {
+      background: #2f3a5a;
+      transform: translateY(-1px);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #fff;
+    }
+    
+    .user-greeting {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .btn-logout {
+      background: #e74c3c;
+      color: #fff;
+      border: 1px solid #e74c3c;
+    }
+    
+    .btn-logout:hover {
+      background: #c0392b;
+      border-color: #c0392b;
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 20px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+    
+    .hero-content {
+      max-width: 800px;
+      z-index: 1;
+    }
+    
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease-in-out infinite;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .hero p {
+      font-size: 1.3rem;
+      color: #a0a0a0;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-hero {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      min-width: 180px;
+    }
+    
+    /* Features Section */
+    .features {
+      padding: 80px 20px;
+      background: rgba(28, 30, 40, 0.5);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .features h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      color: #fff;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+    
+    .feature-card {
+      background: rgba(28, 30, 40, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(47, 58, 90, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    
+    .feature-card p {
+      color: #a0a0a0;
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    footer {
+      background: #121216;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(47, 58, 90, 0.3);
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: #a0a0a0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #667eea;
+    }
+    
+    .footer-bottom {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    /* Loading Animation */
+    .loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(18, 18, 22, 0.9);
+      z-index: 9999;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #333;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        width: 95%;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      .header-actions {
+        gap: 10px;
+      }
+      
+      .btn {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn-hero {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero {
+        padding: 60px 15px 0;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .feature-card {
+        padding: 20px;
+      }
+    }
+    
+    /* Scroll animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="logo" onclick="scrollToTop()">Nova Vibe RP</div>
+      <div class="header-actions" id="header-actions">
+        <!-- Conteúdo será preenchido pelo JavaScript -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Nova Vibe RP</h1>
+      <p>Mergulhe na experiência de roleplay mais imersiva do Brasil. Crie sua história, viva aventuras únicas e faça parte de uma comunidade incrível.</p>
+      <div class="hero-buttons">
+        <a href="login.html" class="btn btn-primary btn-hero">Começar Agora</a>
+        <a href="#features" class="btn btn-secondary btn-hero">Saiba Mais</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2 class="fade-in">Por que escolher a Nova Vibe?</h2>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🏙️</span>
+          <h3>Cidade Realista</h3>
+          <p>Explore uma Los Santos completamente customizada com locais únicos, empresas funcionais e uma economia dinâmica que evolui com a comunidade.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🚗</span>
+          <h3>Veículos Exclusivos</h3>
+          <p>Mais de 500 veículos customizados, desde carros de luxo até motos esportivas. Cada veículo com física realista e modificações únicas.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">👥</span>
+          <h3>Comunidade Ativa</h3>
+          <p>Junte-se a milhares de jogadores em uma comunidade vibrante. Participe de eventos, facções e crie conexões que durarão para sempre.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🎭</span>
+          <h3>Roleplay Imersivo</h3>
+          <p>Sistema de empregos realistas, sistema judicial completo e interações profundas que tornam cada momento único e memorável.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🏆</span>
+          <h3>Eventos Exclusivos</h3>
+          <p>Participe de corridas, competições, festas e eventos especiais organizados pela staff. Sempre há algo novo acontecendo!</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🛡️</span>
+          <h3>Suporte 24/7</h3>
+          <p>Nossa equipe está sempre disponível para ajudar. Suporte técnico, moderação ativa e um ambiente seguro para todos os jogadores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#" onclick="scrollToTop()">Início</a>
+        <a href="login.html">Entrar</a>
+        <a href="#">Discord</a>
+        <a href="#">Regras</a>
+        <a href="#">Suporte</a>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Nova Vibe RP. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Verificar se o usuário está logado ao carregar a página
+    window.addEventListener('load', function() {
+      const cliente = JSON.parse(localStorage.getItem('cliente'));
+      const headerActions = document.getElementById('header-actions');
+      
+      if (cliente && cliente.nome && cliente.email) {
+        // Usuário logado - mostrar saudação e botões de usuário logado
+        const primeiroNome = cliente.nome.trim().split(' ')[0];
+        headerActions.innerHTML = `
+          <div class="user-info">
+            <span class="user-greeting">Olá, ${primeiroNome}!</span>
+            <a href="loja.html" class="btn btn-primary">Loja</a>
+            <button class="btn btn-logout" onclick="fazerLogout()">Sair</button>
+          </div>
+        `;
+      } else {
+        // Usuário não logado - mostrar botões de login e registro
+        headerActions.innerHTML = `
+          <a href="login.html" class="btn btn-secondary">Entrar</a>
+          <a href="login.html" class="btn btn-primary">Cadastrar</a>
+        `;
+      }
+      
+      // Animação de fade-in
+      const fadeElements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      });
+      
+      fadeElements.forEach(el => observer.observe(el));
+    });
+    
+    // Função para fazer logout
+    function fazerLogout() {
+      if (confirm('Tem certeza que deseja fazer logout?')) {
+        localStorage.removeItem('cliente');
+        localStorage.removeItem('carrinho');
+        location.reload(); // Recarregar a página para atualizar o header
+      }
+    }
+    
+    // Função para scroll suave
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    
+    // Scroll suave para seções
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Efeito de header ao scroll
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('header');
+      if (window.scrollY > 100) {
+        header.style.background = 'rgba(18, 18, 22, 0.98)';
+        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+      } else {
+        header.style.background = 'rgba(18, 18, 22, 0.95)';
+        header.style.boxShadow = 'none';
+      }
+    });
+    
+    // Verificar parâmetros da URL para mensagens de boas-vindas
+    const urlParams = new URLSearchParams(window.location.search);
+    const userParam = urlParams.get('user');
+    
+    if (userParam) {
+      // Mostrar mensagem de boas-vindas se houver parâmetro de usuário
+      setTimeout(() => {
+        const cliente = JSON.parse(localStorage.getItem('cliente'));
+        if (cliente && cliente.nome) {
+          alert(`Bem-vindo à Nova Vibe RP, ${cliente.nome}! 🎉`);
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
