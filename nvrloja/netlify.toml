@@ -1,0 +1,4 @@
+[build]
+  publish = "src"
+  functions = "netlify"
+  command = "npm run build"
