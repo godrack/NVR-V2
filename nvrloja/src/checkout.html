@@ -96,6 +96,7 @@
       background: rgba(26, 26, 30, 0.8);
       color: #fff;
       font-size: 1rem;
+      transition: all 0.3s ease;
     }
 
     .form-group input:focus,
@@ -103,6 +104,11 @@
       outline: none;
       border-color: #3f92f7;
       box-shadow: 0 0 0 2px rgba(63, 146, 247, 0.2);
+    }
+
+    .form-group input.error {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
     }
 
     .form-row {
@@ -177,6 +183,21 @@
       justify-content: center;
       font-weight: bold;
       font-size: 1.3rem;
+    }
+
+    .qr-code-container {
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 15px;
+      display: inline-block;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .qr-code-container img {
+      display: block;
+      max-width: 200px;
+      height: auto;
     }
 
     .qr-placeholder {
@@ -394,6 +415,50 @@
       color: #27ae60;
     }
 
+    .payment-info {
+      background: rgba(63, 146, 247, 0.1);
+      border: 1px solid rgba(63, 146, 247, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+
+    .payment-info h4 {
+      color: #3f92f7;
+      margin-bottom: 10px;
+    }
+
+    .payment-info p {
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .copy-btn {
+      background: #3f92f7;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background: #2d7cf0;
+    }
+
+    .copy-btn:active {
+      background: #1a5fb8;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 20px;
@@ -448,20 +513,24 @@
           <div class="form-group">
             <label for="nome">Nome Completo *</label>
             <input type="text" id="nome" required>
+            <div class="error-message" id="nome-error"></div>
           </div>
           <div class="form-group">
             <label for="cpf">CPF *</label>
             <input type="text" id="cpf" required maxlength="14" placeholder="000.000.000-00">
+            <div class="error-message" id="cpf-error"></div>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="email">Email *</label>
             <input type="email" id="email" required>
+            <div class="error-message" id="email-error"></div>
           </div>
           <div class="form-group">
             <label for="telefone">Telefone *</label>
             <input type="tel" id="telefone" required placeholder="(00) 00000-0000">
+            <div class="error-message" id="telefone-error"></div>
           </div>
         </div>
       </div>
@@ -472,15 +541,18 @@
           <div class="form-group">
             <label for="idJogador">ID do Jogador na Cidade *</label>
             <input type="number" id="idJogador" required placeholder="Ex: 12345">
+            <div class="error-message" id="idJogador-error"></div>
           </div>
           <div class="form-group">
             <label for="nomePersonagem">Nome do Personagem *</label>
             <input type="text" id="nomePersonagem" required placeholder="Ex: João Silva">
+            <div class="error-message" id="nomePersonagem-error"></div>
           </div>
         </div>
         <div class="form-group">
           <label for="discordUser">Usuário do Discord *</label>
           <input type="text" id="discordUser" required placeholder="Ex: usuario#1234">
+          <div class="error-message" id="discordUser-error"></div>
         </div>
       </div>
 
@@ -491,7 +563,7 @@
 
       <div class="actions">
         <a href="#" class="btn btn-secondary" onclick="voltarParaLoja()">← Voltar à Loja</a>
-        <button class="btn btn-primary" onclick="nextStep()">Continuar para Pagamento →</button>
+        <button class="btn btn-primary" onclick="nextStep()" id="continuar-btn">Continuar para Pagamento →</button>
       </div>
     </div>
 
@@ -533,6 +605,13 @@
           <h2 style="color: #27ae60; margin-bottom: 15px;">Compra Realizada com Sucesso!</h2>
           <p style="margin-bottom: 20px;">Seu pagamento foi processado e as informações foram enviadas para nossa equipe.</p>
           <p style="color: #ccc;">Você receberá os itens em até 24 horas.</p>
+          
+          <div class="payment-info">
+            <h4>Detalhes do Pagamento</h4>
+            <p><strong>ID do Pagamento:</strong> <span id="payment-id-display"></span></p>
+            <p><strong>Data:</strong> <span id="payment-date-display"></span></p>
+            <p><strong>Valor:</strong> <span id="payment-amount-display"></span></p>
+          </div>
         </div>
       </div>
 
@@ -543,8 +622,10 @@
   </div>
 
   <script>
-    // Configuração do webhook do Discord
-    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/SEU_WEBHOOK_ID/SEU_WEBHOOK_TOKEN';
+    // Configuração da API - COLOQUE SUA ACCESS TOKEN AQUI
+    const MP_ACCESS_TOKEN = 'APP_USR-YOUR_ACCESS_TOKEN_HERE'; // Substitua pela sua Access Token do Mercado Pago
+    const API_BASE_URL = 'https://api.mercadopago.com/v1';
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1390898408709029978/0fZVKIRIyYnF6WgbwEW4PviryDy1n_t0nZK3dHL8ar_lpdAhDNkoF5YhiNJbT3V017J4';
     
     let orderData = [];
     let orderTotal = 0;
@@ -553,8 +634,199 @@
     let checkInterval = null;
     let currentStep = 1;
     let customerData = {};
+    let mercadoPagoPayment = null;
+
+    // Classe para gerenciar validações
+    class ValidationManager {
+      constructor() {
+        this.errors = {};
+      }
+
+      validateField(fieldName, value, rules) {
+        this.errors[fieldName] = [];
+        
+        for (const rule of rules) {
+          const result = rule(value);
+          if (result !== true) {
+            this.errors[fieldName].push(result);
+          }
+        }
+        
+        return this.errors[fieldName].length === 0;
+      }
+
+      showFieldError(fieldName, message) {
+        const errorElement = document.getElementById(`${fieldName}-error`);
+        const inputElement = document.getElementById(fieldName);
+        
+        if (errorElement) {
+          errorElement.textContent = message;
+        }
+        
+        if (inputElement) {
+          inputElement.classList.add('error');
+        }
+      }
+
+      clearFieldError(fieldName) {
+        const errorElement = document.getElementById(`${fieldName}-error`);
+        const inputElement = document.getElementById(fieldName);
+        
+        if (errorElement) {
+          errorElement.textContent = '';
+        }
+        
+        if (inputElement) {
+          inputElement.classList.remove('error');
+        }
+      }
+
+      clearAllErrors() {
+        const errorElements = document.querySelectorAll('.error-message');
+        const inputElements = document.querySelectorAll('input.error');
+        
+        errorElements.forEach(el => el.textContent = '');
+        inputElements.forEach(el => el.classList.remove('error'));
+      }
+    }
+
+    // Regras de validação
+    const validationRules = {
+      required: (value) => value && value.trim() !== '' || 'Este campo é obrigatório',
+      email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Email inválido',
+      cpf: (value) => {
+        const cpf = value.replace(/\D/g, '');
+        if (cpf.length !== 11) return 'CPF deve ter 11 dígitos';
+        if (/^(\d)\1{10}$/.test(cpf)) return 'CPF inválido';
+        return validateCPF(cpf) || 'CPF inválido';
+      },
+      phone: (value) => {
+        const phone = value.replace(/\D/g, '');
+        return phone.length >= 10 || 'Telefone deve ter pelo menos 10 dígitos';
+      },
+      number: (value) => !isNaN(value) && parseInt(value) > 0 || 'Deve ser um número válido'
+    };
+
+    const validator = new ValidationManager();
+
+    // Função para validar CPF
+    function validateCPF(cpf) {
+      let sum = 0;
+      let remainder;
+      
+      // Verifica primeiro dígito
+      for (let i = 1; i <= 9; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+      }
+      remainder = (sum * 10) % 11;
+      if (remainder === 10 || remainder === 11) remainder = 0;
+      if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+      
+      // Verifica segundo dígito
+      sum = 0;
+      for (let i = 1; i <= 10; i++) {
+        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+      }
+      remainder = (sum * 10) % 11;
+      if (remainder === 10 || remainder === 11) remainder = 0;
+      if (remainder !== parseInt(cpf.substring(10, 11))) return false;
+      
+      return true;
+    }
+
+    // Classe para gerenciar pagamentos do Mercado Pago
+    class MercadoPagoManager {
+      constructor() {
+        this.accessToken = MP_ACCESS_TOKEN;
+      }
+
+      async createPayment(orderData, customerData) {
+        try {
+          // Gera um ID único para o pagamento
+          const externalReference = 'NVRP_' + Date.now();
+          
+          const paymentData = {
+            transaction_amount: parseFloat(orderTotal.toFixed(2)),
+            description: this.generateOrderDescription(orderData),
+            payment_method_id: 'pix',
+            payer: {
+              first_name: customerData.nome.split(' ')[0],
+              last_name: customerData.nome.split(' ').slice(1).join(' ') || customerData.nome.split(' ')[0],
+              email: customerData.email,
+              identification: {
+                type: 'CPF',
+                number: customerData.cpf.replace(/\D/g, '')
+              }
+            },
+            external_reference: externalReference,
+            notification_url: `${window.location.origin}/webhook/mercadopago`,
+            metadata: {
+              customer_data: customerData,
+              order_data: orderData,
+              player_id: customerData.idJogador,
+              character_name: customerData.nomePersonagem,
+              discord_user: customerData.discordUser
+            }
+          };
+
+          const response = await fetch(`${API_BASE_URL}/payments`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.accessToken}`,
+              'X-Idempotency-Key': externalReference
+            },
+            body: JSON.stringify(paymentData)
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(`Erro ${response.status}: ${error.message || 'Erro ao criar pagamento'}`);
+          }
+
+          const payment = await response.json();
+          return payment;
+        } catch (error) {
+          console.error('Erro ao criar pagamento:', error);
+          throw error;
+        }
+      }
+
+      generateOrderDescription(orderData) {
+        const items = orderData.map(item => `${item.produto} (${item.quantidade})`).join(', ');
+        return `Nova Vibe RP - ${items}`;
+      }
+
+      async checkPaymentStatus(paymentId) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/payments/${paymentId}`, {
+            headers: {
+              'Authorization': `Bearer ${this.accessToken}`
+            }
+          });
+          
+          if (!response.ok) {
+            throw new Error('Erro ao verificar status do pagamento');
+          }
+          
+          const payment = await response.json();
+          return payment;
+        } catch (error) {
+          console.error('Erro ao verificar status:', error);
+          throw error;
+        }
+      }
+    }
+
+    const mercadoPagoManager = new MercadoPagoManager();
 
     function init() {
+      // Verifica se o token está configurado
+      if (MP_ACCESS_TOKEN === 'APP_USR-YOUR_ACCESS_TOKEN_HERE') {
+        showNotification('Erro: Configure o Access Token do Mercado Pago', 'error');
+        console.error('IMPORTANTE: Configure o MP_ACCESS_TOKEN na linha 387 do código');
+      }
+      
       loadOrderData();
       setupEventListeners();
     }
@@ -576,39 +848,90 @@
         value = value.replace(/(\d{5})(\d)/, '$1-$2');
         e.target.value = value;
       });
+
+      // Validação em tempo real
+      const fieldsToValidate = ['nome', 'cpf', 'email', 'telefone', 'idJogador', 'nomePersonagem', 'discordUser'];
+      
+      fieldsToValidate.forEach(fieldName => {
+        const element = document.getElementById(fieldName);
+        if (element) {
+          element.addEventListener('blur', () => validateSingleField(fieldName));
+          element.addEventListener('input', () => validator.clearFieldError(fieldName));
+        }
+      });
+    }
+
+    function validateSingleField(fieldName: string): boolean {
+      const element = document.getElementById(fieldName) as HTMLInputElement | null;
+      const value = element && typeof element.value === 'string' ? element.value.trim() : '';
+      
+      let rules = [validationRules.required];
+      
+      switch (fieldName) {
+        case 'email':
+          rules.push(validationRules.email);
+          break;
+        case 'cpf':
+          rules.push(validationRules.cpf);
+          break;
+        case 'telefone':
+          rules.push(validationRules.phone);
+          break;
+        case 'idJogador':
+          rules.push(validationRules.number);
+          break;
+      }
+      
+      let isValid = true;
+      for (const rule of rules) {
+        const result = rule(value);
+        if (result !== true) {
+          validator.showFieldError(fieldName, result);
+          isValid = false;
+          break;
+        }
+      }
+      
+      if (isValid) {
+        validator.clearFieldError(fieldName);
+      }
+      
+      return isValid;
     }
 
     function loadOrderData() {
-      const savedCart = getFromStorage('carrinho');
+      // Carrega dados do pedido do localStorage
+      const savedOrder = localStorage.getItem('orderData');
+      const savedTotal = localStorage.getItem('orderTotal');
       
-      if (savedCart && savedCart.length > 0) {
-        orderData = savedCart;
-        orderTotal = orderData.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+      if (savedOrder && savedTotal) {
+        orderData = JSON.parse(savedOrder);
+        orderTotal = parseFloat(savedTotal);
         displayOrderSummary();
       } else {
-        // Dados de exemplo para teste
+        // Dados de exemplo se não houver pedido salvo
         orderData = [
-          { produto: 'VIP Mensal', preco: 15.99, quantidade: 1 },
-          { produto: 'Pacote de Carros', preco: 8.50, quantidade: 2 }
+          { produto: 'VIP Mensal', quantidade: 1, preco: 29.90 },
+          { produto: 'Dinheiro (500k)', quantidade: 2, preco: 15.00 }
         ];
-        orderTotal = orderData.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+        orderTotal = 59.90;
         displayOrderSummary();
       }
     }
 
     function displayOrderSummary() {
-      const orderSummary = document.getElementById('order-summary');
+      const summaryContainer = document.getElementById('order-summary');
       let html = '';
       
       orderData.forEach(item => {
-        const subtotal = item.preco * item.quantidade;
+        const itemTotal = item.preco * item.quantidade;
         html += `
           <div class="order-item">
             <div class="item-info">
               <div class="item-name">${item.produto}</div>
               <div class="item-quantity">Quantidade: ${item.quantidade}</div>
             </div>
-            <div class="item-price">R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+            <div class="item-price">R$ ${itemTotal.toFixed(2)}</div>
           </div>
         `;
       });
@@ -618,104 +941,17 @@
           <div class="item-info">
             <div class="item-name">Total</div>
           </div>
-          <div class="item-price">R$ ${orderTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div>
+          <div class="item-price">R$ ${orderTotal.toFixed(2)}</div>
         </div>
       `;
       
-      orderSummary.innerHTML = html;
+      summaryContainer.innerHTML = html;
     }
 
-    function nextStep() {
-      if (currentStep === 1) {
-        if (validateCustomerData()) {
-          collectCustomerData();
-          goToStep(2);
-          setTimeout(() => {
-            createPixPayment();
-          }, 1000);
-        }
-      }
-    }
-
-    function prevStep() {
-      if (currentStep === 2) {
-        clearInterval(checkInterval);
-        goToStep(1);
-      }
-    }
-
-    function goToStep(step) {
-      // Ocultar todas as etapas
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    function validateForm() {
+      validator.clearAllErrors();
       
-      // Mostrar etapa atual
-      document.getElementById(`step${step}`).classList.add('active');
-      
-      // Atualizar indicadores
-      updateStepIndicators(step);
-      
-      currentStep = step;
-    }
-
-    function updateStepIndicators(activeStep) {
-      for (let i = 1; i <= 3; i++) {
-        const indicator = document.getElementById(`step${i}-indicator`);
-        const label = document.getElementById(`step${i}-label`);
-        
-        if (i < activeStep) {
-          indicator.classList.add('completed');
-          indicator.classList.remove('active');
-          label.classList.add('completed');
-          label.classList.remove('active');
-          indicator.innerHTML = '✓';
-        } else if (i === activeStep) {
-          indicator.classList.add('active');
-          indicator.classList.remove('completed');
-          label.classList.add('active');
-          label.classList.remove('completed');
-          indicator.innerHTML = i;
-        } else {
-          indicator.classList.remove('active', 'completed');
-          label.classList.remove('active', 'completed');
-          indicator.innerHTML = i;
-        }
-      }
-    }
-
-    function validateCustomerData() {
-      const requiredFields = ['nome', 'cpf', 'email', 'telefone', 'idJogador', 'nomePersonagem', 'discordUser'];
-      
-      for (let field of requiredFields) {
-        const element = document.getElementById(field);
-        if (!element.value.trim()) {
-          showNotification(`Por favor, preencha o campo ${element.previousElementSibling.textContent}`, 'error');
-          element.focus();
-          return false;
-        }
-      }
-
-      // Validar CPF
-      const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
-      if (cpf.length !== 11) {
-        showNotification('CPF deve ter 11 dígitos', 'error');
-        document.getElementById('cpf').focus();
-        return false;
-      }
-
-      // Validar email
-      const email = document.getElementById('email').value;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        showNotification('Email inválido', 'error');
-        document.getElementById('email').focus();
-        return false;
-      }
-
-      return true;
-    }
-
-    function collectCustomerData() {
-      customerData = {
+      const fields = {
         nome: document.getElementById('nome').value.trim(),
         cpf: document.getElementById('cpf').value.trim(),
         email: document.getElementById('email').value.trim(),
@@ -724,208 +960,263 @@
         nomePersonagem: document.getElementById('nomePersonagem').value.trim(),
         discordUser: document.getElementById('discordUser').value.trim()
       };
+      
+      let isValid = true;
+      
+      for (const [fieldName, value] of Object.entries(fields)) {
+        if (!validateSingleField(fieldName)) {
+          isValid = false;
+        }
+      }
+      
+      if (isValid) {
+        customerData = fields;
+      }
+      
+      return isValid;
     }
 
-    function createPixPayment() {
-      try {
-        const mockPayment = {
-          id: 'DEMO_' + Date.now(),
-          status: 'pending',
-          transaction_amount: orderTotal,
-          point_of_interaction: {
-            transaction_data: {
-              qr_code: '00020126580014br.gov.bcb.pix0136123e4567-e12b-12d1-a456-426614174000' + Math.random().toString(36).substr(2, 9),
-              qr_code_base64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
-            }
-          }
-        };
-
-        paymentId = mockPayment.id;
-        displayPixPayment(mockPayment);
-        startPaymentCheck();
-        
-      } catch (error) {
-        console.error('Erro ao criar pagamento:', error);
-        showPaymentError();
+    function nextStep() {
+      if (currentStep === 1) {
+        if (validateForm()) {
+          currentStep = 2;
+          updateStepIndicator();
+          showStep(currentStep);
+          initializePayment();
+        }
       }
     }
 
-    function displayPixPayment(payment) {
-      const paymentContent = document.getElementById('payment-content');
-      const statusElement = document.getElementById('payment-status');
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        updateStepIndicator();
+        showStep(currentStep);
+        
+        // Limpa o intervalo de verificação se estiver ativo
+        if (checkInterval) {
+          clearInterval(checkInterval);
+          checkInterval = null;
+        }
+      }
+    }
+
+    function showStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(step => {
+        step.classList.remove('active');
+      });
       
-      statusElement.innerHTML = '<div class="spinner"></div><span>Aguardando pagamento...</span>';
+      document.getElementById(`step${stepNumber}`).classList.add('active');
+    }
+
+    function updateStepIndicator() {
+      for (let i = 1; i <= 3; i++) {
+        const indicator = document.getElementById(`step${i}-indicator`);
+        const label = document.getElementById(`step${i}-label`);
+        
+        if (i < currentStep) {
+          indicator.classList.add('completed');
+          indicator.classList.remove('active');
+          label.classList.add('completed');
+          label.classList.remove('active');
+          indicator.textContent = '✓';
+        } else if (i === currentStep) {
+          indicator.classList.add('active');
+          indicator.classList.remove('completed');
+          label.classList.add('active');
+          label.classList.remove('completed');
+          indicator.textContent = i;
+        } else {
+          indicator.classList.remove('active', 'completed');
+          label.classList.remove('active', 'completed');
+          indicator.textContent = i;
+        }
+      }
+    }
+
+    async function initializePayment() {
+      try {
+        updatePaymentStatus('waiting', 'Gerando pagamento...');
+        
+        // Cria o pagamento no Mercado Pago
+        mercadoPagoPayment = await mercadoPagoManager.createPayment(orderData, customerData);
+        paymentId = mercadoPagoPayment.id;
+        
+        // Exibe o QR Code e código PIX
+        displayPaymentInfo(mercadoPagoPayment);
+        
+        // Inicia verificação do status
+        startPaymentMonitoring();
+        
+      } catch (error) {
+        console.error('Erro ao inicializar pagamento:', error);
+        updatePaymentStatus('error', 'Erro ao gerar pagamento. Tente novamente.');
+        showNotification('Erro ao gerar pagamento. Tente novamente.', 'error');
+      }
+    }
+
+    function displayPaymentInfo(payment) {
+      const paymentContent = document.getElementById('payment-content');
       
       const qrCodeData = payment.point_of_interaction.transaction_data.qr_code;
+      const pixCode = payment.point_of_interaction.transaction_data.qr_code_base64;
       
       paymentContent.innerHTML = `
-        <div class="qr-placeholder">
-          <div class="qr-icon">📱</div>
-          <div style="color: #666; font-size: 0.9rem;">QR Code PIX</div>
+        <div class="qr-code-container">
+          <img src="data:image/png;base64,${pixCode}" alt="QR Code PIX" />
         </div>
         
-        <div style="text-align: left;">
-          <p><strong>💵 Valor:</strong> R$ ${orderTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
-          <p><strong>🆔 ID do Pagamento:</strong> ${payment.id}</p>
-          <p><strong>📝 Código PIX:</strong></p>
+        <div class="payment-info">
+          <h4>📋 Instruções de Pagamento</h4>
+          <p>• Abra o app do seu banco</p>
+          <p>• Escolha pagar via PIX</p>
+          <p>• Escaneie o QR Code ou cole o código</p>
+          <p>• Confirme o pagamento</p>
+        </div>
+        
+        <div>
+          <p style="margin-bottom: 10px; font-weight: bold;">Código PIX Copia e Cola:</p>
           <div class="pix-code" id="pix-code">${qrCodeData}</div>
-          <button class="btn btn-primary" onclick="copyPixCode()" style="width: 100%;">
-            📋 Copiar código PIX
-          </button>
-          <div style="margin-top: 15px; text-align: center;">
-            <button class="btn btn-secondary" onclick="simulatePayment()" style="width: 100%;">
-              ✅ Simular Pagamento (Demo)
-            </button>
-          </div>
+          <button class="copy-btn" onclick="copyPixCode()">📋 Copiar Código</button>
         </div>
-      `;
-    }
-
-    function showPaymentError() {
-      const paymentContent = document.getElementById('payment-content');
-      const statusElement = document.getElementById('payment-status');
-      
-      statusElement.className = 'status error';
-      statusElement.innerHTML = '<span>❌</span><span>Erro ao gerar pagamento</span>';
-      
-      paymentContent.innerHTML = `
-        <div style="text-align: center; padding: 20px;">
-          <p style="color: #e74c3c; margin-bottom: 20px;">
-            Ocorreu um erro ao processar o pagamento. Tente novamente.
-          </p>
-          <button class="btn btn-primary" onclick="createPixPayment()">
-            🔄 Tentar Novamente
-          </button>
-        </div>
-      `;
-    }
-
-    function startPaymentCheck() {
-      checkInterval = setInterval(() => {
-        if (!paymentApproved && paymentId) {
-          checkPaymentStatus();
-        }
-      }, 5000);
-    }
-
-    function checkPaymentStatus() {
-      console.log('Verificando status do pagamento...');
-    }
-
-    function simulatePayment() {
-      if (paymentApproved) return;
-      
-      showNotification('Simulando pagamento...', 'success');
-      
-      setTimeout(() => {
-        approvePayment();
-      }, 2000);
-    }
-
-    function approvePayment() {
-      if (paymentApproved) return;
-      
-      paymentApproved = true;
-      clearInterval(checkInterval);
-      
-      const statusElement = document.getElementById('payment-status');
-      statusElement.className = 'status approved';
-      statusElement.innerHTML = '<span>✅</span><span>Pagamento Aprovado!</span>';
-      
-      showNotification('Pagamento aprovado com sucesso!', 'success');
-      
-      // Enviar para Discord e processar
-      sendToDiscord();
-      
-      setTimeout(() => {
-        goToStep(3);
-      }, 2000);
-    }
-
-    async function sendToDiscord() {
-      try {
-        const orderDetails = orderData.map(item => {
-          const subtotal = item.preco * item.quantidade;
-          return `**${item.produto}** - Qtd: ${item.quantidade} - R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-        }).join('\n');
-
-        const embed = {
-          title: "🛒 Nova Compra Realizada - Nova Vibe RP",
-          color: 0x3f92f7,
-          timestamp: new Date().toISOString(),
-          fields: [
-            {
-              name: "👤 Dados do Cliente",
-              value: `**Nome:** ${customerData.nome}\n**CPF:** ${customerData.cpf}\n**Email:** ${customerData.email}\n**Telefone:** ${customerData.telefone}`,
-              inline: false
-            },
-            {
-              name: "🎮 Dados do Jogador",
-              value: `**ID na Cidade:** ${customerData.idJogador}\n**Nome do Personagem:** ${customerData.nomePersonagem}\n**Discord:** ${customerData.discordUser}`,
-              inline: false
-            },
-            {
-              name: "🛒 Produtos Comprados",
-              value: orderDetails,
-              inline: false
-            },
-            {
-              name: "💰 Valor Total",
-              value: `R$ ${orderTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`,
-              inline: true
-            },
-            {
-              name: "🆔 ID do Pagamento",
-              value: paymentId || 'N/A',
-              inline: true
-            },
-            {
-              name: "📅 Data/Hora",
-              value: new Date().toLocaleString('pt-BR'),
-              inline: true
-            }
-          ],
-          footer: {
-            text: "Nova Vibe RP - Sistema de Checkout"
-          }
-        };
-
-        const payload = {
-          embeds: [embed]
-        };
-
-        // Para usar o webhook, descomente as linhas abaixo e adicione sua URL real
-        if (DISCORD_WEBHOOK_URL && !DISCORD_WEBHOOK_URL.includes('SEU_WEBHOOK')) {
-          const response = await fetch(DISCORD_WEBHOOK_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-          });
-
-          if (!response.ok) {
-            throw new Error('Erro ao enviar webhook');
-          }
-          
-          console.log('Webhook enviado com sucesso para Discord');
-        } else {
-          console.log('Webhook demo - dados que seriam enviados:', payload);
-        }
         
-      } catch (error) {
-        console.error('Erro ao enviar webhook:', error);
-        showNotification('Erro ao enviar notificação, mas pagamento foi processado', 'error');
-      }
+        <div style="text-align: center; margin-top: 20px; color: #ccc;">
+          <p>⏱️ Aguardando pagamento...</p>
+          <p style="font-size: 0.9rem;">O pagamento será confirmado automaticamente</p>
+        </div>
+      `;
+      
+      updatePaymentStatus('waiting', 'Aguardando pagamento...');
     }
 
     function copyPixCode() {
       const pixCode = document.getElementById('pix-code').textContent;
+      
       navigator.clipboard.writeText(pixCode).then(() => {
         showNotification('Código PIX copiado!', 'success');
       }).catch(() => {
-        showNotification('Erro ao copiar código', 'error');
+        // Fallback para navegadores mais antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = pixCode;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Código PIX copiado!', 'success');
       });
+    }
+
+    function startPaymentMonitoring() {
+      if (checkInterval) {
+        clearInterval(checkInterval);
+      }
+      
+      checkInterval = setInterval(async () => {
+        try {
+          const payment = await mercadoPagoManager.checkPaymentStatus(paymentId);
+          
+          if (payment.status === 'approved') {
+            paymentApproved = true;
+            clearInterval(checkInterval);
+            checkInterval = null;
+            
+            updatePaymentStatus('approved', 'Pagamento aprovado!');
+            
+            // Envia notificação para o Discord
+            await sendDiscordNotification(payment);
+            
+            // Vai para a próxima etapa
+            setTimeout(() => {
+              currentStep = 3;
+              updateStepIndicator();
+              showStep(currentStep);
+              displayPaymentSuccess(payment);
+            }, 2000);
+            
+          } else if (payment.status === 'rejected' || payment.status === 'cancelled') {
+            clearInterval(checkInterval);
+            checkInterval = null;
+            updatePaymentStatus('error', 'Pagamento rejeitado ou cancelado.');
+            showNotification('Pagamento rejeitado ou cancelado.', 'error');
+          }
+          
+        } catch (error) {
+          console.error('Erro ao verificar pagamento:', error);
+        }
+      }, 3000); // Verifica a cada 3 segundos
+    }
+
+    function updatePaymentStatus(status, message) {
+      const statusElement = document.getElementById('payment-status');
+      statusElement.className = `status ${status}`;
+      
+      let icon = '';
+      switch (status) {
+        case 'waiting':
+          icon = '<div class="spinner"></div>';
+          break;
+        case 'approved':
+          icon = '✅';
+          break;
+        case 'error':
+          icon = '❌';
+          break;
+      }
+      
+      statusElement.innerHTML = `${icon} <span>${message}</span>`;
+    }
+
+    async function sendDiscordNotification(payment) {
+      const embed = {
+        title: "🎉 Nova Compra Realizada",
+        color: 0x00ff00,
+        fields: [
+          {
+            name: "💰 Pagamento",
+            value: `**ID:** ${payment.id}\n**Valor:** R$ ${payment.transaction_amount.toFixed(2)}\n**Status:** Aprovado`,
+            inline: true
+          },
+          {
+            name: "👤 Cliente",
+            value: `**Nome:** ${customerData.nome}\n**CPF:** ${customerData.cpf}\n**Email:** ${customerData.email}`,
+            inline: true
+          },
+          {
+            name: "🎮 Dados do Jogo",
+            value: `**ID:** ${customerData.idJogador}\n**Personagem:** ${customerData.nomePersonagem}\n**Discord:** ${customerData.discordUser}`,
+            inline: false
+          },
+          {
+            name: "🛒 Produtos",
+            value: orderData.map(item => `• ${item.produto} (${item.quantidade}x) - R$ ${(item.preco * item.quantidade).toFixed(2)}`).join('\n'),
+            inline: false
+          }
+        ],
+        timestamp: new Date().toISOString(),
+        footer: {
+          text: "Nova Vibe RP - Sistema de Pagamento"
+        }
+      };
+
+      try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            embeds: [embed]
+          })
+        });
+      } catch (error) {
+        console.error('Erro ao enviar notificação Discord:', error);
+      }
+    }
+
+    function displayPaymentSuccess(payment) {
+      document.getElementById('payment-id-display').textContent = payment.id;
+      document.getElementById('payment-date-display').textContent = new Date().toLocaleDateString('pt-BR');
+      document.getElementById('payment-amount-display').textContent = `R$ ${payment.transaction_amount.toFixed(2)}`;
     }
 
     function showNotification(message, type = 'success') {
@@ -937,169 +1228,55 @@
       
       setTimeout(() => {
         notification.remove();
-      }, 3000);
+      }, 5000);
     }
 
     function voltarParaLoja() {
-      window.location.href = 'loja.html';
+      if (confirm('Tem certeza que deseja voltar à loja? Os dados inseridos serão perdidos.')) {
+        // Redireciona para a loja ou página anterior
+        window.location.href = '/loja'; // Ajuste conforme sua estrutura
+      }
     }
 
     function novaCompra() {
-      clearStorage('carrinho');
-      window.location.href = 'loja.html';
-    }
-
-    function getFromStorage(key) {
-      try {
-        const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : null;
-      } catch (error) {
-        console.error('Erro ao ler localStorage:', error);
-        return null;
-      }
-    }
-
-    function saveToStorage(key, data) {
-      try {
-        localStorage.setItem(key, JSON.stringify(data));
-      } catch (error) {
-        console.error('Erro ao salvar localStorage:', error);
-      }
-    }
-
-    function clearStorage(key) {
-      try {
-        localStorage.removeItem(key);
-      } catch (error) {
-        console.error('Erro ao limpar localStorage:', error);
-      }
-    }
-
-    // Função para salvar dados da compra no histórico
-    function saveOrderToHistory() {
-      const orderHistory = getFromStorage('orderHistory') || [];
-      const newOrder = {
-        id: paymentId,
-        customerData: customerData,
-        orderData: orderData,
-        total: orderTotal,
-        date: new Date().toISOString(),
-        status: 'completed'
-      };
+      // Limpa dados do pedido
+      localStorage.removeItem('orderData');
+      localStorage.removeItem('orderTotal');
       
-      orderHistory.push(newOrder);
-      saveToStorage('orderHistory', orderHistory);
-    }
-
-    // Função para verificar se todos os campos obrigatórios estão preenchidos
-    function validateAllFields() {
-      const requiredFields = [
-        'nome', 'cpf', 'email', 'telefone', 
-        'idJogador', 'nomePersonagem', 'discordUser'
-      ];
+      // Reinicia o sistema
+      currentStep = 1;
+      paymentApproved = false;
+      paymentId = null;
+      customerData = {};
+      mercadoPagoPayment = null;
       
-      let isValid = true;
-      const errors = [];
-
-      requiredFields.forEach(field => {
-        const element = document.getElementById(field);
-        if (!element.value.trim()) {
-          isValid = false;
-          errors.push(field);
-        }
-      });
-
-      // Validações específicas
-      const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
-      if (cpf.length !== 11) {
-        isValid = false;
-        errors.push('cpf');
+      if (checkInterval) {
+        clearInterval(checkInterval);
+        checkInterval = null;
       }
-
-      const email = document.getElementById('email').value;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        isValid = false;
-        errors.push('email');
-      }
-
-      return { isValid, errors };
-    }
-
-    // Função para destacar campos com erro
-    function highlightErrors(errors) {
-      // Remover highlights anteriores
-      document.querySelectorAll('.form-group input, .form-group select').forEach(el => {
-        el.style.borderColor = 'rgba(63, 146, 247, 0.3)';
-      });
-
-      // Adicionar highlights aos campos com erro
-      errors.forEach(fieldName => {
-        const element = document.getElementById(fieldName);
-        if (element) {
-          element.style.borderColor = '#e74c3c';
-          element.style.boxShadow = '0 0 0 2px rgba(231, 76, 60, 0.2)';
-        }
-      });
-    }
-
-    // Função melhorada para validação
-    function validateCustomerData() {
-      const validation = validateAllFields();
       
-      if (!validation.isValid) {
-        highlightErrors(validation.errors);
-        showNotification('Por favor, preencha todos os campos obrigatórios corretamente', 'error');
-        return false;
-      }
-
-      return true;
-    }
-
-    // Função para limpar dados do formulário
-    function clearForm() {
+      // Limpa formulário
       document.querySelectorAll('input').forEach(input => {
         input.value = '';
-        input.style.borderColor = 'rgba(63, 146, 247, 0.3)';
-        input.style.boxShadow = 'none';
+        input.classList.remove('error');
       });
+      
+      validator.clearAllErrors();
+      updateStepIndicator();
+      showStep(1);
+      
+      // Recarrega dados do pedido
+      loadOrderData();
     }
 
-    // Função melhorada para aprovar pagamento
-    function approvePayment() {
-      if (paymentApproved) return;
-      
-      paymentApproved = true;
-      clearInterval(checkInterval);
-      
-      const statusElement = document.getElementById('payment-status');
-      statusElement.className = 'status approved';
-      statusElement.innerHTML = '<span>✅</span><span>Pagamento Aprovado!</span>';
-      
-      showNotification('Pagamento aprovado com sucesso!', 'success');
-      
-      // Salvar no histórico
-      saveOrderToHistory();
-      
-      // Enviar para Discord
-      sendToDiscord();
-      
-      // Limpar carrinho
-      clearStorage('carrinho');
-      
-      setTimeout(() => {
-        goToStep(3);
-      }, 2000);
-    }
-
-    // Adicionar evento de teclado para navegação
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && currentStep === 1) {
-        nextStep();
+    // Cleanup quando a página é fechada
+    window.addEventListener('beforeunload', () => {
+      if (checkInterval) {
+        clearInterval(checkInterval);
       }
     });
 
-    // Inicializar quando a página carregar
+    // Inicializa o sistema quando a página carrega
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
