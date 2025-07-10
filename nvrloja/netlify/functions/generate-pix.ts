@@ -1,6 +1,6 @@
 import postgres from "https://deno.land/x/postgresjs/mod.js";
 
-const MP_TOKEN = Deno.env.get("MP_TOKEN");
+const MP_TOKEN = Deno.env.get("TEST-7004638756944644-070819-a855fe0efceca1f64bab604f01e20fac-1389751127");
 const DB_URL = Deno.env.get("NETLIFY_DATABASE_URL");
 
 const sql = postgres(DB_URL, { prepare: false });
