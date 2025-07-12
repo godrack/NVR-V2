@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Redefinir Senha — Nova Vibe RP</title>
   <style>
+    /* Seu CSS da página reset que você enviou */
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -95,16 +96,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 
   <script>
-    // Configurar seu Supabase aqui:
-    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';  // <=== substitua
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';              // <=== substitua
+    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';  // substitua
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU'; // substitua
 
     const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
     const alertEl = document.getElementById('alert');
     const form = document.getElementById('reset-form');
 
-    // Pega o access_token da URL
     const urlParams = new URLSearchParams(window.location.search);
     const access_token = urlParams.get('access_token');
 
@@ -130,14 +129,11 @@
         return;
       }
 
-      // Usa o token para atualizar a senha
       try {
-        const { data, error } = await supabase.auth.updateUser({
-          password: password
-        }, {
-          // O token de acesso obtido do link de reset:
-          accessToken: access_token
-        });
+        const { data, error } = await supabase.auth.updateUser(
+          { password: password },
+          { accessToken: access_token }
+        );
 
         if (error) {
           alertEl.innerHTML = `<div class="alert error">Erro: ${error.message}</div>`;
