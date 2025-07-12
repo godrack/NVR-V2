@@ -206,6 +206,11 @@
       </div>
       
       <div class="form-group">
+        <label for="cpf">CPF:</label>
+        <input type="text" id="cpf" placeholder="000.000.000-00" required>
+      </div>
+      
+      <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" placeholder="seu@email.com" required>
       </div>
@@ -270,6 +275,7 @@
     const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
     const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
     const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1390898408709029978/0fZVKIRIyYnF6WgbwEW4PviryDy1n_t0nZK3dHL8ar_lpdAhDNkoF5YhiNJbT3V017J4';
 
     let checkInterval = null;
     let currentPaymentId = null;
@@ -332,7 +338,7 @@
     }
 
     function validateForm() {
-      const fields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
+      const fields = ['nome', 'cpf', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
       
       for (let field of fields) {
         const element = document.getElementById(field);
@@ -369,6 +375,84 @@
         btn.disabled = false;
         btnText.style.display = 'inline-block';
         btnLoading.style.display = 'none';
+      }
+    }
+
+    async function sendDiscordWebhook(paymentData) {
+      try {
+        const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+        
+        // Criar lista de itens formatada
+        const itemsList = carrinho.map(item => {
+          const subtotal = item.preco * item.quantidade;
+          return `• **${item.produto}** - R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})} x ${item.quantidade} = R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
+        }).join('\n');
+
+        const embed = {
+          title: "🎉 Nova Compra Aprovada - Nova Vibe RP",
+          description: "Uma nova compra foi realizada com sucesso!",
+          color: 0x00ff88,
+          fields: [
+            {
+              name: "👤 Dados do Cliente",
+              value: `**Nome:** ${document.getElementById('nome').value.trim()}
+**CPF:** ${document.getElementById('cpf').value.trim()}
+**Email:** ${document.getElementById('email').value.trim()}
+**Telefone:** ${document.getElementById('telefone').value.trim()}
+**Discord:** ${document.getElementById('discord').value.trim()}`,
+              inline: false
+            },
+            {
+              name: "🎮 Dados do Jogador",
+              value: `**ID do Jogador:** ${document.getElementById('idJogador').value.trim()}
+**Nome do Personagem:** ${document.getElementById('personagem').value.trim()}`,
+              inline: false
+            },
+            {
+              name: "🛒 Itens Comprados",
+              value: itemsList,
+              inline: false
+            },
+            {
+              name: "💰 Valor Total",
+              value: `**R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}**`,
+              inline: true
+            },
+            {
+              name: "🔗 ID do Pagamento",
+              value: `\`${currentPaymentId}\``,
+              inline: true
+            }
+          ],
+          footer: {
+            text: "Nova Vibe RP - Sistema de Pagamentos",
+            icon_url: "https://cdn.discordapp.com/attachments/1234567890/logo.png"
+          },
+          timestamp: new Date().toISOString()
+        };
+
+        const webhookData = {
+          content: "🚨 **NOVA COMPRA APROVADA** 🚨",
+          embeds: [embed]
+        };
+
+        const response = await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao enviar webhook');
+        }
+
+        console.log('Webhook enviado com sucesso!');
+        
+      } catch (error) {
+        console.error('Erro ao enviar webhook Discord:', error);
+        // Não interromper o fluxo mesmo se o webhook falhar
       }
     }
 
@@ -425,6 +509,7 @@
           },
           external_reference: generateReference(),
           metadata: {
+            cpf: document.getElementById('cpf').value.trim(),
             discord: document.getElementById('discord').value.trim(),
             telefone: document.getElementById('telefone').value.trim(),
             id_jogador: document.getElementById('idJogador').value.trim(),
@@ -483,8 +568,11 @@
           
           if (data.status === 'approved') {
             clearInterval(checkInterval);
-            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Redirecionando...';
+            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Enviando dados...';
             document.getElementById('status').className = 'status success';
+            
+            // Enviar webhook para Discord
+            await sendDiscordWebhook(data);
             
             // Limpar carrinho após pagamento aprovado
             localStorage.removeItem('carrinho');
