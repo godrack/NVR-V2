@@ -2,151 +2,406 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Redefinir Senha — Nova Vibe RP</title>
   <style>
-    /* Seu CSS da página reset que você enviou */
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    * {
       margin: 0;
-      padding: 20px;
-    }
-    .container {
-      background: white;
-      padding: 30px 40px;
-      border-radius: 12px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-      max-width: 400px;
-      width: 100%;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #333;
-      text-align: center;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #555;
-    }
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 2px solid #ddd;
-      font-size: 16px;
-      margin-bottom: 20px;
+      padding: 0;
       box-sizing: border-box;
     }
-    button {
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      color: #333;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .logo p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e1e5e9;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
       width: 100%;
       padding: 12px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
       border: none;
       border-radius: 12px;
-      color: white;
-      font-weight: 700;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 15px;
     }
-    button:hover {
-      background: linear-gradient(135deg, #5a6cd4 0%, #633f8a 100%);
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
     }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: #667eea;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      display: block;
+      text-align: center;
+      width: 100%;
+    }
+
+    .link-btn:hover {
+      color: #764ba2;
+    }
+
     .alert {
       padding: 12px;
       border-radius: 8px;
       margin-bottom: 20px;
       font-size: 14px;
       font-weight: 500;
-      text-align: center;
     }
+
     .alert.error {
       background: #fee2e2;
       color: #dc2626;
       border: 1px solid #fecaca;
     }
+
     .alert.success {
       background: #dcfce7;
       color: #16a34a;
       border: 1px solid #bbf7d0;
     }
+
+    .password-strength {
+      margin-top: 8px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+
+    .strength-fill {
+      height: 100%;
+      transition: all 0.3s ease;
+      width: 0%;
+    }
+
+    .strength-text {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .loading-container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading-container .loading {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(102, 126, 234, 0.3);
+      border-top: 3px solid #667eea;
+      margin: 0 auto 15px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Redefinir Senha</h1>
-    <div id="alert"></div>
-    <form id="reset-form">
-      <label for="password">Nova senha</label>
-      <input type="password" id="password" required minlength="6" />
-      <label for="confirm-password">Confirmar nova senha</label>
-      <input type="password" id="confirm-password" required minlength="6" />
-      <button type="submit">Redefinir senha</button>
-    </form>
+    <div class="logo">
+      <h1>Nova Vibe RP</h1>
+      <p>Redefinir sua senha</p>
+    </div>
+
+    <!-- Loading inicial -->
+    <div id="loading-container" class="loading-container">
+      <div class="loading"></div>
+      <p>Verificando link de redefinição...</p>
+    </div>
+
+    <!-- Formulário de nova senha -->
+    <div id="reset-form" style="display: none;">
+      <div id="reset-alert"></div>
+      <form id="reset-form-element">
+        <div class="form-group">
+          <label for="new-password">Nova senha</label>
+          <input type="password" id="new-password" required />
+          <div class="password-strength">
+            <div class="strength-bar">
+              <div id="strength-fill" class="strength-fill"></div>
+            </div>
+            <div id="strength-text" class="strength-text">Muito fraca</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirmar nova senha</label>
+          <input type="password" id="confirm-password" required />
+        </div>
+        <button type="submit" id="reset-btn" class="btn">Redefinir senha</button>
+      </form>
+    </div>
+
+    <!-- Erro/Sucesso -->
+    <div id="error-container" style="display: none;">
+      <div id="error-alert"></div>
+      <button type="button" id="back-to-login" class="link-btn">Voltar ao login</button>
+    </div>
+
+    <div id="success-container" style="display: none;">
+      <div id="success-alert"></div>
+      <button type="button" id="go-to-login" class="link-btn">Ir para o login</button>
+    </div>
   </div>
 
   <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
   <script>
-    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';  // substitua
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU'; // substitua
+    // Configurar Supabase
+    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+    
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
-    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    // Elementos
+    const loadingContainer = document.getElementById('loading-container');
+    const resetForm = document.getElementById('reset-form');
+    const errorContainer = document.getElementById('error-container');
+    const successContainer = document.getElementById('success-container');
 
-    const alertEl = document.getElementById('alert');
-    const form = document.getElementById('reset-form');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const access_token = urlParams.get('access_token');
-
-    if (!access_token) {
-      alertEl.innerHTML = '<div class="alert error">Token de redefinição não encontrado na URL.</div>';
-      form.style.display = 'none';
+    function showAlert(containerId, message, type = 'error') {
+      const alertDiv = document.getElementById(`${containerId}-alert`);
+      alertDiv.innerHTML = `<div class="alert ${type}">${message}</div>`;
     }
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      alertEl.innerHTML = '';
+    function showContainer(containerName) {
+      // Esconder todos os containers
+      loadingContainer.style.display = 'none';
+      resetForm.style.display = 'none';
+      errorContainer.style.display = 'none';
+      successContainer.style.display = 'none';
+      
+      // Mostrar o container desejado
+      document.getElementById(`${containerName}-container`).style.display = 'block';
+    }
 
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirm-password').value;
+    // Indicador de força da senha
+    document.getElementById('new-password').addEventListener('input', function() {
+      const p = this.value;
+      const fill = document.getElementById('strength-fill');
+      const text = document.getElementById('strength-text');
+      let strength = 0;
 
-      if (password !== confirmPassword) {
-        alertEl.innerHTML = '<div class="alert error">As senhas não coincidem.</div>';
-        return;
-      }
+      if (p.length >= 8) strength++;
+      if (/[a-z]/.test(p)) strength++;
+      if (/[A-Z]/.test(p)) strength++;
+      if (/[0-9]/.test(p)) strength++;
+      if (/[^A-Za-z0-9]/.test(p)) strength++;
 
-      if (password.length < 6) {
-        alertEl.innerHTML = '<div class="alert error">A senha deve ter pelo menos 6 caracteres.</div>';
+      const colors = ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#16a34a'];
+      const labels = ['Muito fraca', 'Fraca', 'Média', 'Forte', 'Muito forte'];
+
+      fill.style.width = `${(strength / 5) * 100}%`;
+      fill.style.backgroundColor = colors[strength - 1] || '#ef4444';
+      text.textContent = labels[strength - 1] || 'Muito fraca';
+      text.style.color = colors[strength - 1] || '#ef4444';
+    });
+
+    // Verificar URL para access_token
+    async function checkResetToken() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get('access_token');
+      const refreshToken = urlParams.get('refresh_token');
+
+      if (!accessToken || !refreshToken) {
+        showAlert('error', 'Link de redefinição inválido ou expirado.');
+        showContainer('error');
         return;
       }
 
       try {
-        const { data, error } = await supabase.auth.updateUser(
-          { password: password },
-          { accessToken: access_token }
-        );
+        // Definir a sessão com os tokens
+        const { data, error } = await supabaseClient.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
 
         if (error) {
-          alertEl.innerHTML = `<div class="alert error">Erro: ${error.message}</div>`;
-          return;
+          throw error;
         }
 
-        alertEl.innerHTML = '<div class="alert success">Senha redefinida com sucesso! Você pode fechar esta página e fazer login.</div>';
-        form.reset();
-        form.querySelector('button').disabled = true;
-      } catch (err) {
-        alertEl.innerHTML = `<div class="alert error">Erro inesperado: ${err.message}</div>`;
+        // Mostrar formulário de redefinição
+        resetForm.style.display = 'block';
+        loadingContainer.style.display = 'none';
+
+      } catch (error) {
+        showAlert('error', 'Link de redefinição inválido ou expirado.');
+        showContainer('error');
+      }
+    }
+
+    // Redefinir senha
+    document.getElementById('reset-form-element').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const btn = document.getElementById('reset-btn');
+
+      if (!newPassword || !confirmPassword) {
+        showAlert('reset', 'Por favor, preencha todos os campos');
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showAlert('reset', 'As senhas não coincidem');
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        showAlert('reset', 'A senha deve ter pelo menos 6 caracteres');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading"></span> Redefinindo...';
+
+      try {
+        const { error } = await supabaseClient.auth.updateUser({
+          password: newPassword
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        showAlert('success', 'Senha redefinida com sucesso! Você já pode fazer login.', 'success');
+        showContainer('success');
+
+      } catch (error) {
+        let errorMessage = 'Erro ao redefinir senha';
+        
+        if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        showAlert('reset', errorMessage);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Redefinir senha';
       }
     });
+
+    // Botões de navegação
+    document.getElementById('back-to-login').addEventListener('click', () => {
+      window.location.href = '/'; // ou o caminho para sua página de login
+    });
+
+    document.getElementById('go-to-login').addEventListener('click', () => {
+      window.location.href = '/'; // ou o caminho para sua página de login
+    });
+
+    // Inicializar
+    checkResetToken();
   </script>
 </body>
 </html>
