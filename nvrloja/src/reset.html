@@ -313,6 +313,8 @@
             border: 1px solid #374151;
         }
 
+
+
         @media (max-width: 480px) {
             .container {
                 padding: 32px 24px;
@@ -338,6 +340,8 @@
             <div class="logo">🔐</div>
             <h1>Nova Senha</h1>
             <p class="subtitle">Crie uma senha forte e segura para sua conta</p>
+            
+
             
             <form id="passwordForm">
                 <div class="form-group">
@@ -403,20 +407,12 @@
     </div>
 
     <script>
-        // Configuração do Supabase - Pegando das variáveis de ambiente
-        const SUPABASE_URL = process.env.SUPABASEURL || 'https://your-project.supabase.co';
-        const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
+        // Configuração do Supabase - DEFINA SUAS CREDENCIAIS AQUI
+        const SUPABASE_URL = 'https://czsnjdoxguldtznixcdj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
         
-        // Fallback para desenvolvimento - remova em produção
-        const ACTUAL_SUPABASE_URL = SUPABASEURL === 'https://your-project.supabase.co' 
-            ? (window.ENV?.SUPABASEURL || 'https://your-project.supabase.co')
-            : SUPABASE_URL;
-            
-        const ACTUAL_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY === 'your-anon-key'
-            ? (window.ENV?.SUPABASE_ANON_KEY || 'your-anon-key')
-            : SUPABASE_ANON_KEY;
-        
-        const supabase = window.supabase.createClient(ACTUAL_SUPABASE_URL, ACTUAL_SUPABASE_ANON_KEY);
+        // Inicializar Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Elementos DOM
         const form = document.getElementById('passwordForm');
@@ -438,6 +434,29 @@
             number: { element: document.getElementById('req-number'), test: (p) => /\d/.test(p) },
             special: { element: document.getElementById('req-special'), test: (p) => /[!@#$%^&*(),.?":{}|<>]/.test(p) }
         };
+
+        // Verificar tokens na URL
+        function checkUrlTokens() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessToken = urlParams.get('access_token');
+            const refreshToken = urlParams.get('refresh_token');
+            const type = urlParams.get('type');
+
+            if (accessToken && refreshToken && type === 'recovery') {
+                // Definir sessão com os tokens
+                supabase.auth.setSession({
+                    access_token: accessToken,
+                    refresh_token: refreshToken
+                }).then(({ data, error }) => {
+                    if (error) {
+                        console.error('Erro ao definir sessão:', error);
+                        showError('Erro ao autenticar. Verifique o link de recuperação.');
+                    } else {
+                        showSuccess('Autenticado com sucesso! Você pode redefinir sua senha.', 3000);
+                    }
+                });
+            }
+        }
 
         // Verificar requisitos da senha
         function checkPasswordRequirements(password) {
@@ -497,22 +516,22 @@
                 if (progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
-                        showSuccess();
+                        showSuccessScreen();
                     }, 300);
                 }
-            }, 100); // 5 segundos total (100 incrementos de 50ms)
+            }, 50);
         }
 
         // Mostrar tela de sucesso
-        function showSuccess() {
+        function showSuccessScreen() {
             formContainer.classList.add('hidden');
             successContainer.style.display = 'block';
         }
 
         // Ir para a loja
         function goToStore() {
-            // Substitua pela URL da sua loja
-            window.location.href = '/loja';
+            // Redirecionar para a página de login ou loja
+            window.location.href = '/login';
         }
 
         // Mostrar erro
@@ -523,6 +542,22 @@
             setTimeout(() => {
                 errorMessage.style.display = 'none';
             }, 5000);
+        }
+
+        // Mostrar sucesso temporário
+        function showSuccess(message, duration = 3000) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'error-message';
+            successDiv.style.background = '#1f2937';
+            successDiv.style.color = '#10b981';
+            successDiv.style.border = '1px solid #10b981';
+            successDiv.textContent = message;
+            
+            form.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, duration);
         }
 
         // Event listeners
@@ -569,7 +604,7 @@
                 
             } catch (error) {
                 console.error('Erro ao atualizar senha:', error);
-                showError('Erro ao redefinir senha. Tente novamente ou entre em contato com o suporte.');
+                showError(`Erro ao redefinir senha: ${error.message}`);
                 
                 // Reabilitar botão
                 submitBtn.disabled = false;
@@ -577,26 +612,11 @@
             }
         });
 
-        // Verificar se o usuário está autenticado ao carregar a página
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (!session && event !== 'PASSWORD_RECOVERY') {
-                // Usuário não está autenticado, redirecionar para login
-                window.location.href = '/login';
-            }
+        // Inicialização
+        window.addEventListener('load', () => {
+            // Verificar tokens na URL ao carregar
+            checkUrlTokens();
         });
-
-        // Verificar parâmetros da URL para tokens de recuperação
-        const urlParams = new URLSearchParams(window.location.search);
-        const accessToken = urlParams.get('access_token');
-        const refreshToken = urlParams.get('refresh_token');
-
-        if (accessToken && refreshToken) {
-            // Definir sessão com os tokens
-            supabase.auth.setSession({
-                access_token: accessToken,
-                refresh_token: refreshToken
-            });
-        }
     </script>
 </body>
 </html>
