@@ -197,7 +197,8 @@
         🛒 Carrinho
         <span id="cart-badge-header" class="cart-badge" style="display: none;">0</span>
       </button>
-      <button class="header-btn logout" onclick="fazerLogout()">Sair</button>
+      <button class="header-btn login" id="login-btn" onclick="irParaLogin()" style="display: block;">Entrar</button>
+      <button class="header-btn logout" id="logout-btn" onclick="fazerLogout()" style="display: none;">Sair</button>
     </div>
   </div>
 </header>
@@ -229,7 +230,7 @@
       <h3>Lamborghini Urus</h3>
       <p>V12 Biturbo, o mais veloz da cidade.</p>
       <p><strong>R$ 1,00</strong></p>
-      <button onclick="addToCart('Ferrari 488 GTB', 1)">Adicionar ao Carrinho</button>
+      <button onclick="addToCart('Lamborghini Urus', 1)">Adicionar ao Carrinho</button>
     </div>
 
     <div class="product-item" data-category="extras">
@@ -284,21 +285,27 @@
 </div>
 
 <script>
-  // Verificar se o cliente está logado ANTES de qualquer outra coisa
-  (function verificarLogin() {
+  // Verificar status de login no carregamento da página
+  function verificarStatusLogin() {
     const cliente = JSON.parse(localStorage.getItem('cliente'));
-    if (!cliente || !cliente.nome || !cliente.email) {
-      alert("Você precisa estar logado para acessar a loja.");
-      window.location.href = "login.html";
-      return;
-    }
-
-    // Mostrar saudação ao cliente
-    const primeiroNome = cliente.nome.trim().split(' ')[0];
     const userGreeting = document.getElementById('user-greeting');
-    userGreeting.textContent = `Olá, ${primeiroNome}`;
-    userGreeting.style.display = 'block';
-  })();
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    if (cliente && cliente.nome && cliente.email) {
+      // Usuário está logado
+      const primeiroNome = cliente.nome.trim().split(' ')[0];
+      userGreeting.textContent = `Olá, ${primeiroNome}`;
+      userGreeting.style.display = 'block';
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'block';
+    } else {
+      // Usuário não está logado
+      userGreeting.style.display = 'none';
+      loginBtn.style.display = 'block';
+      logoutBtn.style.display = 'none';
+    }
+  }
 
   // Elementos do DOM
   const cartItems = document.getElementById('cart-items');
@@ -310,8 +317,21 @@
   // Estado da aplicação
   let carrinho = [];
 
+  // Função para verificar se está logado
+  function verificarLogin() {
+    const cliente = JSON.parse(localStorage.getItem('cliente'));
+    return cliente && cliente.nome && cliente.email;
+  }
+
   // Função para adicionar ao carrinho
   function addToCart(produto, preco) {
+    // Verificar se o usuário está logado apenas ao tentar adicionar ao carrinho
+    if (!verificarLogin()) {
+      alert("Você precisa estar logado para adicionar itens ao carrinho.");
+      window.location.href = "login.html";
+      return;
+    }
+
     const itemExistente = carrinho.find(item => item.produto === produto);
     if (itemExistente) {
       itemExistente.quantidade++;
@@ -452,8 +472,20 @@
       return;
     }
     
+    // Verificar se está logado antes de finalizar
+    if (!verificarLogin()) {
+      alert("Você precisa estar logado para finalizar a compra.");
+      window.location.href = "login.html";
+      return;
+    }
+    
     // Redirecionar para checkout.html
     window.location.href = 'checkout.html';
+  }
+
+  // Função para ir para a página de login
+  function irParaLogin() {
+    window.location.href = 'login.html';
   }
 
   // Função para filtrar produtos
@@ -489,7 +521,9 @@
       localStorage.removeItem('cliente');
       localStorage.removeItem('carrinho');
       alert('Logout realizado com sucesso!');
-      window.location.href = 'login.html';
+      verificarStatusLogin(); // Atualizar interface
+      carrinho = []; // Limpar carrinho da sessão
+      atualizarCarrinho(); // Atualizar display do carrinho
     }
   }
 
@@ -500,10 +534,11 @@
     }
   });
 
-  window.location.href = `index.html?user=${encodeURIComponent(user.email)}`;
-
-  // Inicializar carrinho
-  carregarCarrinho();
+  // Inicializar quando a página carregar
+  document.addEventListener('DOMContentLoaded', function() {
+    verificarStatusLogin();
+    carregarCarrinho();
+  });
 </script>
 
 </body>
