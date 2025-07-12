@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout — Nova Vibe RP</title>
   <style>
+    /* Seu CSS original aqui (mesmo que você enviou) */
     body { 
       background: #121216; 
       color: #fff; 
@@ -225,6 +226,8 @@
   <script>
     const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
     const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
+    const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+
     let checkInterval = null;
     let currentPaymentId = null;
 
@@ -295,7 +298,10 @@
 
         const response = await fetch(createPaymentURL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_TOKEN}`
+          },
           body: JSON.stringify(paymentData)
         });
 
@@ -338,7 +344,9 @@
       
       checkInterval = setInterval(async () => {
         try {
-          const response = await fetch(`${checkPaymentURL}?payment_id=${paymentId}`);
+          const response = await fetch(`${checkPaymentURL}?payment_id=${paymentId}`, {
+            headers: { 'Authorization': `Bearer ${API_TOKEN}` }
+          });
           const data = await response.json();
           
           if (data.status === 'approved') {
