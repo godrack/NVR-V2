@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout — Nova Vibe RP</title>
   <style>
-    /* Seu CSS original aqui (mesmo que você enviou) */
     body { 
       background: #121216; 
       color: #fff; 
@@ -24,6 +23,30 @@
       text-align: center;
       color: #00ff88;
       margin-bottom: 30px;
+    }
+    .product-list {
+      background: #2a2a2e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+    .product-list p {
+      margin: 6px 0;
+      font-size: 1rem;
+    }
+    .product-list p span {
+      float: right;
+      font-weight: bold;
+      color: #00ff88;
+    }
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: right;
+      margin-bottom: 30px;
+      color: #00ff88;
     }
     .form-group {
       margin-bottom: 20px;
@@ -143,65 +166,49 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    .product-info {
-      background: #2a2a2e;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      border-left: 4px solid #00ff88;
-    }
-    .price {
-      font-size: 24px;
-      font-weight: bold;
-      color: #00ff88;
-      text-align: center;
-      margin: 10px 0;
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Nova Vibe RP — Checkout</h1>
-    
-    <div class="product-info">
-      <h3>🎮 VIP Mensal + 500k Dinheiro</h3>
-      <p>• Acesso completo ao VIP por 30 dias</p>
-      <p>• 500.000 em dinheiro no jogo</p>
-      <p>• Vantagens exclusivas e benefícios</p>
-      <div class="price">R$ 0,05</div>
+
+    <div class="product-list" id="product-list">
+      <!-- Itens do carrinho vão aqui -->
     </div>
+
+    <div class="total" id="total-value">Total: R$ 0,00</div>
 
     <div id="form-area">
       <div class="form-group">
         <label for="nome">Nome Completo:</label>
         <input type="text" id="nome" placeholder="Digite seu nome completo" required>
       </div>
-      
+
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" placeholder="seu@email.com" required>
       </div>
-      
+
       <div class="form-group">
         <label for="telefone">Telefone:</label>
         <input type="text" id="telefone" placeholder="(11) 99999-9999" required>
       </div>
-      
+
       <div class="form-group">
         <label for="discord">Discord:</label>
         <input type="text" id="discord" placeholder="SeuNome#1234" required>
       </div>
-      
+
       <div class="form-group">
         <label for="idJogador">ID do Jogador:</label>
         <input type="number" id="idJogador" placeholder="123456" required>
       </div>
-      
+
       <div class="form-group">
         <label for="personagem">Nome do Personagem:</label>
         <input type="text" id="personagem" placeholder="Nome do seu personagem" required>
       </div>
-      
+
       <button id="payBtn" onclick="processPayment()">
         <span id="btnText">🔥 Pagar via PIX</span>
         <span id="btnLoading" class="loading" style="display:none;"></span>
@@ -223,173 +230,105 @@
     </div>
   </div>
 
-  <script>
-    const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
-    const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
-    const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+<script>
+  // URLs e token da API (substitua pelos seus)
+  const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
+  const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
+  const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
 
-    let checkInterval = null;
-    let currentPaymentId = null;
+  let checkInterval = null;
+  let currentPaymentId = null;
 
-    function generateReference() {
-      return 'NVRP_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+  // Função para carregar carrinho do localStorage e mostrar na tela
+  function carregarCarrinho() {
+    const carrinhoSalvo = localStorage.getItem('carrinho');
+    if (!carrinhoSalvo) {
+      alert('Carrinho vazio! Volte para a loja e adicione produtos.');
+      window.location.href = 'index.html'; // volta para loja
+      return null;
     }
 
-    function validateForm() {
-      const fields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
-      for (let field of fields) {
-        const value = document.getElementById(field).value.trim();
-        if (!value) {
-          alert(`Por favor, preencha o campo ${field}`);
-          document.getElementById(field).focus();
-          return false;
-        }
-      }
-      
-      const email = document.getElementById('email').value;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert('Por favor, insira um email válido');
-        document.getElementById('email').focus();
+    const carrinho = JSON.parse(carrinhoSalvo);
+    if (!carrinho.length) {
+      alert('Carrinho vazio! Volte para a loja e adicione produtos.');
+      window.location.href = 'index.html';
+      return null;
+    }
+
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = '';
+
+    let total = 0;
+    carrinho.forEach(item => {
+      const p = document.createElement('p');
+      p.textContent = `${item.produto} (x${item.quantidade})`;
+      const span = document.createElement('span');
+      const valorTotalItem = item.preco * item.quantidade;
+      span.textContent = `R$ ${valorTotalItem.toFixed(2).replace('.', ',')}`;
+      p.appendChild(span);
+      productList.appendChild(p);
+      total += valorTotalItem;
+    });
+
+    document.getElementById('total-value').textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+
+    return { carrinho, total };
+  }
+
+  // Função para carregar dados do cliente do localStorage e preencher formulário
+  function carregarDadosCliente() {
+    const cliente = JSON.parse(localStorage.getItem('cliente'));
+    if (!cliente) {
+      alert('Cliente não encontrado. Faça login antes de continuar.');
+      window.location.href = 'login.html';
+      return null;
+    }
+    document.getElementById('nome').value = cliente.nome || '';
+    document.getElementById('email').value = cliente.email || '';
+    document.getElementById('telefone').value = cliente.telefone || '';
+    document.getElementById('discord').value = cliente.discord || '';
+    document.getElementById('idJogador').value = cliente.idJogador || '';
+    document.getElementById('personagem').value = cliente.personagem || '';
+    return cliente;
+  }
+
+  // Validação simples do formulário
+  function validateForm() {
+    const fields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
+    for (let field of fields) {
+      const value = document.getElementById(field).value.trim();
+      if (!value) {
+        alert(`Por favor, preencha o campo ${field}`);
+        document.getElementById(field).focus();
         return false;
       }
-      
-      return true;
     }
-
-    function setLoading(loading) {
-      const btn = document.getElementById('payBtn');
-      const btnText = document.getElementById('btnText');
-      const btnLoading = document.getElementById('btnLoading');
-      
-      if (loading) {
-        btn.disabled = true;
-        btnText.style.display = 'none';
-        btnLoading.style.display = 'inline-block';
-      } else {
-        btn.disabled = false;
-        btnText.style.display = 'inline-block';
-        btnLoading.style.display = 'none';
-      }
+    // Email regex
+    const email = document.getElementById('email').value;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Por favor, insira um email válido');
+      document.getElementById('email').focus();
+      return false;
     }
+    return true;
+  }
 
-    async function processPayment() {
-      if (!validateForm()) return;
-      
-      setLoading(true);
-      
-      try {
-        const paymentData = {
-          transaction_amount: 44.90,
-          description: 'Nova Vibe RP - VIP Mensal + 500k Dinheiro',
-          payer: {
-            email: document.getElementById('email').value.trim(),
-            first_name: document.getElementById('nome').value.trim().split(' ')[0],
-            last_name: document.getElementById('nome').value.trim().split(' ').slice(1).join(' ') || 'Cliente'
-          },
-          external_reference: generateReference(),
-          metadata: {
-            discord: document.getElementById('discord').value.trim(),
-            telefone: document.getElementById('telefone').value.trim(),
-            id_jogador: document.getElementById('idJogador').value.trim(),
-            personagem: document.getElementById('personagem').value.trim()
-          }
-        };
-
-        const response = await fetch(createPaymentURL, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_TOKEN}`
-          },
-          body: JSON.stringify(paymentData)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Erro ao criar pagamento');
-        }
-
-        if (data.status !== 'pending') {
-          throw new Error('Erro ao gerar PIX. Tente novamente.');
-        }
-
-        currentPaymentId = data.id;
-        
-        // Mostrar área de pagamento
-        document.getElementById('form-area').style.display = 'none';
-        document.getElementById('payment-area').style.display = 'block';
-        
-        // Mostrar QR Code
-        const qrCodeImg = `<img src="data:image/png;base64,${data.point_of_interaction.transaction_data.qr_code_base64}" alt="QR Code PIX">`;
-        document.getElementById('qr-code').innerHTML = qrCodeImg;
-        
-        // Mostrar código PIX
-        document.getElementById('pix-text').textContent = data.point_of_interaction.transaction_data.qr_code;
-        
-        // Iniciar verificação de status
-        checkPaymentStatus(data.id);
-        
-      } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro: ' + error.message);
-      } finally {
-        setLoading(false);
-      }
+  // Controle botão loading
+  function setLoading(loading) {
+    const btn = document.getElementById('payBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoading = document.getElementById('btnLoading');
+    if (loading) {
+      btn.disabled = true;
+      btnText.style.display = 'none';
+      btnLoading.style.display = 'inline-block';
+    } else {
+      btn.disabled = false;
+      btnText.style.display = 'inline-block';
+      btnLoading.style.display = 'none';
     }
+  }
 
-    async function checkPaymentStatus(paymentId) {
-      if (checkInterval) clearInterval(checkInterval);
-      
-      checkInterval = setInterval(async () => {
-        try {
-          const response = await fetch(`${checkPaymentURL}?payment_id=${paymentId}`, {
-            headers: { 'Authorization': `Bearer ${API_TOKEN}` }
-          });
-          const data = await response.json();
-          
-          if (data.status === 'approved') {
-            clearInterval(checkInterval);
-            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Obrigado pela compra!';
-            document.getElementById('status').className = 'status success';
-            
-            // Mostrar mensagem de sucesso
-            setTimeout(() => {
-              alert('🎉 Pagamento confirmado! Você receberá as informações no Discord em breve.');
-            }, 1000);
-            
-          } else if (data.status === 'rejected' || data.status === 'cancelled') {
-            clearInterval(checkInterval);
-            document.getElementById('status').innerHTML = '❌ Pagamento cancelado ou rejeitado';
-            document.getElementById('status').className = 'status error';
-          }
-        } catch (error) {
-          console.error('Erro ao verificar status:', error);
-        }
-      }, 5000);
-    }
-
-    function copyPixCode() {
-      const pixText = document.getElementById('pix-text').textContent;
-      navigator.clipboard.writeText(pixText).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        const originalText = btn.textContent;
-        btn.textContent = 'Copiado!';
-        btn.style.background = '#27ae60';
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.style.background = '#00ff88';
-        }, 2000);
-      });
-    }
-
-    // Limpeza ao sair da página
-    window.addEventListener('beforeunload', () => {
-      if (checkInterval) {
-        clearInterval(checkInterval);
-      }
-    });
-  </script>
-</body>
-</html>
+  // Gera uma referência única para a compra
+  function generate
