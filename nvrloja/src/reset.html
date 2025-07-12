@@ -374,38 +374,13 @@
           throw error;
         }
 
-        // Obter dados do usuário atual
-        const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+        // Fazer logout após redefinir a senha
+        await supabaseClient.auth.signOut();
         
-        if (userError) {
-          throw userError;
-        }
+        // Limpar qualquer dado do localStorage
+        localStorage.removeItem('nova_vibe_user');
 
-        // Obter sessão atual
-        const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
-        
-        if (sessionError) {
-          throw sessionError;
-        }
-
-        // Salvar dados do usuário no localStorage (mesmo padrão do login)
-        const userDataToStore = {
-          id: userData.user.id,
-          email: userData.user.email,
-          name: userData.user.user_metadata?.full_name || userData.user.email,
-          user_metadata: userData.user.user_metadata,
-          access_token: sessionData.session.access_token,
-          refresh_token: sessionData.session.refresh_token,
-          expires_at: sessionData.session.expires_at,
-          logged_in: true,
-          login_time: new Date().toISOString(),
-          email_confirmed: userData.user.email_confirmed_at ? true : false
-        };
-        
-        // Salvar no localStorage
-        localStorage.setItem('nova_vibe_user', JSON.stringify(userDataToStore));
-
-        showAlert('success', 'Senha redefinida com sucesso! Você já pode fazer login.', 'success');
+        showAlert('success', 'Senha redefinida com sucesso! Agora você pode fazer login com sua nova senha.', 'success');
         showContainer('success');
 
       } catch (error) {
@@ -428,21 +403,7 @@
     });
 
     document.getElementById('go-to-login').addEventListener('click', () => {
-      // Verificar se já está logado e redirecionar para a loja
-      const storedUser = localStorage.getItem('nova_vibe_user');
-      if (storedUser) {
-        try {
-          const userData = JSON.parse(storedUser);
-          if (userData.logged_in && userData.expires_at && new Date(userData.expires_at * 1000) > new Date()) {
-            window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
-            return;
-          }
-        } catch (error) {
-          console.error('Erro ao verificar usuário logado:', error);
-        }
-      }
-      
-      // Se não estiver logado, ir para o login
+      // Sempre ir para o login após redefinir a senha
       window.location.href = 'https://novaviberoleplay.netlify.app/';
     });
 
