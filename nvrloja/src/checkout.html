@@ -5,102 +5,383 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Checkout — Nova Vibe RP</title>
   <style>
-    body { background: #121216; color: #fff; font-family: sans-serif; padding: 20px; }
-    input, button { padding: 10px; margin: 5px 0; width: 100%; }
-    .qr-code img { max-width: 250px; margin: 20px auto; display: block; }
-    .pix-code { background: #222; padding: 10px; word-break: break-all; margin: 10px 0; }
-    .status { margin: 10px 0; padding: 10px; border-radius: 5px; }
-    .success { background: #27ae60; color: #fff; }
-    .error { background: #e74c3c; color: #fff; }
-    .pending { background: #f1c40f; color: #000; }
+    body { 
+      background: #121216; 
+      color: #fff; 
+      font-family: sans-serif; 
+      padding: 20px; 
+      max-width: 600px; 
+      margin: 0 auto; 
+    }
+    .container {
+      background: #1a1a1e;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    h1 {
+      text-align: center;
+      color: #00ff88;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #ccc;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      background: #2a2a2e;
+      color: #fff;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input:focus {
+      outline: none;
+      border-color: #00ff88;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #00ff88, #00cc6a);
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #00cc6a, #00ff88);
+      transform: translateY(-2px);
+    }
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .payment-area {
+      margin-top: 30px;
+      padding: 20px;
+      background: #2a2a2e;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .qr-code img {
+      max-width: 280px;
+      margin: 20px auto;
+      display: block;
+      border: 3px solid #00ff88;
+      border-radius: 10px;
+    }
+    .pix-code {
+      background: #333;
+      padding: 15px;
+      word-break: break-all;
+      margin: 20px 0;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 14px;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #00ff88;
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+      width: auto;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .success {
+      background: #27ae60;
+      color: #fff;
+    }
+    .error {
+      background: #e74c3c;
+      color: #fff;
+    }
+    .pending {
+      background: #f1c40f;
+      color: #000;
+    }
+    .info {
+      background: #3498db;
+      color: #fff;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #00ff88;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .product-info {
+      background: #2a2a2e;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      border-left: 4px solid #00ff88;
+    }
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ff88;
+      text-align: center;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Nova Vibe RP — Checkout</h1>
+    
+    <div class="product-info">
+      <h3>🎮 VIP Mensal + 500k Dinheiro</h3>
+      <p>• Acesso completo ao VIP por 30 dias</p>
+      <p>• 500.000 em dinheiro no jogo</p>
+      <p>• Vantagens exclusivas e benefícios</p>
+      <div class="price">R$ 44,90</div>
+    </div>
 
-  <h1>Nova Vibe RP — Checkout</h1>
+    <div id="form-area">
+      <div class="form-group">
+        <label for="nome">Nome Completo:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="seu@email.com" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" placeholder="(11) 99999-9999" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="discord">Discord:</label>
+        <input type="text" id="discord" placeholder="SeuNome#1234" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="idJogador">ID do Jogador:</label>
+        <input type="number" id="idJogador" placeholder="123456" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="personagem">Nome do Personagem:</label>
+        <input type="text" id="personagem" placeholder="Nome do seu personagem" required>
+      </div>
+      
+      <button id="payBtn" onclick="processPayment()">
+        <span id="btnText">🔥 Pagar via PIX</span>
+        <span id="btnLoading" class="loading" style="display:none;"></span>
+      </button>
+    </div>
 
-  <div>
-    <label>Nome:</label>
-    <input type="text" id="nome">
-    <label>Email:</label>
-    <input type="email" id="email">
-    <label>Telefone:</label>
-    <input type="text" id="telefone">
-    <label>Discord:</label>
-    <input type="text" id="discord">
-    <label>ID do Jogador:</label>
-    <input type="number" id="idJogador">
-    <label>Personagem:</label>
-    <input type="text" id="personagem">
-    <button onclick="processPayment()">Pagar via PIX</button>
-  </div>
-
-  <div id="payment-area" style="display:none;">
-    <div class="qr-code" id="qr-code"></div>
-    <div class="pix-code" id="pix-code"></div>
-    <div id="status" class="status pending">Aguardando pagamento...</div>
+    <div id="payment-area" class="payment-area" style="display:none;">
+      <h3>💳 Pagamento PIX</h3>
+      <div id="qr-code" class="qr-code"></div>
+      <div id="pix-code" class="pix-code">
+        <button class="copy-btn" onclick="copyPixCode()">Copiar</button>
+        <span id="pix-text"></span>
+      </div>
+      <div id="status" class="status pending">⏳ Aguardando pagamento...</div>
+      <div class="info">
+        <p>📱 Abra o app do seu banco e escaneie o QR Code ou cole o código PIX</p>
+        <p>⚡ O pagamento é processado instantaneamente</p>
+      </div>
+    </div>
   </div>
 
   <script>
-    const functionURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
+    const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
+    const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
     let checkInterval = null;
+    let currentPaymentId = null;
 
     function generateReference() {
       return 'NVRP_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     }
 
-    async function processPayment() {
-      const paymentData = {
-        transaction_amount: 44.90,
-        description: 'Nova Vibe RP - VIP Mensal + 500k Dinheiro',
-        payer: {
-          email: document.getElementById('email').value,
-          first_name: document.getElementById('nome').value.split(' ')[0],
-          last_name: document.getElementById('nome').value.split(' ').slice(1).join(' ') || 'Cliente'
-        },
-        external_reference: generateReference(),
-        metadata: {
-          discord: document.getElementById('discord').value,
-          telefone: document.getElementById('telefone').value,
-          id_jogador: document.getElementById('idJogador').value,
-          personagem: document.getElementById('personagem').value
+    function validateForm() {
+      const fields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
+      for (let field of fields) {
+        const value = document.getElementById(field).value.trim();
+        if (!value) {
+          alert(`Por favor, preencha o campo ${field}`);
+          document.getElementById(field).focus();
+          return false;
         }
-      };
-
-      const res = await fetch(functionURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(paymentData)
-      });
-
-      const data = await res.json();
-      if (data.status !== 'pending') {
-        alert('Erro ao criar pagamento!');
-        return;
       }
-
-      document.getElementById('payment-area').style.display = 'block';
-      document.getElementById('qr-code').innerHTML = `<img src="data:image/png;base64,${data.point_of_interaction.transaction_data.qr_code_base64}">`;
-      document.getElementById('pix-code').innerText = data.point_of_interaction.transaction_data.qr_code;
-
-      checkStatus(data.id);
+      
+      const email = document.getElementById('email').value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Por favor, insira um email válido');
+        document.getElementById('email').focus();
+        return false;
+      }
+      
+      return true;
     }
 
-    async function checkStatus(paymentId) {
-      if (checkInterval) clearInterval(checkInterval);
-      checkInterval = setInterval(async () => {
-        const res = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-          headers: { Authorization: `Bearer SEU_MP_TOKEN` }
+    function setLoading(loading) {
+      const btn = document.getElementById('payBtn');
+      const btnText = document.getElementById('btnText');
+      const btnLoading = document.getElementById('btnLoading');
+      
+      if (loading) {
+        btn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline-block';
+      } else {
+        btn.disabled = false;
+        btnText.style.display = 'inline-block';
+        btnLoading.style.display = 'none';
+      }
+    }
+
+    async function processPayment() {
+      if (!validateForm()) return;
+      
+      setLoading(true);
+      
+      try {
+        const paymentData = {
+          transaction_amount: 44.90,
+          description: 'Nova Vibe RP - VIP Mensal + 500k Dinheiro',
+          payer: {
+            email: document.getElementById('email').value.trim(),
+            first_name: document.getElementById('nome').value.trim().split(' ')[0],
+            last_name: document.getElementById('nome').value.trim().split(' ').slice(1).join(' ') || 'Cliente'
+          },
+          external_reference: generateReference(),
+          metadata: {
+            discord: document.getElementById('discord').value.trim(),
+            telefone: document.getElementById('telefone').value.trim(),
+            id_jogador: document.getElementById('idJogador').value.trim(),
+            personagem: document.getElementById('personagem').value.trim()
+          }
+        };
+
+        const response = await fetch(createPaymentURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(paymentData)
         });
-        const data = await res.json();
-        if (data.status === 'approved') {
-          clearInterval(checkInterval);
-          document.getElementById('status').innerText = '✅ Pagamento aprovado!';
-          document.getElementById('status').className = 'status success';
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Erro ao criar pagamento');
+        }
+
+        if (data.status !== 'pending') {
+          throw new Error('Erro ao gerar PIX. Tente novamente.');
+        }
+
+        currentPaymentId = data.id;
+        
+        // Mostrar área de pagamento
+        document.getElementById('form-area').style.display = 'none';
+        document.getElementById('payment-area').style.display = 'block';
+        
+        // Mostrar QR Code
+        const qrCodeImg = `<img src="data:image/png;base64,${data.point_of_interaction.transaction_data.qr_code_base64}" alt="QR Code PIX">`;
+        document.getElementById('qr-code').innerHTML = qrCodeImg;
+        
+        // Mostrar código PIX
+        document.getElementById('pix-text').textContent = data.point_of_interaction.transaction_data.qr_code;
+        
+        // Iniciar verificação de status
+        checkPaymentStatus(data.id);
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro: ' + error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function checkPaymentStatus(paymentId) {
+      if (checkInterval) clearInterval(checkInterval);
+      
+      checkInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`${checkPaymentURL}?payment_id=${paymentId}`);
+          const data = await response.json();
+          
+          if (data.status === 'approved') {
+            clearInterval(checkInterval);
+            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Obrigado pela compra!';
+            document.getElementById('status').className = 'status success';
+            
+            // Mostrar mensagem de sucesso
+            setTimeout(() => {
+              alert('🎉 Pagamento confirmado! Você receberá as informações no Discord em breve.');
+            }, 1000);
+            
+          } else if (data.status === 'rejected' || data.status === 'cancelled') {
+            clearInterval(checkInterval);
+            document.getElementById('status').innerHTML = '❌ Pagamento cancelado ou rejeitado';
+            document.getElementById('status').className = 'status error';
+          }
+        } catch (error) {
+          console.error('Erro ao verificar status:', error);
         }
       }, 5000);
     }
-  </script>
 
+    function copyPixCode() {
+      const pixText = document.getElementById('pix-text').textContent;
+      navigator.clipboard.writeText(pixText).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Copiado!';
+        btn.style.background = '#27ae60';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '#00ff88';
+        }, 2000);
+      });
+    }
+
+    // Limpeza ao sair da página
+    window.addEventListener('beforeunload', () => {
+      if (checkInterval) {
+        clearInterval(checkInterval);
+      }
+    });
+  </script>
 </body>
 </html>
