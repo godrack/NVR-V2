@@ -13,24 +13,26 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      color: #e2e8f0;
     }
 
     .container {
-      background: rgba(49, 49, 49, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      box-shadow: 0 25px 50px rgb(255, 252, 252);
-      padding: 40px;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      padding: 48px;
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       position: relative;
       overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .container::before {
@@ -40,24 +42,46 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #121212, #2e0101);
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    }
+
+    .container::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
     }
 
     .logo {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
     .logo h1 {
-      color: #333;
-      font-size: 28px;
+      color: #f8fafc;
+      font-size: 32px;
       font-weight: 700;
       margin-bottom: 8px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .logo p {
-      color: #666;
+      color: #94a3b8;
       font-size: 14px;
+      font-weight: 500;
     }
 
     .form-container {
@@ -66,21 +90,21 @@
 
     .form-container.active {
       display: block;
-      animation: fadeIn 0.3s ease-out;
+      animation: fadeIn 0.4s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
 
     label {
       display: block;
-      color: #333;
+      color: #f1f5f9;
       font-weight: 500;
       margin-bottom: 8px;
       font-size: 14px;
@@ -88,23 +112,30 @@
 
     input {
       width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e1e5e9;
+      padding: 14px 16px;
+      border: 2px solid #334155;
       border-radius: 12px;
       font-size: 16px;
       transition: all 0.3s ease;
-      background: white;
+      background: rgba(30, 41, 59, 0.5);
+      color: #f8fafc;
+      backdrop-filter: blur(10px);
+    }
+
+    input::placeholder {
+      color: #64748b;
     }
 
     input:focus {
       outline: none;
       border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+      background: rgba(30, 41, 59, 0.8);
     }
 
     .btn {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
@@ -117,9 +148,24 @@
       overflow: hidden;
     }
 
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
     .btn:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn:hover:not(:disabled)::before {
+      left: 100%;
     }
 
     .btn:disabled {
@@ -136,6 +182,7 @@
       border-top: 2px solid white;
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin-right: 8px;
     }
 
     @keyframes spin {
@@ -146,80 +193,103 @@
     .link-btn {
       background: none;
       border: none;
-      color: #2c0000;
+      color: #94a3b8;
       text-decoration: underline;
       cursor: pointer;
       font-size: 14px;
       padding: 0;
-      margin-top: 15px;
+      margin-top: 20px;
       display: block;
       text-align: center;
+      transition: color 0.3s ease;
     }
 
     .link-btn:hover {
-      color: #410101;
+      color: #667eea;
     }
 
     .alert {
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 24px;
       font-size: 14px;
       font-weight: 500;
+      backdrop-filter: blur(10px);
     }
 
     .alert.error {
-      background: #fee2e2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
     .alert.success {
-      background: #dcfce7;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
+      background: rgba(34, 197, 94, 0.1);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
     }
 
     .password-strength {
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
     .strength-bar {
-      height: 4px;
-      background: #e5e7eb;
-      border-radius: 2px;
+      height: 6px;
+      background: rgba(51, 65, 85, 0.5);
+      border-radius: 3px;
       overflow: hidden;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
 
     .strength-fill {
       height: 100%;
       transition: all 0.3s ease;
       width: 0%;
+      border-radius: 3px;
     }
 
     .strength-text {
       font-size: 12px;
       font-weight: 500;
+      color: #94a3b8;
     }
 
     .form-links {
       display: flex;
       justify-content: space-between;
-      margin-top: 20px;
+      margin-top: 24px;
     }
 
     .form-links button {
       background: none;
       border: none;
-      color: #667eea;
+      color: #94a3b8;
       font-size: 14px;
       cursor: pointer;
       text-decoration: underline;
+      transition: color 0.3s ease;
     }
 
     .form-links button:hover {
-      color: #764ba2;
+      color: #667eea;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 32px 24px;
+        margin: 10px;
+      }
+      
+      .logo h1 {
+        font-size: 28px;
+      }
+      
+      .form-links {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -236,11 +306,11 @@
       <form id="login-form-element">
         <div class="form-group">
           <label for="login-email">Email</label>
-          <input type="email" id="login-email" required />
+          <input type="email" id="login-email" placeholder="Digite seu email" required />
         </div>
         <div class="form-group">
           <label for="login-password">Senha</label>
-          <input type="password" id="login-password" required />
+          <input type="password" id="login-password" placeholder="Digite sua senha" required />
         </div>
         <button type="submit" id="login-btn" class="btn">Entrar</button>
         <div class="form-links">
@@ -256,15 +326,15 @@
       <form id="register-form-element">
         <div class="form-group">
           <label for="register-name">Nome completo</label>
-          <input type="text" id="register-name" required />
+          <input type="text" id="register-name" placeholder="Digite seu nome completo" required />
         </div>
         <div class="form-group">
           <label for="register-email">Email</label>
-          <input type="email" id="register-email" required />
+          <input type="email" id="register-email" placeholder="Digite seu email" required />
         </div>
         <div class="form-group">
           <label for="register-password">Senha</label>
-          <input type="password" id="register-password" required />
+          <input type="password" id="register-password" placeholder="Digite sua senha" required />
           <div class="password-strength">
             <div class="strength-bar">
               <div id="strength-fill" class="strength-fill"></div>
@@ -274,7 +344,7 @@
         </div>
         <div class="form-group">
           <label for="register-confirm">Confirmar senha</label>
-          <input type="password" id="register-confirm" required />
+          <input type="password" id="register-confirm" placeholder="Confirme sua senha" required />
         </div>
         <button type="submit" id="register-btn" class="btn">Criar conta</button>
         <button type="button" id="show-login" class="link-btn">Já tenho uma conta</button>
@@ -287,7 +357,7 @@
       <form id="forgot-form-element">
         <div class="form-group">
           <label for="forgot-email">Email</label>
-          <input type="email" id="forgot-email" required />
+          <input type="email" id="forgot-email" placeholder="Digite seu email para recuperação" required />
         </div>
         <button type="submit" id="forgot-btn" class="btn">Enviar link de recuperação</button>
         <button type="button" id="back-to-login" class="link-btn">Voltar ao login</button>
@@ -413,7 +483,7 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Entrando...';
+      btn.innerHTML = '<span class="loading"></span>Entrando...';
 
       try {
         const { data, error } = await supabaseClient.auth.signInWithPassword({ 
@@ -492,7 +562,7 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Verificando email...';
+      btn.innerHTML = '<span class="loading"></span>Verificando email...';
 
       try {
         // Verificar se o email já existe
@@ -503,7 +573,7 @@
           return;
         }
 
-        btn.innerHTML = '<span class="loading"></span> Criando conta...';
+        btn.innerHTML = '<span class="loading"></span>Criando conta...';
 
         const { data, error } = await supabaseClient.auth.signUp({
           email,
@@ -589,7 +659,7 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Enviando...';
+      btn.innerHTML = '<span class="loading"></span>Enviando...';
 
       try {
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
