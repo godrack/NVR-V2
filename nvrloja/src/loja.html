@@ -2,509 +2,592 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nova Vibe Roleplay — Loja Oficial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nova Vibe RP — Sua Jornada Começa Aqui</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { background: #121216; color: #fff; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
-    .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 20px 0; }
-    header { 
-      position: fixed; 
-      top: 0; 
-      left: 0; 
-      width: 100%; 
-      background: #121216; 
-      border-bottom: 1px solid #2f3a5a; 
-      z-index: 1001; 
-      padding: 10px 0; 
-    }
-    .header-content { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      width: 90%; 
-      max-width: 1200px; 
-      margin: 0 auto; 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     
-    .header-left h1 { 
-      font-size: 1.8rem; 
-      color: #fff; 
-      margin: 0; 
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
-    .header-left h1:hover {
-      color: #2f3a5a;
-    }
-    .header-right { 
-      display: flex; 
-      align-items: center; 
-      gap: 20px; 
-    }
-    .header-btn { 
-      background: transparent; 
-      border: 1px solid #2f3a5a; 
-      color: #fff; 
-      padding: 8px 12px; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      transition: all 0.3s ease; 
-      font-size: 0.9rem; 
-      display: flex; 
-      align-items: center; 
-      gap: 8px; 
-      text-decoration: none; 
-    }
-    .header-btn:hover { 
-      background: #2f3a5a; 
-      transform: translateY(-1px); 
-    }
-    .header-btn.login { 
-      background: #2f3a5a; 
-    }
-    .header-btn.login:hover { 
-      background: #3f4b76; 
-    }
-    .header-btn.logout { 
-      background: #e74c3c; 
-      border-color: #e74c3c;
-    }
-    .header-btn.logout:hover { 
-      background: #c0392b; 
-      border-color: #c0392b;
-    }
-    .user-greeting {
+    body {
+      background: linear-gradient(135deg, #121216 0%, #1c1e28 100%);
       color: #fff;
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-right: 10px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
     }
-    body { 
-      padding-top: 65px; 
-    }
-    nav { margin: 20px 0; text-align: center; padding: 10px 0; border-bottom: 1px solid #2f3a5a; }
-    nav a { color: #fff; text-decoration: none; padding: 10px 16px; margin: 0 6px; border-radius: 4px; transition: background 0.2s ease; cursor: pointer; }
-    nav a:hover { background: #2f3a5a; }
-    .intro { margin: 30px auto; text-align: center; font-size: 1rem; color: #ccc; line-height: 1.6; max-width: 750px; }
-    .filter-buttons { text-align: center; margin: 30px 0 15px; }
-    .filter-buttons button {
-      background: transparent; border: 1.5px solid #2f3a5a; color: #fff; padding: 8px 18px;
-      margin: 0 10px 10px 0; border-radius: 4px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; font-size: 0.9rem;
-    }
-    .filter-buttons button:hover, .filter-buttons button.active { background: #2f3a5a; }
-    .product-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .product-item { background: #1c1e28; border-radius: 8px; padding: 18px; display: flex; flex-direction: column; border: 1px solid transparent; transition: all 0.3s ease; }
-    .product-item:hover { border-color: #2f3a5a; transform: translateY(-2px); }
-    .product-item img { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; margin-bottom: 14px; background: #2f3a5a; }
-    .product-item h3 { margin-bottom: 10px; }
-    .product-item p { flex-grow: 1; color: #ccc; margin-bottom: 12px; font-size: 0.9rem; }
-    .product-item p strong { color: #fff; font-size: 1.05rem; }
-    .product-item button {
-      background: #2f3a5a; color: #fff; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: 600;
+    
+    /* Header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(18, 18, 22, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(47, 58, 90, 0.3);
+      z-index: 1000;
+      padding: 15px 0;
       transition: all 0.3s ease;
     }
-    .product-item button:hover { background: #3f4b76; transform: translateY(-1px); }
-    footer { margin-top: 50px; padding: 20px 0; text-align: center; border-top: 1px solid #2f3a5a; color: #bbb; font-size: 0.9rem; }
     
-    /* Cart Overlay */
-    #cart-overlay {
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 0.9rem;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: #fff;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #2f3a5a;
+    }
+    
+    .btn-secondary:hover {
+      background: #2f3a5a;
+      transform: translateY(-1px);
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #fff;
+    }
+    
+    .user-greeting {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    
+    .btn-logout {
+      background: #e74c3c;
+      color: #fff;
+      border: 1px solid #e74c3c;
+    }
+    
+    .btn-logout:hover {
+      background: #c0392b;
+      border-color: #c0392b;
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 80px 20px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+    
+    .hero-content {
+      max-width: 800px;
+      z-index: 1;
+    }
+    
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 3s ease-in-out infinite;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .hero p {
+      font-size: 1.3rem;
+      color: #a0a0a0;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn-hero {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      min-width: 180px;
+    }
+    
+    /* Features Section */
+    .features {
+      padding: 80px 20px;
+      background: rgba(28, 30, 40, 0.5);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .features h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      color: #fff;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+    
+    .feature-card {
+      background: rgba(28, 30, 40, 0.8);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(47, 58, 90, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    
+    .feature-card p {
+      color: #a0a0a0;
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    footer {
+      background: #121216;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid rgba(47, 58, 90, 0.3);
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: #a0a0a0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: #667eea;
+    }
+    
+    .footer-bottom {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    /* Loading Animation */
+    .loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
-      display: none;
-      backdrop-filter: blur(2px);
+      background: rgba(18, 18, 22, 0.9);
+      z-index: 9999;
     }
     
-    #cart {
-      position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #1c1e28;
-      color: #fff; padding: 20px; box-shadow: -4px 0 12px rgba(0,0,0,0.4); transition: right 0.3s ease;
-      overflow-y: auto; z-index: 1002; border-left: 1px solid #2f3a5a;
-    }
-    #cart.open { right: 0; }
-    #cart h2 { font-size: 1.4rem; margin-bottom: 15px; }
-    #cart-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
-    #cart ul { list-style: none; padding: 0; margin-bottom: 20px; }
-    #cart ul li {
-      margin-bottom: 10px; border-bottom: 1px solid #2f3a5a; padding-bottom: 8px; font-size: 0.9rem;
-    }
-    #cart ul li .item-info { margin-bottom: 5px; }
-    #cart ul li .item-controls { display: flex; align-items: center; gap: 10px; }
-    #cart ul li .item-controls button { 
-      background: #2f3a5a; border: none; color: #fff; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 0.8rem;
-    }
-    #cart ul li .item-controls button:hover { background: #3f4b76; }
-    #cart button { background: #3f4b76; border: none; color: #fff; padding: 10px; width: 100%; border-radius: 4px; cursor: pointer; font-weight: 600; margin-top: 10px; transition: all 0.3s ease; }
-    #cart button:hover { background: #4f5d9e; transform: translateY(-1px); }
-    
-    .cart-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: #e74c3c;
-      color: #fff;
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #333;
+      border-top: 4px solid #667eea;
       border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      font-weight: bold;
+      animation: spin 1s linear infinite;
     }
     
-    @media (max-width: 768px) { 
-      .product-list { grid-template-columns: repeat(2, 1fr); }
-      #cart { width: 100%; right: -100%; }
-      .header-right { gap: 10px; }
-      .header-btn { padding: 6px 10px; font-size: 0.8rem; }
-      .header-left h1 { font-size: 1.5rem; }
-      .user-greeting { font-size: 0.8rem; }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    @media (max-width: 500px) { 
-      .product-list { grid-template-columns: 1fr; }
-      .header-content { width: 95%; }
-      .header-right { gap: 8px; }
-      .header-btn { padding: 5px 8px; font-size: 0.75rem; }
-      .header-left h1 { font-size: 1.3rem; }
-      .user-greeting { font-size: 0.7rem; }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        width: 95%;
+      }
+      
+      .logo {
+        font-size: 1.5rem;
+      }
+      
+      .header-actions {
+        gap: 10px;
+      }
+      
+      .btn {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn-hero {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-links {
+        flex-direction: column;
+        gap: 15px;
+      }
     }
-    .product-item img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 6px;
-      margin-bottom: 14px;
-      background: #2f3a5a;
+    
+    @media (max-width: 480px) {
+      .hero {
+        padding: 60px 15px 0;
+      }
+      
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .feature-card {
+        padding: 20px;
+      }
+    }
+    
+    /* Scroll animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
-
-<header>
-  <div class="header-content">
-    <div class="header-left">
-      <h1 onclick="scrollToTop()">Nova Vibe Roleplay</h1>
-    </div>
-    <div class="header-right" id="header-right">
-      <!-- Botões aparecem baseado no status de login -->
-      <span id="user-greeting" class="user-greeting" style="display: none;"></span>
-      <button class="header-btn" onclick="openCart()" style="position: relative;">
-        🛒 Carrinho
-        <span id="cart-badge-header" class="cart-badge" style="display: none;">0</span>
-      </button>
-      <button class="header-btn logout" onclick="fazerLogout()">Sair</button>
-    </div>
+  <!-- Loading Screen -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
   </div>
-</header>
 
-<nav style="display: none;">
-  <a href="#" onclick="scrollToTop()">Início</a>
-</nav>
-
-<div class="filter-buttons">
-  <button data-filter="all" class="active" onclick="filterProducts('all')">Todos</button>
-  <button data-filter="casas" onclick="filterProducts('casas')">Casas</button>
-  <button data-filter="veiculos" onclick="filterProducts('veiculos')">Veículos</button>
-  <button data-filter="extras" onclick="filterProducts('extras')">Extras</button>
-</div>
-
-<!--PRODUTOS----------------------------------------------------------------------------------------------------->
-<main class="container">
-  <section class="product-list">
-    <div class="product-item" data-category="casas">
-      <img src="https://five-rp.de/wp-content/uploads/2024/07/chrome_nQisegy55l-1024x573.jpg.webp" alt="Mansão Vista Mar" />
-      <h3>Mansão Vista Mar</h3>
-      <p>Luxo à beira-mar com garagem p/ 5 carros.</p>
-      <p><strong>R$ 1,00</strong></p>
-      <button onclick="addToCart('Mansão Vista Mar', 1)">Adicionar ao Carrinho</button>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="logo" onclick="scrollToTop()">Nova Vibe RP</div>
+      <div class="header-actions" id="header-actions">
+        <!-- Conteúdo será preenchido pelo JavaScript -->
+      </div>
     </div>
+  </header>
 
-    <div class="product-item" data-category="veiculos">
-      <img src="https://img.gta5-mods.com/q95/images/lamborghini-urus-2018-add-on/2b9a2a-PGTA51544780450.jpg" alt="Supercarro ZX9" />
-      <h3>Lamborghini Urus</h3>
-      <p>V12 Biturbo, o mais veloz da cidade.</p>
-      <p><strong>R$ 1,00</strong></p>
-      <button onclick="addToCart('Ferrari 488 GTB', 1)">Adicionar ao Carrinho</button>
-    </div>
-
-    <div class="product-item" data-category="extras">
-      <img src="https://storage.hydrus.gg/production/packages/mwUds4zV929tBziSfiAs5gG64TqNnwOlcjCXZsKIqVPsixKUiR1DXeGtOUjmGPfq.png" alt="VIP Gold" />
-      <h3>VIP Ouro (30d)</h3>
-      <p>Acesso VIP com benefícios exclusivos.</p>
-      <p><strong>R$ 1,00</strong></p>
-      <button onclick="addToCart('VIP Ouro (30d)', 1)">Adicionar ao Carrinho</button>
-    </div>
-
-    <div class="product-item" data-category="casas">
-      <img src="https://img.gta5-mods.com/q95/images/single-player-mode-custom-apartment-menyoo-mapeditor-adco1234/6f0395-9e73e5-46f5ac-GTA5%202016-05-02%2012-17-12-54_%E5%89%AF%E6%9C%AC.png" alt="Apartamento Moderno" />
-      <h3>Apartamento Moderno</h3>
-      <p>Localização central com vista panorâmica.</p>
-      <p><strong>R$ 180,00</strong></p>
-      <button onclick="addToCart('Apartamento Moderno', 180)">Adicionar ao Carrinho</button>
-    </div>
-
-    <div class="product-item" data-category="veiculos">
-      <img src="https://img.gta5-mods.com/q95/images/2020-yamaha-yzf-r1-r1m/b82192-a.jpg" alt="Moto Esportiva" />
-      <h3>Moto Esportiva R1</h3>
-      <p>Velocidade e agilidade nas ruas.</p>
-      <p><strong>R$ 85,00</strong></p>
-      <button onclick="addToCart('Moto Esportiva R1', 85)">Adicionar ao Carrinho</button>
-    </div>
-
-    <div class="product-item" data-category="extras">
-      <img src="https://storage.hydrus.gg/production/packages/yKxKYS3wtu4Xz1Y6N2ui9TM0oTUpYOKTrLx7bTSqW8BREpXUWLp5wojEkwMRBkgc.png" alt="VIP Premium" />
-      <h3>VIP Permanente</h3>
-      <p>Máximo de privilégios no servidor.</p>
-      <p><strong>R$ 1.390,00</strong></p>
-      <button onclick="addToCart('VIP Permanente', 1390)">Adicionar ao Carrinho</button>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Nova Vibe RP</h1>
+      <p>Mergulhe na experiência de roleplay mais imersiva do Brasil. Crie sua história, viva aventuras únicas e faça parte de uma comunidade incrível.</p>
+      <div class="hero-buttons">
+        <a href="login2.html" class="btn btn-primary btn-hero">Começar Agora</a>
+        <a href="#features" class="btn btn-secondary btn-hero">Saiba Mais</a>
+      </div>
     </div>
   </section>
-</main>
 
-<footer>
-  <div class="container">&copy; 2025 Nova Vibe RP — Todos os direitos reservados.</div>
-</footer>
-
-<!-- Cart Overlay -->
-<div id="cart-overlay" onclick="closeCart()"></div>
-
-<div id="cart">
-  <h2>Carrinho</h2>
-  <ul id="cart-items"></ul>
-  <div id="cart-total" style="margin-top: 15px; font-weight: bold; font-size: 1rem; border-top: 1px solid #2f3a5a; padding-top: 15px;">
-    Total: R$ 0,00
-  </div>
-  <button id="finalizar-btn" style="display:none;" onclick="finalizarCompra()">Finalizar Compra</button>
-  <button id="limpar-btn" style="display:none;" onclick="limparCarrinho()">Limpar Carrinho</button>
-</div>
-
-<script>
-  // Verificar se o cliente está logado ANTES de qualquer outra coisa
-  (function verificarLogin() {
-    const cliente = JSON.parse(localStorage.getItem('cliente'));
-    if (!cliente || !cliente.nome || !cliente.email) {
-      alert("Você precisa estar logado para acessar a loja.");
-      window.location.href = "index.html";
-      return;
-    }
-
-    // Mostrar saudação ao cliente
-    const primeiroNome = cliente.nome.trim().split(' ')[0];
-    const userGreeting = document.getElementById('user-greeting');
-    userGreeting.textContent = `Olá, ${primeiroNome}`;
-    userGreeting.style.display = 'block';
-  })();
-
-  // Elementos do DOM
-  const cartItems = document.getElementById('cart-items');
-  const cart = document.getElementById('cart');
-  const cartOverlay = document.getElementById('cart-overlay');
-  const cartTotal = document.getElementById('cart-total');
-  const cartBadge = document.getElementById('cart-badge');
-
-  // Estado da aplicação
-  let carrinho = [];
-
-  // Função para adicionar ao carrinho
-  function addToCart(produto, preco) {
-    const itemExistente = carrinho.find(item => item.produto === produto);
-    if (itemExistente) {
-      itemExistente.quantidade++;
-    } else {
-      carrinho.push({ produto, preco: parseFloat(preco), quantidade: 1 });
-    }
-    atualizarCarrinho();
-    salvarCarrinho();
-    
-    // Feedback visual
-    const button = event.target;
-    const originalText = button.textContent;
-    button.textContent = 'Adicionado!';
-    button.style.background = '#27ae60';
-    
-    setTimeout(() => {
-      button.textContent = originalText;
-      button.style.background = '#2f3a5a';
-    }, 1000);
-  }
-
-  // Funções de manipulação de quantidade
-  function aumentarQuantidade(produto) {
-    const item = carrinho.find(item => item.produto === produto);
-    if (item) {
-      item.quantidade++;
-      atualizarCarrinho();
-      salvarCarrinho();
-    }
-  }
-
-  function diminuirQuantidade(produto) {
-    const item = carrinho.find(item => item.produto === produto);
-    if (item) {
-      item.quantidade--;
-      if (item.quantidade <= 0) {
-        carrinho = carrinho.filter(i => i.produto !== produto);
-      }
-      atualizarCarrinho();
-      salvarCarrinho();
-    }
-  }
-
-  function removerItem(produto) {
-    carrinho = carrinho.filter(i => i.produto !== produto);
-    atualizarCarrinho();
-    salvarCarrinho();
-  }
-
-  function limparCarrinho() {
-    if (confirm('Tem certeza que deseja limpar o carrinho?')) {
-      carrinho = [];
-      atualizarCarrinho();
-      salvarCarrinho();
-    }
-  }
-
-  // Função para salvar carrinho no localStorage
-  function salvarCarrinho() {
-    const carrinhoData = carrinho.map(item => ({
-      produto: item.produto,
-      preco: item.preco,
-      quantidade: item.quantidade
-    }));
-    localStorage.setItem('carrinho', JSON.stringify(carrinhoData));
-  }
-
-  // Função para carregar carrinho do localStorage
-  function carregarCarrinho() {
-    const carrinhoSalvo = localStorage.getItem('carrinho');
-    if (carrinhoSalvo) {
-      carrinho = JSON.parse(carrinhoSalvo);
-      atualizarCarrinho();
-    }
-  }
-
-  // Função para atualizar o carrinho
-  function atualizarCarrinho() {
-    cartItems.innerHTML = '';
-    let total = 0;
-    let totalItens = 0;
-    
-    carrinho.forEach(item => {
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <div class="item-info">
-          <strong>${item.produto}</strong><br>
-          R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2 class="fade-in">Por que escolher a Nova Vibe?</h2>
+      <div class="features-grid">
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🏙️</span>
+          <h3>Cidade Realista</h3>
+          <p>Explore uma Los Santos completamente customizada com locais únicos, empresas funcionais e uma economia dinâmica que evolui com a comunidade.</p>
         </div>
-        <div class="item-controls">
-          <button onclick="diminuirQuantidade('${item.produto}')">-</button>
-          <span>${item.quantidade}</span>
-          <button onclick="aumentarQuantidade('${item.produto}')">+</button>
-          <button onclick="removerItem('${item.produto}')" style="background: #e74c3c; margin-left: auto;">✕</button>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🚗</span>
+          <h3>Veículos Exclusivos</h3>
+          <p>Mais de 500 veículos customizados, desde carros de luxo até motos esportivas. Cada veículo com física realista e modificações únicas.</p>
         </div>
-      `;
-      cartItems.appendChild(li);
-      total += item.preco * item.quantidade;
-      totalItens += item.quantidade;
-    });
-    
-    cartTotal.textContent = `Total: R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-    
-    // Atualizar badges
-    const badges = [cartBadge, document.getElementById('cart-badge-header')];
-    badges.forEach(badge => {
-      if (badge) {
-        if (totalItens > 0) {
-          badge.textContent = totalItens;
-          badge.style.display = 'flex';
-        } else {
-          badge.style.display = 'none';
-        }
-      }
-    });
-    
-    // Mostrar/esconder botões
-    document.getElementById('finalizar-btn').style.display = carrinho.length ? 'block' : 'none';
-    document.getElementById('limpar-btn').style.display = carrinho.length ? 'block' : 'none';
-  }
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">👥</span>
+          <h3>Comunidade Ativa</h3>
+          <p>Junte-se a milhares de jogadores em uma comunidade vibrante. Participe de eventos, facções e crie conexões que durarão para sempre.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🎭</span>
+          <h3>Roleplay Imersivo</h3>
+          <p>Sistema de empregos realistas, sistema judicial completo e interações profundas que tornam cada momento único e memorável.</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🏆</span>
+          <h3>Eventos Exclusivos</h3>
+          <p>Participe de corridas, competições, festas e eventos especiais organizados pela staff. Sempre há algo novo acontecendo!</p>
+        </div>
+        
+        <div class="feature-card fade-in">
+          <span class="feature-icon">🛡️</span>
+          <h3>Suporte 24/7</h3>
+          <p>Nossa equipe está sempre disponível para ajudar. Suporte técnico, moderação ativa e um ambiente seguro para todos os jogadores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  // Funções do carrinho
-  function openCart() {
-    cart.classList.add('open');
-    cartOverlay.style.display = 'block';
-    document.body.style.overflow = 'hidden';
-  }
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="#" onclick="scrollToTop()">Início</a>
+        <a href="login2.html">Entrar</a>
+        <a href="#">Discord</a>
+        <a href="#">Regras</a>
+        <a href="#">Suporte</a>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Nova Vibe RP. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
 
-  function closeCart() {
-    cart.classList.remove('open');
-    cartOverlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
-
-  function finalizarCompra() {
-    if (carrinho.length === 0) {
-      alert('Carrinho vazio!');
-      return;
-    }
-    
-    // Redirecionar para checkout.html
-    window.location.href = 'checkout.html';
-  }
-
-  // Função para filtrar produtos
-  function filterProducts(category) {
-    const products = document.querySelectorAll('.product-item');
-    const buttons = document.querySelectorAll('.filter-buttons button');
-    
-    // Atualizar botões ativos
-    buttons.forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[data-filter="${category}"]`).classList.add('active');
-    
-    // Filtrar produtos
-    products.forEach(product => {
-      if (category === 'all' || product.dataset.category === category) {
-        product.style.display = 'flex';
+  <script>
+    // Verificar se o usuário está logado ao carregar a página
+    window.addEventListener('load', function() {
+      const cliente = JSON.parse(localStorage.getItem('cliente'));
+      const headerActions = document.getElementById('header-actions');
+      
+      if (cliente && cliente.nome && cliente.email) {
+        // Usuário logado - mostrar saudação e botões de usuário logado
+        const primeiroNome = cliente.nome.trim().split(' ')[0];
+        headerActions.innerHTML = `
+          <div class="user-info">
+            <span class="user-greeting">Olá, ${primeiroNome}!</span>
+            <a href="loja.html" class="btn btn-primary">Loja</a>
+            <button class="btn btn-logout" onclick="fazerLogout()">Sair</button>
+          </div>
+        `;
       } else {
-        product.style.display = 'none';
+        // Usuário não logado - mostrar botões de login e registro
+        headerActions.innerHTML = `
+          <a href="login.html" class="btn btn-secondary">Entrar</a>
+          <a href="login.html" class="btn btn-primary">Cadastrar</a>
+        `;
+      }
+      
+      // Animação de fade-in
+      const fadeElements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      });
+      
+      fadeElements.forEach(el => observer.observe(el));
+    });
+    
+    // Função para fazer logout
+    function fazerLogout() {
+      if (confirm('Tem certeza que deseja fazer logout?')) {
+        localStorage.removeItem('cliente');
+        localStorage.removeItem('carrinho');
+        location.reload(); // Recarregar a página para atualizar o header
+      }
+    }
+    
+    // Função para scroll suave
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    
+    // Scroll suave para seções
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Efeito de header ao scroll
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('header');
+      if (window.scrollY > 100) {
+        header.style.background = 'rgba(18, 18, 22, 0.98)';
+        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+      } else {
+        header.style.background = 'rgba(18, 18, 22, 0.95)';
+        header.style.boxShadow = 'none';
       }
     });
-  }
-
-  // Função para scroll ao topo
-  function scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  }
-
-  // Função para fazer logout
-  function fazerLogout() {
-    if (confirm('Tem certeza que deseja fazer logout?')) {
-      localStorage.removeItem('cliente');
-      localStorage.removeItem('carrinho');
-      alert('Logout realizado com sucesso!');
-      window.location.href = 'login.html';
+    
+    // Verificar parâmetros da URL para mensagens de boas-vindas
+    const urlParams = new URLSearchParams(window.location.search);
+    const userParam = urlParams.get('user');
+    
+    if (userParam) {
+      // Mostrar mensagem de boas-vindas se houver parâmetro de usuário
+      setTimeout(() => {
+        const cliente = JSON.parse(localStorage.getItem('cliente'));
+        if (cliente && cliente.nome) {
+          alert(`Bem-vindo à Nova Vibe RP, ${cliente.nome}! 🎉`);
+        }
+      }, 1000);
     }
-  }
-
-  // Event listeners
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && cart.classList.contains('open')) {
-      closeCart();
-    }
-  });
-
-  window.location.href = `index.html?user=${encodeURIComponent(user.email)}`;
-
-  // Inicializar carrinho
-  carregarCarrinho();
-</script>
-
+  </script>
 </body>
 </html>
