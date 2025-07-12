@@ -1,466 +1,602 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Redefinir Senha — Nova Vibe RP</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definir Nova Senha</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase/2.39.0/umd/supabase.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
 
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      overflow: hidden;
-    }
+        .container {
+            background: rgba(17, 17, 27, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+            padding: 48px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
 
-    .container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-    }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4, #8b5cf6);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
 
-    .logo {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
 
-    .logo h1 {
-      color: #333;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+        }
 
-    .logo p {
-      color: #666;
-      font-size: 14px;
-    }
+        h1 {
+            color: #f8fafc;
+            margin-bottom: 8px;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 40px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
 
-    label {
-      display: block;
-      color: #333;
-      font-weight: 500;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
 
-    input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #e1e5e9;
-      border-radius: 12px;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      background: white;
-    }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 14px;
+        }
 
-    input:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
+        input[type="password"] {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #374151;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #1f2937;
+            color: #f8fafc;
+            font-family: inherit;
+        }
 
-    .btn {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 15px;
-    }
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: #111827;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            transform: translateY(-1px);
+        }
 
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-    }
+        .password-requirements {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: left;
+        }
 
-    .btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
-    }
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+        }
 
-    .loading {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top: 2px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
+        .requirement-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: all 0.3s ease;
+        }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+        .requirement.valid {
+            color: #10b981;
+        }
 
-    .link-btn {
-      background: none;
-      border: none;
-      color: #667eea;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 14px;
-      padding: 0;
-      display: block;
-      text-align: center;
-      width: 100%;
-    }
+        .requirement.valid .requirement-icon {
+            background: #10b981;
+            color: white;
+        }
 
-    .link-btn:hover {
-      color: #764ba2;
-    }
+        .requirement.invalid .requirement-icon {
+            background: #374151;
+            color: #9ca3af;
+        }
 
-    .alert {
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      font-weight: 500;
-    }
+        .password-match {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
 
-    .alert.error {
-      background: #fee2e2;
-      color: #dc2626;
-      border: 1px solid #fecaca;
-    }
+        .password-match.valid {
+            color: #10b981;
+        }
 
-    .alert.success {
-      background: #dcfce7;
-      color: #16a34a;
-      border: 1px solid #bbf7d0;
-    }
+        .password-match.invalid {
+            color: #f87171;
+        }
 
-    .password-strength {
-      margin-top: 8px;
-    }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .strength-bar {
-      height: 4px;
-      background: #e5e7eb;
-      border-radius: 2px;
-      overflow: hidden;
-      margin-bottom: 4px;
-    }
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+        }
 
-    .strength-fill {
-      height: 100%;
-      transition: all 0.3s ease;
-      width: 0%;
-    }
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
 
-    .strength-text {
-      font-size: 12px;
-      font-weight: 500;
-    }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
-    .loading-container {
-      text-align: center;
-      padding: 20px;
-    }
+        .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
 
-    .loading-container .loading {
-      width: 32px;
-      height: 32px;
-      border: 3px solid rgba(102, 126, 234, 0.3);
-      border-top: 3px solid #667eea;
-      margin: 0 auto 15px;
-    }
-  </style>
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #374151;
+            border-radius: 2px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .success-container {
+            display: none;
+            text-align: center;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #10b981, #059669);
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+        }
+
+        .success-title {
+            color: #f8fafc;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .success-message {
+            color: #94a3b8;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .continue-btn {
+            background: linear-gradient(45deg, #10b981, #059669);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .continue-btn:hover {
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+        }
+
+        .form-container {
+            display: block;
+        }
+
+        .form-container.hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #1f2937;
+            color: #f87171;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-top: 16px;
+            border: 1px solid #374151;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 32px 24px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .logo {
+                width: 64px;
+                height: 64px;
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">
-      <h1>Nova Vibe RP</h1>
-      <p>Redefinir sua senha</p>
-    </div>
-
-    <!-- Loading inicial -->
-    <div id="loading-container" class="loading-container">
-      <div class="loading"></div>
-      <p>Verificando link de redefinição...</p>
-    </div>
-
-    <!-- Formulário de nova senha -->
-    <div id="reset-form" style="display: none;">
-      <div id="reset-alert"></div>
-      <form id="reset-form-element">
-        <div class="form-group">
-          <label for="new-password">Nova senha</label>
-          <input type="password" id="new-password" required />
-          <div class="password-strength">
-            <div class="strength-bar">
-              <div id="strength-fill" class="strength-fill"></div>
-            </div>
-            <div id="strength-text" class="strength-text">Muito fraca</div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirmar nova senha</label>
-          <input type="password" id="confirm-password" required />
-        </div>
-        <button type="submit" id="reset-btn" class="btn">Redefinir senha</button>
-      </form>
-    </div>
-
-    <!-- Erro/Sucesso -->
-    <div id="error-container" style="display: none;">
-      <div id="error-alert"></div>
-      <button type="button" id="back-to-login" class="link-btn">Voltar ao login</button>
-    </div>
-
-    <div id="success-container" style="display: none;">
-      <div id="success-alert"></div>
-      <button type="button" id="go-to-login" class="link-btn">Ir para o login</button>
-    </div>
-  </div>
-
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
-  <script>
-    // Configurar Supabase
-    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
-    
-    const { createClient } = supabase;
-    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
-
-    // Elementos
-    const loadingContainer = document.getElementById('loading-container');
-    const resetForm = document.getElementById('reset-form');
-    const errorContainer = document.getElementById('error-container');
-    const successContainer = document.getElementById('success-container');
-
-    function showAlert(containerId, message, type = 'error') {
-      const alertDiv = document.getElementById(`${containerId}-alert`);
-      alertDiv.innerHTML = `<div class="alert ${type}">${message}</div>`;
-    }
-
-    function showContainer(containerName) {
-      // Esconder todos os containers
-      loadingContainer.style.display = 'none';
-      resetForm.style.display = 'none';
-      errorContainer.style.display = 'none';
-      successContainer.style.display = 'none';
-      
-      // Mostrar o container desejado
-      document.getElementById(`${containerName}-container`).style.display = 'block';
-    }
-
-    // Indicador de força da senha
-    document.getElementById('new-password').addEventListener('input', function() {
-      const p = this.value;
-      const fill = document.getElementById('strength-fill');
-      const text = document.getElementById('strength-text');
-      let strength = 0;
-
-      if (p.length >= 8) strength++;
-      if (/[a-z]/.test(p)) strength++;
-      if (/[A-Z]/.test(p)) strength++;
-      if (/[0-9]/.test(p)) strength++;
-      if (/[^A-Za-z0-9]/.test(p)) strength++;
-
-      const colors = ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#16a34a'];
-      const labels = ['Muito fraca', 'Fraca', 'Média', 'Forte', 'Muito forte'];
-
-      fill.style.width = `${(strength / 5) * 100}%`;
-      fill.style.backgroundColor = colors[strength - 1] || '#ef4444';
-      text.textContent = labels[strength - 1] || 'Muito fraca';
-      text.style.color = colors[strength - 1] || '#ef4444';
-    });
-
-    // Verificar URL para access_token
-    async function checkResetToken() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get('access_token');
-      const refreshToken = urlParams.get('refresh_token');
-
-      if (!accessToken || !refreshToken) {
-        showAlert('error', 'Link de redefinição inválido ou expirado.');
-        showContainer('error');
-        return;
-      }
-
-      try {
-        // Definir a sessão com os tokens
-        const { data, error } = await supabaseClient.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        // Mostrar formulário de redefinição
-        resetForm.style.display = 'block';
-        loadingContainer.style.display = 'none';
-
-      } catch (error) {
-        showAlert('error', 'Link de redefinição inválido ou expirado.');
-        showContainer('error');
-      }
-    }
-
-    // Redefinir senha
-    document.getElementById('reset-form-element').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const newPassword = document.getElementById('new-password').value;
-      const confirmPassword = document.getElementById('confirm-password').value;
-      const btn = document.getElementById('reset-btn');
-
-      if (!newPassword || !confirmPassword) {
-        showAlert('reset', 'Por favor, preencha todos os campos');
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        showAlert('reset', 'As senhas não coincidem');
-        return;
-      }
-
-      if (newPassword.length < 6) {
-        showAlert('reset', 'A senha deve ter pelo menos 6 caracteres');
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Redefinindo...';
-
-      try {
-        const { error } = await supabaseClient.auth.updateUser({
-          password: newPassword
-        });
-
-        if (error) {
-          throw error;
-        }
-
-        // Fazer logout após redefinir a senha
-        await supabaseClient.auth.signOut();
-        
-        // Limpar qualquer dado do localStorage
-        localStorage.removeItem('nova_vibe_user');
-
-        showAlert('success', 'Senha redefinida com sucesso! Agora você pode fazer login com sua nova senha.', 'success');
-        showContainer('success');
-
-      } catch (error) {
-        let errorMessage = 'Erro ao redefinir senha';
-        
-        if (error.message) {
-          errorMessage = error.message;
-        }
-        
-        showAlert('reset', errorMessage);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = 'Redefinir senha';
-      }
-    });
-
-    // Botões de navegação
-    document.getElementById('back-to-login').addEventListener('click', () => {
-      window.location.href = 'https://novaviberoleplay.netlify.app/';
-    });
-
-    document.getElementById('go-to-login').addEventListener('click', () => {
-      // Sempre ir para o login após redefinir a senha
-      window.location.href = 'https://novaviberoleplay.netlify.app/';
-    });
-
-    // Verificar se o usuário já está logado ao carregar a página
-    window.addEventListener('load', async () => {
-      const storedUser = localStorage.getItem('nova_vibe_user');
-      if (storedUser) {
-        try {
-          const userData = JSON.parse(storedUser);
-          
-          // Verificar se o token ainda é válido
-          if (userData.expires_at && new Date(userData.expires_at * 1000) > new Date()) {
-            // Se não há parâmetros de reset na URL, redirecionar para a loja
-            const urlParams = new URLSearchParams(window.location.search);
-            const accessToken = urlParams.get('access_token');
+    <div class="container">
+        <!-- Formulário de Nova Senha -->
+        <div class="form-container" id="formContainer">
+            <div class="logo">🔐</div>
+            <h1>Nova Senha</h1>
+            <p class="subtitle">Crie uma senha forte e segura para sua conta</p>
             
-            if (!accessToken) {
-              window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
-              return;
-            }
-          } else {
-            // Token expirado, limpar localStorage
-            localStorage.removeItem('nova_vibe_user');
-          }
-        } catch (error) {
-          // Erro ao parsear, limpar localStorage
-          localStorage.removeItem('nova_vibe_user');
-        }
-      }
-      
-      // Continuar com a verificação do token de reset
-      checkResetToken();
-    });
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha</label>
+                    <input type="password" id="newPassword" name="newPassword" required 
+                           placeholder="Digite sua nova senha">
+                    <div class="password-requirements">
+                        <div class="requirement" id="req-length">
+                            <div class="requirement-icon">○</div>
+                            Pelo menos 8 caracteres
+                        </div>
+                        <div class="requirement" id="req-uppercase">
+                            <div class="requirement-icon">○</div>
+                            Uma letra maiúscula
+                        </div>
+                        <div class="requirement" id="req-lowercase">
+                            <div class="requirement-icon">○</div>
+                            Uma letra minúscula
+                        </div>
+                        <div class="requirement" id="req-number">
+                            <div class="requirement-icon">○</div>
+                            Um número
+                        </div>
+                        <div class="requirement" id="req-special">
+                            <div class="requirement-icon">○</div>
+                            Um caractere especial
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nova Senha</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required 
+                           placeholder="Confirme sua nova senha">
+                    <div class="password-match" id="passwordMatch"></div>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn" disabled>
+                    <div class="btn-content">
+                        <span>Redefinir Senha</span>
+                    </div>
+                </button>
+                
+                <div class="progress-bar" id="progressBar" style="display: none;">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="error-message" id="errorMessage" style="display: none;"></div>
+            </form>
+        </div>
 
-    // Monitorar mudanças de autenticação
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        // Atualizar dados do usuário no localStorage
-        const userData = {
-          id: session.user.id,
-          email: session.user.email,
-          name: session.user.user_metadata?.full_name || session.user.email,
-          user_metadata: session.user.user_metadata,
-          access_token: session.access_token,
-          refresh_token: session.refresh_token,
-          expires_at: session.expires_at,
-          logged_in: true,
-          login_time: new Date().toISOString(),
-          email_confirmed: session.user.email_confirmed_at ? true : false
-        };
+        <!-- Tela de Sucesso -->
+        <div class="success-container" id="successContainer">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Senha Redefinida!</h2>
+            <p class="success-message">
+                Sua senha foi alterada com sucesso. Agora você pode acessar sua conta com a nova senha.
+            </p>
+            <button class="btn continue-btn" onclick="goToStore()">
+                Continuar para a Loja
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase - Pegando das variáveis de ambiente
+        const SUPABASE_URL = process.env.SUPABASEURL || 'https://your-project.supabase.co';
+        const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'your-anon-key';
         
-        localStorage.setItem('nova_vibe_user', JSON.stringify(userData));
-      } else if (event === 'SIGNED_OUT') {
-        // Limpar dados do localStorage
-        localStorage.removeItem('nova_vibe_user');
-      }
-    });
-  </script>
+        // Fallback para desenvolvimento - remova em produção
+        const ACTUAL_SUPABASE_URL = SUPABASEURL === 'https://your-project.supabase.co' 
+            ? (window.ENV?.SUPABASEURL || 'https://your-project.supabase.co')
+            : SUPABASE_URL;
+            
+        const ACTUAL_SUPABASE_ANON_KEY = SUPABASE_ANON_KEY === 'your-anon-key'
+            ? (window.ENV?.SUPABASE_ANON_KEY || 'your-anon-key')
+            : SUPABASE_ANON_KEY;
+        
+        const supabase = window.supabase.createClient(ACTUAL_SUPABASE_URL, ACTUAL_SUPABASE_ANON_KEY);
+
+        // Elementos DOM
+        const form = document.getElementById('passwordForm');
+        const newPasswordInput = document.getElementById('newPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const submitBtn = document.getElementById('submitBtn');
+        const formContainer = document.getElementById('formContainer');
+        const successContainer = document.getElementById('successContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const passwordMatch = document.getElementById('passwordMatch');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Requisitos de senha
+        const requirements = {
+            length: { element: document.getElementById('req-length'), test: (p) => p.length >= 8 },
+            uppercase: { element: document.getElementById('req-uppercase'), test: (p) => /[A-Z]/.test(p) },
+            lowercase: { element: document.getElementById('req-lowercase'), test: (p) => /[a-z]/.test(p) },
+            number: { element: document.getElementById('req-number'), test: (p) => /\d/.test(p) },
+            special: { element: document.getElementById('req-special'), test: (p) => /[!@#$%^&*(),.?":{}|<>]/.test(p) }
+        };
+
+        // Verificar requisitos da senha
+        function checkPasswordRequirements(password) {
+            let validCount = 0;
+            
+            Object.values(requirements).forEach(req => {
+                const isValid = req.test(password);
+                req.element.classList.toggle('valid', isValid);
+                req.element.classList.toggle('invalid', !isValid);
+                req.element.querySelector('.requirement-icon').textContent = isValid ? '✓' : '○';
+                if (isValid) validCount++;
+            });
+            
+            return validCount === Object.keys(requirements).length;
+        }
+
+        // Verificar se senhas coincidem
+        function checkPasswordMatch() {
+            const password = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (confirmPassword === '') {
+                passwordMatch.textContent = '';
+                return false;
+            }
+            
+            if (password === confirmPassword) {
+                passwordMatch.textContent = '✓ As senhas coincidem';
+                passwordMatch.classList.add('valid');
+                passwordMatch.classList.remove('invalid');
+                return true;
+            } else {
+                passwordMatch.textContent = '✗ As senhas não coincidem';
+                passwordMatch.classList.add('invalid');
+                passwordMatch.classList.remove('valid');
+                return false;
+            }
+        }
+
+        // Atualizar estado do botão
+        function updateSubmitButton() {
+            const isPasswordValid = checkPasswordRequirements(newPasswordInput.value);
+            const isPasswordMatch = checkPasswordMatch();
+            
+            submitBtn.disabled = !(isPasswordValid && isPasswordMatch);
+        }
+
+        // Simular progresso de carregamento
+        function simulateProgress() {
+            let progress = 0;
+            progressBar.style.display = 'block';
+            
+            const interval = setInterval(() => {
+                progress += 2;
+                progressFill.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        showSuccess();
+                    }, 300);
+                }
+            }, 100); // 5 segundos total (100 incrementos de 50ms)
+        }
+
+        // Mostrar tela de sucesso
+        function showSuccess() {
+            formContainer.classList.add('hidden');
+            successContainer.style.display = 'block';
+        }
+
+        // Ir para a loja
+        function goToStore() {
+            // Substitua pela URL da sua loja
+            window.location.href = '/loja';
+        }
+
+        // Mostrar erro
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Event listeners
+        newPasswordInput.addEventListener('input', updateSubmitButton);
+        confirmPasswordInput.addEventListener('input', updateSubmitButton);
+
+        // Submissão do formulário
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            // Validações finais
+            if (!checkPasswordRequirements(newPassword)) {
+                showError('A senha não atende aos requisitos mínimos de segurança.');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showError('As senhas não coincidem.');
+                return;
+            }
+
+            // Desabilitar botão e mostrar loading
+            submitBtn.disabled = true;
+            submitBtn.querySelector('.btn-content').innerHTML = `
+                <div class="loading-spinner"></div>
+                <span>Redefinindo...</span>
+            `;
+            
+            try {
+                // Tentar atualizar a senha no Supabase
+                const { error } = await supabase.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                // Iniciar simulação de progresso
+                simulateProgress();
+                
+            } catch (error) {
+                console.error('Erro ao atualizar senha:', error);
+                showError('Erro ao redefinir senha. Tente novamente ou entre em contato com o suporte.');
+                
+                // Reabilitar botão
+                submitBtn.disabled = false;
+                submitBtn.querySelector('.btn-content').innerHTML = '<span>Redefinir Senha</span>';
+            }
+        });
+
+        // Verificar se o usuário está autenticado ao carregar a página
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (!session && event !== 'PASSWORD_RECOVERY') {
+                // Usuário não está autenticado, redirecionar para login
+                window.location.href = '/login';
+            }
+        });
+
+        // Verificar parâmetros da URL para tokens de recuperação
+        const urlParams = new URLSearchParams(window.location.search);
+        const accessToken = urlParams.get('access_token');
+        const refreshToken = urlParams.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+            // Definir sessão com os tokens
+            supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken
+            });
+        }
+    </script>
 </body>
 </html>
