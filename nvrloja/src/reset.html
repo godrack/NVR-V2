@@ -529,9 +529,8 @@
                         showAlert('Autenticado com sucesso! Você pode redefinir sua senha.', 'success');
                     }
                 });
-            } else {
-                showAlert('Link de recuperação inválido. Verifique o email ou solicite um novo link.');
             }
+            // Removido o else que mostrava erro de link inválido
         }
 
         // Formulário de redefinição
