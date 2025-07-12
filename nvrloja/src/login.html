@@ -354,6 +354,29 @@
       });
     }
 
+    // Função para verificar se o email já existe
+    async function checkEmailExists(email) {
+      try {
+        // Primeiro, tentamos fazer login com uma senha inválida
+        // Se o usuário existir, o Supabase retornará um erro específico
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: 'senha_temporaria_invalida_123456789'
+        });
+
+        // Se retornar erro de credenciais inválidas, significa que o email existe
+        if (error && error.message === 'Invalid login credentials') {
+          return true; // Email existe
+        }
+
+        // Se não der erro de credenciais inválidas, o email não existe
+        return false;
+      } catch (err) {
+        // Em caso de erro inesperado, assumimos que o email não existe
+        return false;
+      }
+    }
+
     // Indicador de força da senha
     document.getElementById('register-password').addEventListener('input', function() {
       const p = this.value;
@@ -460,9 +483,19 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Criando conta...';
+      btn.innerHTML = '<span class="loading"></span> Verificando email...';
 
       try {
+        // Verificar se o email já existe
+        const emailExists = await checkEmailExists(email);
+        
+        if (emailExists) {
+          showAlert('register', 'Este email já está cadastrado. Tente fazer login ou use outro email.');
+          return;
+        }
+
+        btn.innerHTML = '<span class="loading"></span> Criando conta...';
+
         const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
@@ -470,7 +503,7 @@
             data: { 
               full_name: name 
             },
-            emailRedirectTo: window.location.origin + 'contaconfirma.html'
+            emailRedirectTo: 'https://novaviberoleplay.netlify.app/contaconfirma.html'
           }
         });
 
@@ -482,14 +515,22 @@
         
         // Limpar formulário
         document.getElementById('register-form-element').reset();
+        
+        // Resetar indicador de força da senha
+        document.getElementById('strength-fill').style.width = '0%';
+        document.getElementById('strength-text').textContent = 'Muito fraca';
 
       } catch (error) {
         let errorMessage = 'Erro ao criar conta';
         
         if (error.message === 'User already registered') {
-          errorMessage = 'Este email já está cadastrado';
+          errorMessage = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
         } else if (error.message === 'Password should be at least 6 characters') {
           errorMessage = 'A senha deve ter pelo menos 6 caracteres';
+        } else if (error.message === 'Signup is disabled') {
+          errorMessage = 'Cadastro temporariamente desabilitado. Tente novamente mais tarde.';
+        } else if (error.message === 'Invalid email') {
+          errorMessage = 'Por favor, digite um email válido';
         } else if (error.message) {
           errorMessage = error.message;
         }
@@ -518,7 +559,7 @@
 
       try {
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + 'reset.html'
+          redirectTo: 'https://novaviberoleplay.netlify.app/reset.html'
         });
 
         if (error) {
