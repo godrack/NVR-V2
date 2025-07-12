@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redefinir Senha — Nova Vibe RP</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #555;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      font-size: 16px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #5a6cd4 0%, #633f8a 100%);
+    }
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+    }
+    .alert.error {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+    .alert.success {
+      background: #dcfce7;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Redefinir Senha</h1>
+    <div id="alert"></div>
+    <form id="reset-form">
+      <label for="password">Nova senha</label>
+      <input type="password" id="password" required minlength="6" />
+      <label for="confirm-password">Confirmar nova senha</label>
+      <input type="password" id="confirm-password" required minlength="6" />
+      <button type="submit">Redefinir senha</button>
+    </form>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+
+  <script>
+    // Configurar seu Supabase aqui:
+    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';  // <=== substitua
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';              // <=== substitua
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+    const alertEl = document.getElementById('alert');
+    const form = document.getElementById('reset-form');
+
+    // Pega o access_token da URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const access_token = urlParams.get('access_token');
+
+    if (!access_token) {
+      alertEl.innerHTML = '<div class="alert error">Token de redefinição não encontrado na URL.</div>';
+      form.style.display = 'none';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertEl.innerHTML = '';
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (password !== confirmPassword) {
+        alertEl.innerHTML = '<div class="alert error">As senhas não coincidem.</div>';
+        return;
+      }
+
+      if (password.length < 6) {
+        alertEl.innerHTML = '<div class="alert error">A senha deve ter pelo menos 6 caracteres.</div>';
+        return;
+      }
+
+      // Usa o token para atualizar a senha
+      try {
+        const { data, error } = await supabase.auth.updateUser({
+          password: password
+        }, {
+          // O token de acesso obtido do link de reset:
+          accessToken: access_token
+        });
+
+        if (error) {
+          alertEl.innerHTML = `<div class="alert error">Erro: ${error.message}</div>`;
+          return;
+        }
+
+        alertEl.innerHTML = '<div class="alert success">Senha redefinida com sucesso! Você pode fechar esta página e fazer login.</div>';
+        form.reset();
+        form.querySelector('button').disabled = true;
+      } catch (err) {
+        alertEl.innerHTML = `<div class="alert error">Erro inesperado: ${err.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
