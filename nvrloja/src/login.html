@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Autenticação — Nova Vibe RP</title>
   <style>
-    /* Seu CSS conforme você enviou antes */
-    /* ... (pode colar o CSS que você enviou para manter o estilo) */
     * {
       margin: 0;
       padding: 0;
@@ -298,13 +296,16 @@
   </div>
 
   <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
   <script>
-    // Configurar Supabase:
-    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co'; // Substitua pelo seu URL
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU'; // Substitua pela sua chave
-    const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    // Configurar Supabase
+    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+    
+    // Corrigir a inicialização do Supabase
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
     // Navegação entre formulários
     const forms = {
@@ -313,10 +314,26 @@
       forgot: document.getElementById('forgot-form'),
     };
 
-    document.getElementById('show-register').onclick = e => { e.preventDefault(); showForm('register'); };
-    document.getElementById('show-login').onclick = e => { e.preventDefault(); showForm('login'); };
-    document.getElementById('show-forgot').onclick = e => { e.preventDefault(); showForm('forgot'); };
-    document.getElementById('back-to-login').onclick = e => { e.preventDefault(); showForm('login'); };
+    // Event listeners para navegação
+    document.getElementById('show-register').addEventListener('click', (e) => {
+      e.preventDefault();
+      showForm('register');
+    });
+
+    document.getElementById('show-login').addEventListener('click', (e) => {
+      e.preventDefault();
+      showForm('login');
+    });
+
+    document.getElementById('show-forgot').addEventListener('click', (e) => {
+      e.preventDefault();
+      showForm('forgot');
+    });
+
+    document.getElementById('back-to-login').addEventListener('click', (e) => {
+      e.preventDefault();
+      showForm('login');
+    });
 
     function showForm(formName) {
       Object.keys(forms).forEach(key => forms[key].classList.remove('active'));
@@ -337,8 +354,8 @@
       });
     }
 
-    // Indicador de força da senha no cadastro
-    document.getElementById('register-password').oninput = function() {
+    // Indicador de força da senha
+    document.getElementById('register-password').addEventListener('input', function() {
       const p = this.value;
       const fill = document.getElementById('strength-fill');
       const text = document.getElementById('strength-text');
@@ -357,9 +374,7 @@
       fill.style.backgroundColor = colors[strength - 1] || '#ef4444';
       text.textContent = labels[strength - 1] || 'Muito fraca';
       text.style.color = colors[strength - 1] || '#ef4444';
-    };
-
-    // FUNÇÕES SUPABASE
+    });
 
     // LOGIN
     document.getElementById('login-form-element').addEventListener('submit', async (e) => {
@@ -369,25 +384,54 @@
       const password = document.getElementById('login-password').value;
       const btn = document.getElementById('login-btn');
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Entrando...';
-
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        showAlert('login', error.message);
-        btn.disabled = false;
-        btn.innerHTML = 'Entrar';
+      if (!email || !password) {
+        showAlert('login', 'Por favor, preencha todos os campos');
         return;
       }
 
-      showAlert('login', 'Login realizado com sucesso! Redirecionando...', 'success');
-      // Salve o usuário no localStorage (ou onde preferir)
-      localStorage.setItem('user', JSON.stringify(data.user));
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading"></span> Entrando...';
 
-      setTimeout(() => {
-        window.location.href = 'loja.html'; // redirecione para sua página
-      }, 1500);
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ 
+          email, 
+          password 
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        showAlert('login', 'Login realizado com sucesso!', 'success');
+        
+        // Salvar dados do usuário
+        const userData = {
+          id: data.user.id,
+          email: data.user.email,
+          user_metadata: data.user.user_metadata
+        };
+        
+        // Simular redirecionamento (você pode alterar para sua página)
+        setTimeout(() => {
+          alert('Redirecionando para a loja... (você pode alterar este comportamento)');
+        }, 1500);
+
+      } catch (error) {
+        let errorMessage = 'Erro ao fazer login';
+        
+        if (error.message === 'Invalid login credentials') {
+          errorMessage = 'Email ou senha incorretos';
+        } else if (error.message === 'Email not confirmed') {
+          errorMessage = 'Por favor, confirme seu email antes de fazer login';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        showAlert('login', errorMessage);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Entrar';
+      }
     });
 
     // CADASTRO
@@ -400,38 +444,60 @@
       const confirm = document.getElementById('register-confirm').value;
       const btn = document.getElementById('register-btn');
 
+      if (!name || !email || !password || !confirm) {
+        showAlert('register', 'Por favor, preencha todos os campos');
+        return;
+      }
+
       if (password !== confirm) {
-        return showAlert('register', 'As senhas não coincidem');
+        showAlert('register', 'As senhas não coincidem');
+        return;
       }
 
       if (password.length < 6) {
-        return showAlert('register', 'Senha deve ter pelo menos 6 caracteres');
+        showAlert('register', 'A senha deve ter pelo menos 6 caracteres');
+        return;
       }
 
       btn.disabled = true;
       btn.innerHTML = '<span class="loading"></span> Criando conta...';
 
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: name }
-        }
-      });
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { 
+              full_name: name 
+            }
+          }
+        });
 
-      if (error) {
-        showAlert('register', error.message);
+        if (error) {
+          throw error;
+        }
+
+        showAlert('register', 'Conta criada com sucesso! Verifique seu email para confirmar.', 'success');
+        
+        // Limpar formulário
+        document.getElementById('register-form-element').reset();
+
+      } catch (error) {
+        let errorMessage = 'Erro ao criar conta';
+        
+        if (error.message === 'User already registered') {
+          errorMessage = 'Este email já está cadastrado';
+        } else if (error.message === 'Password should be at least 6 characters') {
+          errorMessage = 'A senha deve ter pelo menos 6 caracteres';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        showAlert('register', errorMessage);
+      } finally {
         btn.disabled = false;
         btn.innerHTML = 'Criar conta';
-        return;
       }
-
-      showAlert('register', 'Conta criada com sucesso! Verifique seu email para confirmar.', 'success');
-
-      // Você pode, se quiser, fazer login automático após confirmação,
-      // aqui deixamos o usuário na tela até confirmar email.
-      btn.disabled = false;
-      btn.innerHTML = 'Criar conta';
     });
 
     // ESQUECI A SENHA
@@ -441,23 +507,49 @@
       const email = document.getElementById('forgot-email').value;
       const btn = document.getElementById('forgot-btn');
 
-      btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span> Enviando...';
-
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/reset.html'
-      });
-
-      if (error) {
-        showAlert('forgot', error.message);
-        btn.disabled = false;
-        btn.innerHTML = 'Enviar link de recuperação';
+      if (!email) {
+        showAlert('forgot', 'Por favor, digite seu email');
         return;
       }
 
-      showAlert('forgot', 'Email de recuperação enviado! Verifique sua caixa de entrada.', 'success');
-      btn.disabled = false;
-      btn.innerHTML = 'Enviar link de recuperação';
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading"></span> Enviando...';
+
+      try {
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + '/reset.html'
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        showAlert('forgot', 'Email de recuperação enviado! Verifique sua caixa de entrada.', 'success');
+        
+        // Limpar campo
+        document.getElementById('forgot-email').value = '';
+
+      } catch (error) {
+        let errorMessage = 'Erro ao enviar email de recuperação';
+        
+        if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        showAlert('forgot', errorMessage);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Enviar link de recuperação';
+      }
+    });
+
+    // Verificar se o usuário já está logado
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        console.log('Usuário logado:', session.user);
+      } else if (event === 'SIGNED_OUT') {
+        console.log('Usuário deslogado');
+      }
     });
   </script>
 </body>
