@@ -590,7 +590,6 @@
         const continueButton = document.getElementById('continue-button');
 
         // Estado da aplicação
-        let isRecoveryMode = false;
         let isProcessing = false;
 
         // Função para mostrar alertas
@@ -702,7 +701,6 @@
             const type = urlParams.get('type');
 
             if (accessToken && refreshToken && type === 'recovery') {
-                isRecoveryMode = true;
                 showAlert('Link de recuperação validado. Você pode redefinir sua senha.', 'success');
                 
                 // Configurar sessão com os tokens
@@ -713,7 +711,6 @@
                     if (error) {
                         console.error('Erro ao configurar sessão:', error);
                         showAlert('Link de recuperação inválido ou expirado. Solicite um novo link.');
-                        isRecoveryMode = false;
                     }
                 });
             }
@@ -767,21 +764,6 @@
                     throw error;
                 }
 
-                // Atualizar dados do usuário no localStorage
-                if (data.user) {
-                    const userData = {
-                        id: data.user.id,
-                        email: data.user.email,
-                        name: data.user.user_metadata?.full_name || data.user.email,
-                        user_metadata: data.user.user_metadata,
-                        logged_in: true,
-                        password_updated: true,
-                        updated_at: new Date().toISOString()
-                    };
-                    
-                    localStorage.setItem('nova_vibe_user', JSON.stringify(userData));
-                }
-
                 // Aguardar um pouco para dar feedback visual
                 await new Promise(resolve => setTimeout(resolve, 3000));
 
@@ -819,9 +801,6 @@
 
         // Handler do botão continuar
         continueButton.addEventListener('click', () => {
-            // Limpar dados de sessão antes de redirecionar
-            localStorage.removeItem('nova_vibe_user');
-            supabaseClient.auth.signOut();
             window.location.href = 'https://novaviberoleplay.netlify.app/login.html';
         });
 
@@ -829,37 +808,11 @@
         window.addEventListener('load', () => {
             // Processar tokens de recuperação
             processRecoveryTokens();
-            
-            // Verificar se usuário já está logado (apenas se não estiver em modo de recuperação)
-            if (!isRecoveryMode) {
-                const storedUser = localStorage.getItem('nova_vibe_user');
-                if (storedUser) {
-                    try {
-                        const userData = JSON.parse(storedUser);
-                        if (userData.logged_in) {
-                            showAlert('Você já está logado. Redirecionando...', 'info');
-                            setTimeout(() => {
-                                window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
-                            }, 2000);
-                            return;
-                        }
-                    } catch (error) {
-                        console.error('Erro ao verificar usuário logado:', error);
-                    }
-                }
-            }
         });
 
         // Monitorar mudanças de autenticação
         supabaseClient.auth.onAuthStateChange((event, session) => {
-            if (event === 'PASSWORD_RECOVERY') {
-                console.log('Modo de recuperação de senha ativado');
-                isRecoveryMode = true;
-            } else if (event === 'SIGNED_IN' && isRecoveryMode) {
-                console.log('Usuário autenticado para recuperação de senha');
-            } else if (event === 'SIGNED_OUT') {
-                console.log('Usuário deslogado');
-            }
+            console.log('Auth state changed:', event, session);
         });
 
         // Prevenir navegação acidental
@@ -880,14 +833,6 @@
                     continueButton.click();
                 }
             }
-        });
-
-        // Melhorar acessibilidade
-        document.addEventListener('DOMContentLoaded', () => {
-            // Focar no primeiro campo quando a página carregar
-            setTimeout(() => {
-                newPasswordInput.focus();
-            }, 500);
         });
     </script>
 </body>
