@@ -169,6 +169,26 @@
     .back-btn:hover {
       background: #777;
     }
+    .redirect-message {
+      background: #27ae60;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      margin-top: 20px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .countdown {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ff88;
+      margin: 10px 0;
+    }
   </style>
 </head>
 <body>
@@ -228,6 +248,13 @@
         <p>📱 Abra o app do seu banco e escaneie o QR Code ou cole o código PIX</p>
         <p>⚡ O pagamento é processado instantaneamente</p>
       </div>
+    </div>
+
+    <div id="redirect-area" class="redirect-message" style="display:none;">
+      <h3>🎉 Pagamento Aprovado!</h3>
+      <p>Obrigado pela sua compra! Você será redirecionado em:</p>
+      <div id="countdown" class="countdown">3</div>
+      <p>Redirecionando para a página de sucesso...</p>
     </div>
 
     <div id="empty-cart" style="display:none;">
@@ -345,6 +372,30 @@
       }
     }
 
+    function startCountdownRedirect() {
+      const redirectArea = document.getElementById('redirect-area');
+      const paymentArea = document.getElementById('payment-area');
+      const countdownEl = document.getElementById('countdown');
+      
+      // Esconder área de pagamento e mostrar área de redirecionamento
+      paymentArea.style.display = 'none';
+      redirectArea.style.display = 'block';
+      
+      let countdown = 3;
+      countdownEl.textContent = countdown;
+      
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        countdownEl.textContent = countdown;
+        
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+          // Redirecionar para a página de sucesso
+          window.location.href = 'sucess.html';
+        }
+      }, 1000);
+    }
+
     async function processPayment() {
       if (!validateForm()) return;
       
@@ -432,14 +483,15 @@
           
           if (data.status === 'approved') {
             clearInterval(checkInterval);
-            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Obrigado pela compra!';
+            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Redirecionando...';
             document.getElementById('status').className = 'status success';
             
             // Limpar carrinho após pagamento aprovado
             localStorage.removeItem('carrinho');
             
+            // Iniciar countdown e redirecionamento
             setTimeout(() => {
-              alert('🎉 Pagamento confirmado! Você receberá as informações no Discord em breve.');
+              startCountdownRedirect();
             }, 1000);
             
           } else if (data.status === 'rejected' || data.status === 'cancelled') {
