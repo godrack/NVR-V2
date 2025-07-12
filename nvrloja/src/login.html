@@ -426,6 +426,42 @@
       });
     }
 
+    // Função para verificar se o email já existe
+    async function checkEmailExists(email) {
+      try {
+        // Tentativa de fazer login com uma senha falsa para verificar se o email existe
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: 'fake-password-check-123456'
+        });
+        
+        // Se o erro for "Invalid login credentials", significa que o email existe
+        if (error && error.message === 'Invalid login credentials') {
+          return true;
+        }
+        
+        // Se o erro for "Email not confirmed", também significa que o email existe
+        if (error && error.message === 'Email not confirmed') {
+          return true;
+        }
+        
+        // Se não houve erro, o email existe e a senha estava correta (improvável com nossa senha fake)
+        if (data && data.user) {
+          // Fazer logout imediatamente se por acaso a senha fake funcionou
+          await supabaseClient.auth.signOut();
+          return true;
+        }
+        
+        // Para outros tipos de erro, assumimos que o email não existe
+        return false;
+        
+      } catch (error) {
+        console.error('Erro ao verificar email:', error);
+        // Em caso de erro na verificação, assumimos que o email não existe para não bloquear o cadastro
+        return false;
+      }
+    }
+
     // Indicador de força da senha
     document.getElementById('register-password').addEventListener('input', function() {
       const p = this.value;
@@ -541,9 +577,19 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span>Criando conta...';
+      btn.innerHTML = '<span class="loading"></span>Verificando email...';
 
       try {
+        // Verificar se o email já existe ANTES de tentar criar a conta
+        const emailExists = await checkEmailExists(email);
+        
+        if (emailExists) {
+          showAlert('register', 'Este email já está cadastrado. Tente fazer login ou use outro email.');
+          return;
+        }
+
+        btn.innerHTML = '<span class="loading"></span>Criando conta...';
+
         const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
