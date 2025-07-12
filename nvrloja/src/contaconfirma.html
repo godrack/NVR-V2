@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Confirmar Conta — Nova Vibe RP</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+    }
+
+    .logo {
+      margin-bottom: 30px;
+    }
+
+    .logo h1 {
+      color: #333;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .logo p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .status-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    .status-icon.loading {
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+    }
+
+    .status-icon.success {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .status-icon.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .status-message {
+      margin-bottom: 30px;
+    }
+
+    .status-message h2 {
+      color: #333;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .status-message p {
+      color: #666;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn.secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(102, 126, 234, 0.3);
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .auto-login-info {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #667eea;
+    }
+
+    .email-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      transition: border-color 0.3s ease;
+    }
+
+    .email-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .countdown {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      .logo h1 {
+        font-size: 24px;
+      }
+      
+      .status-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <h1>Nova Vibe RP</h1>
+      <p>Confirmação de conta</p>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading-state">
+      <div class="status-icon loading">
+        <div class="loading"></div>
+      </div>
+      <div class="status-message">
+        <h2>Verificando...</h2>
+        <p>Aguarde enquanto confirmamos sua conta.</p>
+      </div>
+    </div>
+
+    <!-- Sucesso -->
+    <div id="success-state" class="hidden">
+      <div class="status-icon success">
+        ✓
+      </div>
+      <div class="status-message">
+        <h2>Conta confirmada!</h2>
+        <p>Sua conta foi confirmada com sucesso. Você já pode fazer login no sistema.</p>
+      </div>
+      <div class="auto-login-info">
+        <p>Você será automaticamente logado em <span id="countdown" class="countdown">3</span> segundos...</p>
+      </div>
+      <a href="/" class="btn">Ir para o login</a>
+    </div>
+
+    <!-- Erro -->
+    <div id="error-state" class="hidden">
+      <div class="status-icon error">
+        ✗
+      </div>
+      <div class="status-message">
+        <h2>Erro na confirmação</h2>
+        <p id="error-message">Não foi possível confirmar sua conta. O link pode estar expirado ou inválido.</p>
+      </div>
+      <a href="/" class="btn">Voltar ao login</a>
+      <button id="resend-btn" class="btn secondary">Reenviar email de confirmação</button>
+    </div>
+
+    <!-- Reenvio -->
+    <div id="resend-state" class="hidden">
+      <div class="status-icon loading">
+        <div class="loading"></div>
+      </div>
+      <div class="status-message">
+        <h2>Reenviando email...</h2>
+        <p>Aguarde enquanto enviamos um novo email de confirmação.</p>
+      </div>
+    </div>
+
+    <!-- Reenvio sucesso -->
+    <div id="resend-success-state" class="hidden">
+      <div class="status-icon success">
+        ✓
+      </div>
+      <div class="status-message">
+        <h2>Email enviado!</h2>
+        <p>Um novo email de confirmação foi enviado para sua caixa de entrada.</p>
+      </div>
+      <a href="/" class="btn">Voltar ao login</a>
+    </div>
+
+    <!-- Formulário de reenvio -->
+    <div id="resend-form-state" class="hidden">
+      <div class="status-icon error">
+        ✉
+      </div>
+      <div class="status-message">
+        <h2>Reenviar confirmação</h2>
+        <p>Digite seu email para receber um novo link de confirmação:</p>
+      </div>
+      <input type="email" id="email-input" class="email-input" placeholder="seu@email.com" />
+      <button id="send-email-btn" class="btn">Enviar email</button>
+      <button id="cancel-resend-btn" class="btn secondary">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <script>
+    // Configurar Supabase
+    const supabaseUrl = 'https://czsnjdoxguldtznixcdj.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+    
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+    // Estados
+    const states = {
+      loading: document.getElementById('loading-state'),
+      success: document.getElementById('success-state'),
+      error: document.getElementById('error-state'),
+      resend: document.getElementById('resend-state'),
+      resendSuccess: document.getElementById('resend-success-state'),
+      resendForm: document.getElementById('resend-form-state')
+    };
+
+    // Elementos
+    const elements = {
+      errorMessage: document.getElementById('error-message'),
+      resendBtn: document.getElementById('resend-btn'),
+      emailInput: document.getElementById('email-input'),
+      sendEmailBtn: document.getElementById('send-email-btn'),
+      cancelResendBtn: document.getElementById('cancel-resend-btn'),
+      countdown: document.getElementById('countdown')
+    };
+
+    function showState(stateName) {
+      Object.values(states).forEach(state => state.classList.add('hidden'));
+      states[stateName].classList.remove('hidden');
+    }
+
+    function startCountdown() {
+      let count = 3;
+      const countdownElement = elements.countdown;
+      
+      const interval = setInterval(() => {
+        count--;
+        countdownElement.textContent = count;
+        
+        if (count <= 0) {
+          clearInterval(interval);
+          window.location.href = '/loja.html';
+        }
+      }, 1000);
+    }
+
+    // Verificar confirmação
+    async function confirmAccount() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      const type = urlParams.get('type');
+
+      if (!token || type !== 'signup') {
+        showState('error');
+        elements.errorMessage.textContent = 'Link de confirmação inválido.';
+        return;
+      }
+
+      try {
+        // Verificar token
+        const { data, error } = await supabaseClient.auth.verifyOtp({
+          token_hash: token,
+          type: 'signup'
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        // Sucesso
+        showState('success');
+        
+        // Auto-login após confirmação
+        if (data.user && data.session) {
+          // Salvar sessão
+          await supabaseClient.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token
+          });
+
+          // Iniciar countdown
+          startCountdown();
+        }
+
+      } catch (error) {
+        console.error('Erro ao confirmar conta:', error);
+        showState('error');
+        
+        let errorMessage = 'Não foi possível confirmar sua conta.';
+        
+        if (error.message === 'Token has expired') {
+          errorMessage = 'O link de confirmação expirou. Solicite um novo email.';
+        } else if (error.message === 'Invalid token') {
+          errorMessage = 'Link de confirmação inválido.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        elements.errorMessage.textContent = errorMessage;
+      }
+    }
+
+    // Event listeners
+    elements.resendBtn.addEventListener('click', () => {
+      showState('resendForm');
+    });
+
+    elements.cancelResendBtn.addEventListener('click', () => {
+      showState('error');
+    });
+
+    elements.sendEmailBtn.addEventListener('click', async () => {
+      const email = elements.emailInput.value.trim();
+      
+      if (!email) {
+        alert('Por favor, digite seu email.');
+        return;
+      }
+
+      if (!email.includes('@') || !email.includes('.')) {
+        alert('Por favor, digite um email válido.');
+        return;
+      }
+
+      showState('resend');
+
+      try {
+        const { error } = await supabaseClient.auth.resend({
+          type: 'signup',
+          email: email,
+          options: {
+            emailRedirectTo: window.location.origin + '/conta-confirmacao.html'
+          }
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        showState('resendSuccess');
+
+      } catch (error) {
+        console.error('Erro ao reenviar email:', error);
+        showState('error');
+        
+        let errorMessage = 'Não foi possível reenviar o email.';
+        
+        if (error.message === 'Email not confirmed') {
+          errorMessage = 'Email não encontrado ou já confirmado.';
+        } else if (error.message === 'Email rate limit exceeded') {
+          errorMessage = 'Muitas tentativas. Tente novamente em alguns minutos.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        elements.errorMessage.textContent = errorMessage;
+      }
+    });
+
+    // Permitir envio com Enter
+    elements.emailInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        elements.sendEmailBtn.click();
+      }
+    });
+
+    // Iniciar verificação quando a página carregar
+    window.addEventListener('load', () => {
+      confirmAccount();
+    });
+  </script>
+</body>
+</html>
