@@ -13,7 +13,7 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -22,10 +22,11 @@
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(30, 30, 46, 0.95);
       backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
       padding: 40px;
       width: 100%;
       max-width: 400px;
@@ -49,14 +50,14 @@
     }
 
     .logo h1 {
-      color: #333;
+      color: #ffffff;
       font-size: 28px;
       font-weight: 700;
       margin-bottom: 8px;
     }
 
     .logo p {
-      color: #666;
+      color: #a0a0b0;
       font-size: 14px;
     }
 
@@ -72,18 +73,21 @@
     }
 
     .status-icon.loading {
-      background: rgba(102, 126, 234, 0.1);
+      background: rgba(102, 126, 234, 0.2);
       color: #667eea;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
     }
 
     .status-icon.success {
-      background: rgba(34, 197, 94, 0.1);
+      background: rgba(34, 197, 94, 0.2);
       color: #22c55e;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
     }
 
     .status-icon.error {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(239, 68, 68, 0.2);
       color: #ef4444;
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
     }
 
     .status-message {
@@ -91,14 +95,14 @@
     }
 
     .status-message h2 {
-      color: #333;
+      color: #ffffff;
       font-size: 22px;
       font-weight: 600;
       margin-bottom: 10px;
     }
 
     .status-message p {
-      color: #666;
+      color: #a0a0b0;
       font-size: 16px;
       line-height: 1.5;
     }
@@ -155,8 +159,8 @@
     }
 
     .auto-login-info {
-      background: rgba(102, 126, 234, 0.1);
-      border: 1px solid rgba(102, 126, 234, 0.2);
+      background: rgba(102, 126, 234, 0.2);
+      border: 1px solid rgba(102, 126, 234, 0.3);
       border-radius: 8px;
       padding: 12px;
       margin-bottom: 20px;
@@ -167,16 +171,23 @@
     .email-input {
       width: 100%;
       padding: 12px;
-      border: 2px solid #e2e8f0;
+      border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       font-size: 16px;
       margin-bottom: 15px;
       transition: border-color 0.3s ease;
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
     }
 
     .email-input:focus {
       outline: none;
       border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .email-input::placeholder {
+      color: #a0a0b0;
     }
 
     .countdown {
@@ -228,10 +239,7 @@
         <h2>Conta confirmada!</h2>
         <p>Sua conta foi confirmada com sucesso. Você já pode fazer login no sistema.</p>
       </div>
-      <div class="auto-login-info">
-        <p>Você será automaticamente logado em <span id="countdown" class="countdown">3</span> segundos...</p>
-      </div>
-      <a href="/" class="btn">Ir para o login</a>
+      <a href="/loja.html" class="btn">Continuar</a>
     </div>
 
     <!-- Erro -->
@@ -322,18 +330,7 @@
     }
 
     function startCountdown() {
-      let count = 3; // Countdown de 3 segundos após confirmação
-      const countdownElement = elements.countdown;
-      
-      const interval = setInterval(() => {
-        count--;
-        countdownElement.textContent = count;
-        
-        if (count <= 0) {
-          clearInterval(interval);
-          window.location.href = '/loja.html';
-        }
-      }, 1000);
+      // Função removida - não há mais countdown automático
     }
 
     // Verificar confirmação
@@ -342,9 +339,6 @@
       setTimeout(() => {
         // Sempre mostrar sucesso
         showState('success');
-        
-        // Iniciar countdown de 3 segundos
-        startCountdown();
       }, 5000); // Aguarda 5 segundos antes de mostrar sucesso
     }
 
