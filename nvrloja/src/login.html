@@ -424,29 +424,6 @@
       });
     }
 
-    // Função para verificar se o email já existe
-    async function checkEmailExists(email) {
-      try {
-        // Primeiro, tentamos fazer login com uma senha inválida
-        // Se o usuário existir, o Supabase retornará um erro específico
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email: email,
-          password: 'senha_temporaria_invalida_123456789'
-        });
-
-        // Se retornar erro de credenciais inválidas, significa que o email existe
-        if (error && error.message === 'Invalid login credentials') {
-          return true; // Email existe
-        }
-
-        // Se não der erro de credenciais inválidas, o email não existe
-        return false;
-      } catch (err) {
-        // Em caso de erro inesperado, assumimos que o email não existe
-        return false;
-      }
-    }
-
     // Indicador de força da senha
     document.getElementById('register-password').addEventListener('input', function() {
       const p = this.value;
@@ -562,19 +539,9 @@
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="loading"></span>Verificando email...';
+      btn.innerHTML = '<span class="loading"></span>Criando conta...';
 
       try {
-        // Verificar se o email já existe
-        const emailExists = await checkEmailExists(email);
-        
-        if (emailExists) {
-          showAlert('register', 'Este email já está cadastrado. Tente fazer login ou use outro email.');
-          return;
-        }
-
-        btn.innerHTML = '<span class="loading"></span>Criando conta...';
-
         const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
@@ -635,6 +602,8 @@
           errorMessage = 'Cadastro temporariamente desabilitado. Tente novamente mais tarde.';
         } else if (error.message === 'Invalid email') {
           errorMessage = 'Por favor, digite um email válido';
+        } else if (error.message === 'Email rate limit exceeded') {
+          errorMessage = 'Muitas tentativas de cadastro. Aguarde alguns minutos e tente novamente.';
         } else if (error.message) {
           errorMessage = error.message;
         }
