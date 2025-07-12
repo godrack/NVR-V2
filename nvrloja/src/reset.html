@@ -374,6 +374,37 @@
           throw error;
         }
 
+        // Obter dados do usuário atual
+        const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+        
+        if (userError) {
+          throw userError;
+        }
+
+        // Obter sessão atual
+        const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+        
+        if (sessionError) {
+          throw sessionError;
+        }
+
+        // Salvar dados do usuário no localStorage (mesmo padrão do login)
+        const userDataToStore = {
+          id: userData.user.id,
+          email: userData.user.email,
+          name: userData.user.user_metadata?.full_name || userData.user.email,
+          user_metadata: userData.user.user_metadata,
+          access_token: sessionData.session.access_token,
+          refresh_token: sessionData.session.refresh_token,
+          expires_at: sessionData.session.expires_at,
+          logged_in: true,
+          login_time: new Date().toISOString(),
+          email_confirmed: userData.user.email_confirmed_at ? true : false
+        };
+        
+        // Salvar no localStorage
+        localStorage.setItem('nova_vibe_user', JSON.stringify(userDataToStore));
+
         showAlert('success', 'Senha redefinida com sucesso! Você já pode fazer login.', 'success');
         showContainer('success');
 
@@ -393,15 +424,82 @@
 
     // Botões de navegação
     document.getElementById('back-to-login').addEventListener('click', () => {
-      window.location.href = '/'; // ou o caminho para sua página de login
+      window.location.href = 'https://novaviberoleplay.netlify.app/';
     });
 
     document.getElementById('go-to-login').addEventListener('click', () => {
-      window.location.href = '/'; // ou o caminho para sua página de login
+      // Verificar se já está logado e redirecionar para a loja
+      const storedUser = localStorage.getItem('nova_vibe_user');
+      if (storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          if (userData.logged_in && userData.expires_at && new Date(userData.expires_at * 1000) > new Date()) {
+            window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
+            return;
+          }
+        } catch (error) {
+          console.error('Erro ao verificar usuário logado:', error);
+        }
+      }
+      
+      // Se não estiver logado, ir para o login
+      window.location.href = 'https://novaviberoleplay.netlify.app/';
     });
 
-    // Inicializar
-    checkResetToken();
+    // Verificar se o usuário já está logado ao carregar a página
+    window.addEventListener('load', async () => {
+      const storedUser = localStorage.getItem('nova_vibe_user');
+      if (storedUser) {
+        try {
+          const userData = JSON.parse(storedUser);
+          
+          // Verificar se o token ainda é válido
+          if (userData.expires_at && new Date(userData.expires_at * 1000) > new Date()) {
+            // Se não há parâmetros de reset na URL, redirecionar para a loja
+            const urlParams = new URLSearchParams(window.location.search);
+            const accessToken = urlParams.get('access_token');
+            
+            if (!accessToken) {
+              window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
+              return;
+            }
+          } else {
+            // Token expirado, limpar localStorage
+            localStorage.removeItem('nova_vibe_user');
+          }
+        } catch (error) {
+          // Erro ao parsear, limpar localStorage
+          localStorage.removeItem('nova_vibe_user');
+        }
+      }
+      
+      // Continuar com a verificação do token de reset
+      checkResetToken();
+    });
+
+    // Monitorar mudanças de autenticação
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        // Atualizar dados do usuário no localStorage
+        const userData = {
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name || session.user.email,
+          user_metadata: session.user.user_metadata,
+          access_token: session.access_token,
+          refresh_token: session.refresh_token,
+          expires_at: session.expires_at,
+          logged_in: true,
+          login_time: new Date().toISOString(),
+          email_confirmed: session.user.email_confirmed_at ? true : false
+        };
+        
+        localStorage.setItem('nova_vibe_user', JSON.stringify(userData));
+      } else if (event === 'SIGNED_OUT') {
+        // Limpar dados do localStorage
+        localStorage.removeItem('nova_vibe_user');
+      }
+    });
   </script>
 </body>
 </html>
