@@ -1,571 +1,106 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Checkout — Nova Vibe RP</title>
   <style>
-    /* Reset e estilo base */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: linear-gradient(135deg, #0f0f23, #1a1a2e);
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      width: 100%;
-      background: rgba(28, 30, 40, 0.95);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(63, 146, 247, 0.2);
-    }
-    .logo {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      background: linear-gradient(45deg, #3f92f7, #4f5d9e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 30px;
-    }
-    .section {
-      background: rgba(42, 42, 46, 0.6);
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(63, 146, 247, 0.1);
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #3f92f7;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid rgba(63, 146, 247, 0.3);
-      border-radius: 8px;
-      background: rgba(26, 26, 30, 0.8);
-      color: #fff;
-      font-size: 1rem;
-    }
-    .form-group input:focus {
-      outline: none;
-      border-color: #3f92f7;
-      box-shadow: 0 0 0 2px rgba(63, 146, 247, 0.2);
-    }
-    .form-row {
-      display: flex;
-      gap: 15px;
-    }
-    .form-row .form-group {
-      flex: 1;
-    }
-    .btn {
-      padding: 15px 30px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-      background: linear-gradient(45deg, #3f92f7, #4f5d9e);
-      color: #fff;
-      width: 100%;
-    }
-    .btn:hover {
-      background: linear-gradient(45deg, #4f5d9e, #5f6dae);
-      transform: translateY(-2px);
-    }
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-    .btn.loading {
-      background: linear-gradient(45deg, #666, #777);
-      cursor: not-allowed;
-    }
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(63, 146, 247, 0.1);
-    }
-    .order-item:last-child {
-      border-bottom: none;
-    }
-    .total {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #3f92f7;
-      border-top: 2px solid rgba(63, 146, 247, 0.3);
-      padding-top: 10px;
-      margin-top: 10px;
-    }
-    .pix-code {
-      font-family: 'Courier New', monospace;
-      font-size: 0.85rem;
-      word-break: break-all;
-      background: rgba(26, 26, 30, 0.8);
-      padding: 15px;
-      border-radius: 10px;
-      margin: 15px 0;
-      border: 1px solid rgba(63, 146, 247, 0.2);
-      max-height: 100px;
-      overflow-y: auto;
-      user-select: all;
-    }
-    .qr-code {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      margin: 20px auto;
-      width: 250px;
-      text-align: center;
-    }
-    .qr-code img {
-      width: 100%;
-      max-width: 200px;
-      height: auto;
-    }
-    .status {
-      padding: 15px;
-      border-radius: 10px;
-      margin: 15px 0;
-      text-align: center;
-      font-weight: bold;
-    }
-    .status.success {
-      background: rgba(39, 174, 96, 0.1);
-      border: 1px solid rgba(39, 174, 96, 0.3);
-      color: #27ae60;
-    }
-    .status.error {
-      background: rgba(231, 76, 60, 0.1);
-      border: 1px solid rgba(231, 76, 60, 0.3);
-      color: #e74c3c;
-    }
-    .status.pending {
-      background: rgba(241, 196, 15, 0.1);
-      border: 1px solid rgba(241, 196, 15, 0.3);
-      color: #f1c40f;
-    }
-    .hidden {
-      display: none;
-    }
-    .error {
-      border-color: #e74c3c !important;
-    }
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 25px;
-      border-radius: 10px;
-      background: #27ae60;
-      color: #fff;
-      font-weight: bold;
-      z-index: 1000;
-      animation: slideIn 0.3s ease;
-    }
-    .notification.error {
-      background: #e74c3c;
-    }
-    .spinner {
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-top: 3px solid #3f92f7;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-      margin-right: 10px;
-      vertical-align: middle;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    @media (max-width: 600px) {
-      .container { padding: 20px; margin: 10px; }
-      .form-row { flex-direction: column; }
-      .qr-code { width: 200px; }
-    }
+    body { background: #121216; color: #fff; font-family: sans-serif; padding: 20px; }
+    input, button { padding: 10px; margin: 5px 0; width: 100%; }
+    .qr-code img { max-width: 250px; margin: 20px auto; display: block; }
+    .pix-code { background: #222; padding: 10px; word-break: break-all; margin: 10px 0; }
+    .status { margin: 10px 0; padding: 10px; border-radius: 5px; }
+    .success { background: #27ae60; color: #fff; }
+    .error { background: #e74c3c; color: #fff; }
+    .pending { background: #f1c40f; color: #000; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">Nova Vibe RP</div>
 
-    <div id="form-step">
-      <div class="section">
-        <h3>👤 Dados do Cliente</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="nome">Nome *</label>
-            <input type="text" id="nome" required autocomplete="name" />
-          </div>
-          <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" required autocomplete="email" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="telefone">Telefone *</label>
-            <input type="tel" id="telefone" required placeholder="(00) 00000-0000" autocomplete="tel" />
-          </div>
-          <div class="form-group">
-            <label for="discord">Discord *</label>
-            <input type="text" id="discord" required placeholder="usuario#1234" autocomplete="off" />
-          </div>
-        </div>
-      </div>
+  <h1>Nova Vibe RP — Checkout</h1>
 
-      <div class="section">
-        <h3>🎮 Dados do Jogo</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="idJogador">ID do Jogador *</label>
-            <input type="number" id="idJogador" required />
-          </div>
-          <div class="form-group">
-            <label for="personagem">Nome do Personagem *</label>
-            <input type="text" id="personagem" required />
-          </div>
-        </div>
-      </div>
+  <div>
+    <label>Nome:</label>
+    <input type="text" id="nome">
+    <label>Email:</label>
+    <input type="email" id="email">
+    <label>Telefone:</label>
+    <input type="text" id="telefone">
+    <label>Discord:</label>
+    <input type="text" id="discord">
+    <label>ID do Jogador:</label>
+    <input type="number" id="idJogador">
+    <label>Personagem:</label>
+    <input type="text" id="personagem">
+    <button onclick="processPayment()">Pagar via PIX</button>
+  </div>
 
-      <div class="section">
-        <h3>🛒 Pedido</h3>
-        <div id="order-summary">
-          <div class="order-item">
-            <span>VIP Mensal</span>
-            <span>R$ 29,90</span>
-          </div>
-          <div class="order-item">
-            <span>Dinheiro (500k)</span>
-            <span>R$ 15,00</span>
-          </div>
-          <div class="order-item total">
-            <span>Total</span>
-            <span>R$ 44,90</span>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn" id="pay-btn">Pagar via PIX</button>
-    </div>
-
-    <div id="payment-step" class="hidden">
-      <div class="section">
-        <h3>💳 Pagamento PIX</h3>
-        <div id="payment-status" class="status pending">
-          <div class="spinner"></div>
-          Criando pagamento...
-        </div>
-        <div id="payment-content"></div>
-      </div>
-    </div>
-
-    <div id="success-step" class="hidden">
-      <div class="section">
-        <h3>✅ Pagamento Aprovado!</h3>
-        <div style="text-align: center; padding: 20px;">
-          <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
-          <h2 style="color: #27ae60; margin-bottom: 15px;">Compra Realizada!</h2>
-          <p>Você receberá os itens em até 24 horas.</p>
-          <p style="margin-top: 10px; font-size: 0.9rem; color: #ccc;">
-            ID do Pagamento: <span id="payment-id"></span>
-          </p>
-        </div>
-        <button class="btn" id="new-order-btn">Nova Compra</button>
-      </div>
-    </div>
+  <div id="payment-area" style="display:none;">
+    <div class="qr-code" id="qr-code"></div>
+    <div class="pix-code" id="pix-code"></div>
+    <div id="status" class="status pending">Aguardando pagamento...</div>
   </div>
 
   <script>
-    // === CONFIGURAÇÕES ===
-    const MP_TOKEN = 'TEST-7004638756944644-070819-a855fe0efceca1f64bab604f01e20fac-1389751127'; // <== Troque pelo seu token real Mercado Pago (sandbox ou produção)
-    const WEBHOOK_URL = 'https://https://novaviberoleplay.netlify.app/mercadopago/webhook'; // <== Coloque sua URL webhook válida OU comente/remova a linha
-
-    // Variáveis globais
-    let paymentData = {};
+    const functionURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
     let checkInterval = null;
-    let paymentId = null;
 
-    // Elementos DOM
-    const payBtn = document.getElementById('pay-btn');
-    const formStep = document.getElementById('form-step');
-    const paymentStep = document.getElementById('payment-step');
-    const successStep = document.getElementById('success-step');
-    const paymentStatus = document.getElementById('payment-status');
-    const paymentContent = document.getElementById('payment-content');
-    const paymentIdSpan = document.getElementById('payment-id');
-    const newOrderBtn = document.getElementById('new-order-btn');
-
-    // Validação simples do formulário
-    function validateForm() {
-      const requiredFields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
-      let valid = true;
-      requiredFields.forEach(fieldId => {
-        const el = document.getElementById(fieldId);
-        if (!el.value.trim()) {
-          el.classList.add('error');
-          valid = false;
-        } else {
-          el.classList.remove('error');
-        }
-      });
-      return valid;
-    }
-
-    // Gera um código único para external_reference
-    function generateExternalReference() {
+    function generateReference() {
       return 'NVRP_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     }
 
-    // Função para criar pagamento PIX Mercado Pago
-    async function createPixPayment() {
-      const payload = {
+    async function processPayment() {
+      const paymentData = {
         transaction_amount: 44.90,
         description: 'Nova Vibe RP - VIP Mensal + 500k Dinheiro',
-        payment_method_id: 'pix',
         payer: {
-          email: document.getElementById('email').value.trim(),
-          first_name: (() => {
-            const nome = document.getElementById('nome').value.trim();
-            return nome.split(' ')[0] || 'Cliente';
-          })(),
-          last_name: (() => {
-            const nome = document.getElementById('nome').value.trim();
-            const parts = nome.split(' ');
-            return parts.length > 1 ? parts.slice(1).join(' ') : 'Cliente';
-          })(),
+          email: document.getElementById('email').value,
+          first_name: document.getElementById('nome').value.split(' ')[0],
+          last_name: document.getElementById('nome').value.split(' ').slice(1).join(' ') || 'Cliente'
         },
-        external_reference: generateExternalReference(),
-        // Se não tiver webhook válido, comente a linha abaixo
-        notification_url: WEBHOOK_URL,
+        external_reference: generateReference(),
         metadata: {
-          discord: document.getElementById('discord').value.trim(),
-          telefone: document.getElementById('telefone').value.trim(),
-          id_jogador: document.getElementById('idJogador').value.trim(),
-          personagem: document.getElementById('personagem').value.trim()
+          discord: document.getElementById('discord').value,
+          telefone: document.getElementById('telefone').value,
+          id_jogador: document.getElementById('idJogador').value,
+          personagem: document.getElementById('personagem').value
         }
       };
 
-      const res = await fetch('https://api.mercadopago.com/v1/payments', {
+      const res = await fetch(functionURL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${MP_TOKEN}`
-        },
-        body: JSON.stringify(payload)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentData)
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        console.error('Erro API Mercado Pago:', err);
-        throw new Error(`Erro Mercado Pago: ${res.status} - ${JSON.stringify(err)}`);
-      }
-
-      return await res.json();
-    }
-
-    // Função para verificar status do pagamento via polling
-    async function checkPaymentStatus(paymentId) {
-      const res = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
-        headers: { 'Authorization': `Bearer ${MP_TOKEN}` }
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        console.error('Erro API status pagamento:', err);
-        throw new Error(`Erro status pagamento: ${res.status} - ${JSON.stringify(err)}`);
-      }
-
-      return await res.json();
-    }
-
-    // Iniciar checagem periódica do pagamento
-    function startPaymentCheck(paymentId) {
-      checkInterval = setInterval(async () => {
-        try {
-          const payment = await checkPaymentStatus(paymentId);
-          if (payment.status === 'approved') {
-            clearInterval(checkInterval);
-            confirmPayment(payment);
-          } else if (payment.status === 'rejected' || payment.status === 'cancelled') {
-            clearInterval(checkInterval);
-            showPaymentError();
-          }
-          // continua aguardando se status for pending ou other
-        } catch (e) {
-          console.error('Erro ao verificar pagamento:', e);
-          // opcional: mostrar erro para o usuário
-        }
-      }, 5000);
-    }
-
-    // Mostrar tela de sucesso e enviar webhook Discord
-    async function confirmPayment(payment) {
-      // Monta embed para webhook Discord
-      const embed = {
-        title: "🎉 Nova Compra - Nova Vibe RP",
-        color: 0x00ff00,
-        fields: [
-          {
-            name: "💰 Pagamento",
-            value: `**ID MP:** ${payment.id}\n**Valor:** R$ ${payment.transaction_amount.toFixed(2)}\n**Status:** ${payment.status}`,
-            inline: true
-          },
-          {
-            name: "👤 Cliente",
-            value: `**Nome:** ${paymentData.nome}\n**Email:** ${paymentData.email}\n**Telefone:** ${paymentData.telefone}`,
-            inline: true
-          },
-          {
-            name: "🎮 Jogo",
-            value: `**ID:** ${paymentData.idJogador}\n**Personagem:** ${paymentData.personagem}\n**Discord:** ${paymentData.discord}`,
-            inline: false
-          },
-          {
-            name: "🛒 Itens",
-            value: paymentData.items.join(', '),
-            inline: false
-          }
-        ],
-        timestamp: new Date().toISOString()
-      };
-
-      try {
-        await fetch('https://discord.com/api/webhooks/1390898408709029978/0fZVKIRIyYnF6WgbwEW4PviryDy1n_t0nZK3dHL8ar_lpdAhDNkoF5YhiNJbT3V017J4', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ embeds: [embed] })
-        });
-      } catch (error) {
-        console.error('Erro ao enviar webhook Discord:', error);
-      }
-
-      paymentStatus.className = 'status success';
-      paymentStatus.textContent = 'Pagamento aprovado! Obrigado pela compra.';
-
-      paymentIdSpan.textContent = payment.id;
-      formStep.classList.add('hidden');
-      paymentStep.classList.add('hidden');
-      successStep.classList.remove('hidden');
-    }
-
-    // Mostra erro pagamento e retorna ao formulário
-    function showPaymentError() {
-      paymentStatus.className = 'status error';
-      paymentStatus.textContent = 'Pagamento rejeitado ou cancelado. Tente novamente.';
-
-      payBtn.disabled = false;
-      payBtn.textContent = 'Pagar via PIX';
-    }
-
-    // Evento botão pagar
-    payBtn.addEventListener('click', async () => {
-      if (!validateForm()) {
-        alert('Por favor, preencha todos os campos corretamente.');
+      const data = await res.json();
+      if (data.status !== 'pending') {
+        alert('Erro ao criar pagamento!');
         return;
       }
 
-      payBtn.disabled = true;
-      payBtn.textContent = 'Criando pagamento...';
+      document.getElementById('payment-area').style.display = 'block';
+      document.getElementById('qr-code').innerHTML = `<img src="data:image/png;base64,${data.point_of_interaction.transaction_data.qr_code_base64}">`;
+      document.getElementById('pix-code').innerText = data.point_of_interaction.transaction_data.qr_code;
 
-      paymentStatus.className = 'status pending';
-      paymentStatus.innerHTML = '<div class="spinner"></div> Criando pagamento...';
-      paymentContent.innerHTML = '';
-      formStep.classList.add('hidden');
-      paymentStep.classList.remove('hidden');
+      checkStatus(data.id);
+    }
 
-      // Guarda dados do pedido para webhook e exibição
-      paymentData = {
-        nome: document.getElementById('nome').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        telefone: document.getElementById('telefone').value.trim(),
-        discord: document.getElementById('discord').value.trim(),
-        idJogador: document.getElementById('idJogador').value.trim(),
-        personagem: document.getElementById('personagem').value.trim(),
-        items: ['VIP Mensal', '500k Dinheiro']
-      };
-
-      try {
-        const payment = await createPixPayment();
-        paymentId = payment.id;
-
-        const pixInfo = payment.point_of_interaction.transaction_data;
-        paymentContent.innerHTML = `
-          <div class="qr-code">
-            <img src="data:image/png;base64,${pixInfo.qr_code_base64}" alt="QR Code PIX" />
-          </div>
-          <div class="pix-code" title="Clique para copiar o código PIX">${pixInfo.qr_code}</div>
-          <p style="text-align:center; font-size:0.9rem; margin-top:10px; color:#ccc;">
-            Use o código PIX acima para pagar usando seu app bancário.
-          </p>
-        `;
-
-        payBtn.textContent = 'Aguardando pagamento...';
-        // Começa a checar o status do pagamento a cada 5 segundos
-        startPaymentCheck(paymentId);
-
-        // Adiciona funcionalidade copiar código PIX ao clicar
-        const pixCodeElem = paymentContent.querySelector('.pix-code');
-        pixCodeElem.addEventListener('click', () => {
-          navigator.clipboard.writeText(pixInfo.qr_code).then(() => {
-            alert('Código PIX copiado para área de transferência!');
-          });
+    async function checkStatus(paymentId) {
+      if (checkInterval) clearInterval(checkInterval);
+      checkInterval = setInterval(async () => {
+        const res = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+          headers: { Authorization: `Bearer SEU_MP_TOKEN` }
         });
-
-      } catch (error) {
-        console.error(error);
-        alert('Erro ao criar pagamento. Veja console para detalhes.');
-        paymentStep.classList.add('hidden');
-        formStep.classList.remove('hidden');
-        payBtn.disabled = false;
-        payBtn.textContent = 'Pagar via PIX';
-      }
-    });
-
-    // Botão nova compra
-    newOrderBtn.addEventListener('click', () => {
-      // Reset tudo
-      paymentData = {};
-      paymentId = null;
-      paymentContent.innerHTML = '';
-      paymentStatus.textContent = '';
-      paymentStatus.className = '';
-      formStep.classList.remove('hidden');
-      paymentStep.classList.add('hidden');
-      successStep.classList.add('hidden');
-      payBtn.disabled = false;
-      payBtn.textContent = 'Pagar via PIX';
-
-      // Limpa inputs
-      ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'].forEach(id => {
-        document.getElementById(id).value = '';
-        document.getElementById(id).classList.remove('error');
-      });
-    });
+        const data = await res.json();
+        if (data.status === 'approved') {
+          clearInterval(checkInterval);
+          document.getElementById('status').innerText = '✅ Pagamento aprovado!';
+          document.getElementById('status').className = 'status success';
+        }
+      }, 5000);
+    }
   </script>
+
 </body>
 </html>
