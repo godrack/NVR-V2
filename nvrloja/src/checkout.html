@@ -5,764 +5,519 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout — Nova Vibe RP</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
       background: #121216; 
       color: #fff; 
-      font-family: 'Segoe UI', sans-serif; 
-      min-height: 100vh;
-      padding: 20px;
+      font-family: sans-serif; 
+      padding: 20px; 
+      max-width: 600px; 
+      margin: 0 auto; 
     }
-    
     .container {
-      max-width: 700px;
-      margin: 0 auto;
-      background: #1c1e28;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-      overflow: hidden;
-      border: 1px solid #2f3a5a;
-    }
-    
-    .header {
-      background: linear-gradient(135deg, #2f3a5a, #3f4b76);
+      background: #1a1a1e;
       padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    h1 {
       text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
-      pointer-events: none;
-    }
-    
-    .header h1 {
-      font-size: 2rem;
-      color: #fff;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      position: relative;
-      z-index: 1;
-    }
-    
-    .header p {
-      color: #bbb;
-      font-size: 1rem;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .content {
-      padding: 40px;
-    }
-    
-    .section {
+      color: #00ff88;
       margin-bottom: 30px;
-      background: #242836;
-      border-radius: 8px;
-      padding: 25px;
-      border: 1px solid #2f3a5a;
-      transition: all 0.3s ease;
     }
-    
-    .section:hover {
-      border-color: #3f4b76;
-      transform: translateY(-2px);
-    }
-    
-    .section-title {
-      font-size: 1.3rem;
-      color: #fff;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .section-title::before {
-      content: '';
-      width: 4px;
-      height: 20px;
-      background: linear-gradient(to bottom, #2f3a5a, #3f4b76);
-      border-radius: 2px;
-    }
-    
-    .product-list {
-      max-height: 280px;
-      overflow-y: auto;
-      background: #1a1c24;
-      border-radius: 6px;
-      padding: 15px;
-      border: 1px solid #2f3a5a;
-    }
-    
-    .product-list::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    .product-list::-webkit-scrollbar-track {
-      background: #1a1c24;
-      border-radius: 4px;
-    }
-    
-    .product-list::-webkit-scrollbar-thumb {
-      background: #2f3a5a;
-      border-radius: 4px;
-    }
-    
-    .product-list::-webkit-scrollbar-thumb:hover {
-      background: #3f4b76;
-    }
-    
-    .product-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #2f3a5a;
-      transition: all 0.3s ease;
-    }
-    
-    .product-item:last-child {
-      border-bottom: none;
-    }
-    
-    .product-item:hover {
-      background: rgba(47, 58, 90, 0.1);
-      padding-left: 10px;
-      border-radius: 4px;
-    }
-    
-    .product-info {
-      flex: 1;
-    }
-    
-    .product-name {
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-    
-    .product-quantity {
-      font-size: 0.9rem;
-      color: #bbb;
-    }
-    
-    .product-price {
-      font-weight: bold;
-      color: #2f3a5a;
-      font-size: 1.1rem;
-    }
-    
-    .total-section {
-      background: linear-gradient(135deg, #2f3a5a, #3f4b76);
-      border: none;
-      color: #fff;
-      text-align: center;
-    }
-    
-    .total-amount {
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    
     .form-group {
       margin-bottom: 20px;
     }
-    
-    .form-group label {
+    label {
       display: block;
-      margin-bottom: 8px;
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.95rem;
+      margin-bottom: 5px;
+      color: #ccc;
+      font-weight: bold;
     }
-    
-    .form-group input {
+    input {
       width: 100%;
-      padding: 12px 16px;
-      border: 2px solid #2f3a5a;
-      border-radius: 6px;
-      background: #1a1c24;
+      padding: 12px;
+      border: 2px solid #333;
+      border-radius: 5px;
+      background: #2a2a2e;
       color: #fff;
-      font-size: 1rem;
-      transition: all 0.3s ease;
+      font-size: 16px;
+      box-sizing: border-box;
     }
-    
-    .form-group input:focus {
+    input:focus {
       outline: none;
-      border-color: #3f4b76;
-      background: #242836;
-      box-shadow: 0 0 0 3px rgba(47, 58, 90, 0.2);
+      border-color: #00ff88;
     }
-    
-    .form-group input::placeholder {
-      color: #666;
-    }
-    
-    .pay-button {
+    button {
       width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #2f3a5a, #3f4b76);
-      color: #fff;
+      padding: 15px;
+      background: linear-gradient(45deg, #00ff88, #00cc6a);
+      color: #000;
       border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
+      border-radius: 5px;
+      font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      margin-top: 20px;
     }
-    
-    .pay-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s;
-    }
-    
-    .pay-button:hover::before {
-      left: 100%;
-    }
-    
-    .pay-button:hover {
+    button:hover {
+      background: linear-gradient(45deg, #00cc6a, #00ff88);
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(47, 58, 90, 0.4);
     }
-    
-    .pay-button:disabled {
+    button:disabled {
       background: #666;
       cursor: not-allowed;
       transform: none;
-      box-shadow: none;
     }
-    
-    .pay-button:disabled::before {
-      display: none;
-    }
-    
     .payment-area {
-      margin-top: 20px;
+      margin-top: 30px;
+      padding: 20px;
+      background: #2a2a2e;
+      border-radius: 10px;
       text-align: center;
     }
-    
-    .qr-code {
-      margin: 20px 0;
-    }
-    
     .qr-code img {
       max-width: 280px;
-      border: 3px solid #2f3a5a;
+      margin: 20px auto;
+      display: block;
+      border: 3px solid #00ff88;
       border-radius: 10px;
-      transition: all 0.3s ease;
     }
-    
-    .qr-code img:hover {
-      border-color: #3f4b76;
-      transform: scale(1.02);
-    }
-    
     .pix-code {
-      background: #1a1c24;
+      background: #333;
       padding: 15px;
       word-break: break-all;
       margin: 20px 0;
-      border-radius: 6px;
-      font-family: 'Courier New', monospace;
+      border-radius: 5px;
+      font-family: monospace;
       font-size: 14px;
       position: relative;
-      border: 1px solid #2f3a5a;
     }
-    
     .copy-btn {
       position: absolute;
       top: 10px;
       right: 10px;
-      background: #2f3a5a;
-      color: #fff;
+      background: #00ff88;
+      color: #000;
       border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
+      padding: 5px 10px;
+      border-radius: 3px;
       cursor: pointer;
       font-size: 12px;
-      font-weight: 600;
-      transition: all 0.3s ease;
+      width: auto;
     }
-    
-    .copy-btn:hover {
-      background: #3f4b76;
-      transform: translateY(-1px);
-    }
-    
     .status {
       margin: 20px 0;
       padding: 15px;
-      border-radius: 6px;
-      font-weight: 600;
+      border-radius: 5px;
+      font-weight: bold;
       text-align: center;
-      border: 1px solid;
     }
-    
-    .status.success {
-      background: rgba(39, 174, 96, 0.1);
-      border-color: #27ae60;
-      color: #27ae60;
-    }
-    
-    .status.error {
-      background: rgba(231, 76, 60, 0.1);
-      border-color: #e74c3c;
-      color: #e74c3c;
-    }
-    
-    .status.pending {
-      background: rgba(241, 196, 15, 0.1);
-      border-color: #f1c40f;
-      color: #f1c40f;
-    }
-    
-    .status.info {
-      background: rgba(52, 152, 219, 0.1);
-      border-color: #3498db;
-      color: #3498db;
-    }
-    
-    .payment-instructions {
-      background: #242836;
-      border-radius: 6px;
-      padding: 20px;
-      margin-top: 20px;
-      border: 1px solid #2f3a5a;
-    }
-    
-    .payment-instructions h4 {
+    .success {
+      background: #27ae60;
       color: #fff;
-      margin-bottom: 15px;
-      font-size: 1.1rem;
     }
-    
-    .payment-instructions p {
-      color: #bbb;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .error {
+      background: #e74c3c;
+      color: #fff;
     }
-    
-    .payment-instructions p:last-child {
-      margin-bottom: 0;
+    .pending {
+      background: #f1c40f;
+      color: #000;
     }
-    
+    .info {
+      background: #3498db;
+      color: #fff;
+    }
     .loading {
       display: inline-block;
       width: 20px;
       height: 20px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-top: 3px solid #fff;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #00ff88;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
-    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    
-    .back-button {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: #2f3a5a;
+    .product-info {
+      background: #2a2a2e;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      border-left: 4px solid #00ff88;
+    }
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ff88;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .back-btn {
+      background: #666;
       color: #fff;
+      padding: 10px 20px;
       border: none;
-      padding: 10px 15px;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      z-index: 1000;
+      margin-bottom: 20px;
+      width: auto;
     }
-    
-    .back-button:hover {
-      background: #3f4b76;
-      transform: translateY(-2px);
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        margin: 10px;
-        border-radius: 8px;
-      }
-      
-      .header {
-        padding: 20px;
-      }
-      
-      .header h1 {
-        font-size: 1.5rem;
-      }
-      
-      .content {
-        padding: 20px;
-      }
-      
-      .section {
-        padding: 20px;
-      }
-      
-      .total-amount {
-        font-size: 1.5rem;
-      }
-      
-      .qr-code img {
-        max-width: 240px;
-      }
+    .back-btn:hover {
+      background: #777;
     }
   </style>
 </head>
 <body>
-  <button class="back-button" onclick="window.history.back()">← Voltar</button>
-  
   <div class="container">
-    <div class="header">
-      <h1>🛒 Finalizar Compra</h1>
-      <p>Revise seus itens e complete o pagamento</p>
+    <h1>Nova Vibe RP — Checkout</h1>
+    
+    <div id="product-info" class="product-info">
+      <!-- Será preenchido dinamicamente -->
     </div>
 
-    <div class="content">
-      <div class="section">
-        <h3 class="section-title">📦 Seus Itens</h3>
-        <div class="product-list" id="product-list">
-          <!-- Itens do carrinho vão aqui -->
-        </div>
+    <div id="form-area">
+      <div class="form-group">
+        <label for="nome">Nome Completo:</label>
+        <input type="text" id="nome" placeholder="Digite seu nome completo" required>
       </div>
-
-      <div class="section total-section">
-        <div class="total-amount" id="total-value">Total: R$ 0,00</div>
-        <p>Pagamento via PIX instantâneo</p>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="seu@email.com" required>
       </div>
-
-      <div class="section" id="form-area">
-        <h3 class="section-title">👤 Dados do Cliente</h3>
-        
-        <div class="form-group">
-          <label for="nome">Nome Completo:</label>
-          <input type="text" id="nome" placeholder="Digite seu nome completo" required>
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" placeholder="seu@email.com" required>
-        </div>
-
-        <div class="form-group">
-          <label for="telefone">Telefone:</label>
-          <input type="text" id="telefone" placeholder="(11) 99999-9999" required>
-        </div>
-
-        <div class="form-group">
-          <label for="discord">Discord:</label>
-          <input type="text" id="discord" placeholder="SeuNome#1234" required>
-        </div>
-
-        <div class="form-group">
-          <label for="idJogador">ID do Jogador:</label>
-          <input type="number" id="idJogador" placeholder="123456" required>
-        </div>
-
-        <div class="form-group">
-          <label for="personagem">Nome do Personagem:</label>
-          <input type="text" id="personagem" placeholder="Nome do seu personagem" required>
-        </div>
-
-        <button class="pay-button" id="payBtn" onclick="processPayment()">
-          <span id="btnText">🔥 Pagar via PIX</span>
-          <span id="btnLoading" class="loading" style="display:none;"></span>
-        </button>
+      
+      <div class="form-group">
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" placeholder="(11) 99999-9999" required>
       </div>
+      
+      <div class="form-group">
+        <label for="discord">Discord:</label>
+        <input type="text" id="discord" placeholder="SeuNome#1234" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="idJogador">ID do Jogador:</label>
+        <input type="number" id="idJogador" placeholder="123456" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="personagem">Nome do Personagem:</label>
+        <input type="text" id="personagem" placeholder="Nome do seu personagem" required>
+      </div>
+      
+      <button id="payBtn" onclick="processPayment()">
+        <span id="btnText">🔥 Pagar via PIX</span>
+        <span id="btnLoading" class="loading" style="display:none;"></span>
+      </button>
+    </div>
 
-      <div class="section payment-area" id="payment-area" style="display:none;">
-        <h3 class="section-title">💳 Pagamento PIX</h3>
-        <div id="qr-code" class="qr-code"></div>
-        <div id="pix-code" class="pix-code">
-          <button class="copy-btn" onclick="copyPixCode()">Copiar</button>
-          <span id="pix-text"></span>
-        </div>
-        <div id="status" class="status pending">⏳ Aguardando pagamento...</div>
-        
-        <div class="payment-instructions">
-          <h4>📱 Como pagar:</h4>
-          <p>1️⃣ Abra o app do seu banco</p>
-          <p>2️⃣ Escaneie o QR Code ou cole o código PIX</p>
-          <p>3️⃣ Confirme o pagamento</p>
-          <p>⚡ O pagamento é processado instantaneamente</p>
-        </div>
+    <div id="payment-area" class="payment-area" style="display:none;">
+      <h3>💳 Pagamento PIX</h3>
+      <div id="qr-code" class="qr-code"></div>
+      <div id="pix-code" class="pix-code">
+        <button class="copy-btn" onclick="copyPixCode()">Copiar</button>
+        <span id="pix-text"></span>
+      </div>
+      <div id="status" class="status pending">⏳ Aguardando pagamento...</div>
+      <div class="info">
+        <p>📱 Abra o app do seu banco e escaneie o QR Code ou cole o código PIX</p>
+        <p>⚡ O pagamento é processado instantaneamente</p>
+      </div>
+    </div>
+
+    <div id="empty-cart" style="display:none;">
+      <div class="error" style="padding:20px; text-align:center;">
+        <h3>🛒 Carrinho Vazio</h3>
+        <p>Seu carrinho está vazio. Adicione alguns produtos antes de finalizar a compra.</p>
+        <button class="back-btn" onclick="goBack()">Voltar às Compras</button>
       </div>
     </div>
   </div>
 
-<script>
-  // URLs e token da API (substitua pelos seus)
-  const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
-  const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
-  const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
+  <script>
+    const createPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/create_payment';
+    const checkPaymentURL = 'https://czsnjdoxguldtznixcdj.supabase.co/functions/v1/check_payment';
+    const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6c25qZG94Z3VsZHR6bml4Y2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwMzI0NTAsImV4cCI6MjA2NzYwODQ1MH0.PCTVMRqrDD-5jsTXwQOHZP-uuNBwjbcjlfOZBidRcaU';
 
-  let checkInterval = null;
-  let currentPaymentId = null;
+    let checkInterval = null;
+    let currentPaymentId = null;
+    let carrinho = [];
 
-  // Função para carregar carrinho do localStorage e mostrar na tela
-  function carregarCarrinho() {
-    const carrinhoSalvo = localStorage.getItem('carrinho');
-    if (!carrinhoSalvo) {
-      alert('Carrinho vazio! Volte para a loja e adicione produtos.');
-      window.location.href = 'index.html';
-      return null;
+    function generateReference() {
+      return 'NVRP_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
     }
 
-    const carrinho = JSON.parse(carrinhoSalvo);
-    if (!carrinho.length) {
-      alert('Carrinho vazio! Volte para a loja e adicione produtos.');
-      window.location.href = 'index.html';
-      return null;
+    function carregarCarrinhoCheckout() {
+      try {
+        const carrinhoSalvo = localStorage.getItem('carrinho');
+        if (carrinhoSalvo) {
+          carrinho = JSON.parse(carrinhoSalvo);
+        } else {
+          carrinho = [];
+        }
+      } catch (error) {
+        console.error('Erro ao carregar carrinho:', error);
+        carrinho = [];
+      }
     }
 
-    const productList = document.getElementById('product-list');
-    productList.innerHTML = '';
-
-    let total = 0;
-    carrinho.forEach(item => {
-      const div = document.createElement('div');
-      div.className = 'product-item';
+    function mostrarCarrinhoCheckout() {
+      const productInfo = document.getElementById('product-info');
+      const formArea = document.getElementById('form-area');
+      const emptyCart = document.getElementById('empty-cart');
       
-      const valorTotalItem = item.preco * item.quantidade;
+      if (!carrinho.length) {
+        productInfo.style.display = 'none';
+        formArea.style.display = 'none';
+        emptyCart.style.display = 'block';
+        return;
+      }
       
-      div.innerHTML = `
-        <div class="product-info">
-          <div class="product-name">${item.produto}</div>
-          <div class="product-quantity">Quantidade: ${item.quantidade}</div>
-        </div>
-        <div class="product-price">R$ ${valorTotalItem.toFixed(2).replace('.', ',')}</div>
-      `;
+      let html = '<h3>🛒 Itens do Carrinho</h3>';
+      html += '<ul style="padding-left:0; list-style:none; margin:0;">';
       
-      productList.appendChild(div);
-      total += valorTotalItem;
-    });
-
-    document.getElementById('total-value').textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
-
-    return { carrinho, total };
-  }
-
-  // Função para carregar dados do cliente do localStorage e preencher formulário
-  function carregarDadosCliente() {
-    const cliente = JSON.parse(localStorage.getItem('cliente'));
-    if (!cliente) {
-      alert('Cliente não encontrado. Faça login antes de continuar.');
-      window.location.href = 'login.html';
-      return null;
+      let total = 0;
+      carrinho.forEach(item => {
+        const subtotal = item.preco * item.quantidade;
+        total += subtotal;
+        
+        html += `<li style="margin-bottom:10px; padding:10px; background:#333; border-radius:5px;">
+          <strong>${item.produto}</strong><br>
+          <span style="color:#ccc;">R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})} x ${item.quantidade}</span>
+          <span style="float:right; color:#00ff88;">R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
+        </li>`;
+      });
+      
+      html += '</ul>';
+      html += `<div class="price" style="margin-top:20px; border-top:2px solid #00ff88; padding-top:10px;">
+        Total: R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}
+      </div>`;
+      
+      productInfo.innerHTML = html;
+      productInfo.style.display = 'block';
+      formArea.style.display = 'block';
+      emptyCart.style.display = 'none';
     }
-    document.getElementById('nome').value = cliente.nome || '';
-    document.getElementById('email').value = cliente.email || '';
-    document.getElementById('telefone').value = cliente.telefone || '';
-    document.getElementById('discord').value = cliente.discord || '';
-    document.getElementById('idJogador').value = cliente.idJogador || '';
-    document.getElementById('personagem').value = cliente.personagem || '';
-    return cliente;
-  }
 
-  // Validação simples do formulário
-  function validateForm() {
-    const fields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
-    for (let field of fields) {
-      const value = document.getElementById(field).value.trim();
-      if (!value) {
-        alert(`Por favor, preencha o campo ${field}`);
-        document.getElementById(field).focus();
+    function validateForm() {
+      const fields = ['nome', 'email', 'telefone', 'discord', 'idJogador', 'personagem'];
+      
+      for (let field of fields) {
+        const element = document.getElementById(field);
+        const value = element.value.trim();
+        
+        if (!value) {
+          alert(`Por favor, preencha o campo ${field}`);
+          element.focus();
+          return false;
+        }
+      }
+      
+      const email = document.getElementById('email').value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Por favor, insira um email válido');
+        document.getElementById('email').focus();
         return false;
       }
-    }
-    // Email regex
-    const email = document.getElementById('email').value;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert('Por favor, insira um email válido');
-      document.getElementById('email').focus();
-      return false;
-    }
-    return true;
-  }
-
-  // Controle botão loading
-  function setLoading(loading) {
-    const btn = document.getElementById('payBtn');
-    const btnText = document.getElementById('btnText');
-    const btnLoading = document.getElementById('btnLoading');
-    if (loading) {
-      btn.disabled = true;
-      btnText.style.display = 'none';
-      btnLoading.style.display = 'inline-block';
-    } else {
-      btn.disabled = false;
-      btnText.style.display = 'inline-block';
-      btnLoading.style.display = 'none';
-    }
-  }
-
-  // Gera uma referência única para a compra
-  function generateReference() {
-    return 'NVR-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-  }
-
-  // Função principal para processar pagamento
-  async function processPayment() {
-    // Validar formulário
-    if (!validateForm()) return;
-
-    // Carregar dados
-    const dadosCarrinho = carregarCarrinho();
-    if (!dadosCarrinho) return;
-
-    const cliente = carregarDadosCliente();
-    if (!cliente) return;
-
-    // Preparar dados para envio
-    const paymentData = {
-      reference: generateReference(),
-      amount: dadosCarrinho.total,
-      customer: {
-        name: document.getElementById('nome').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('telefone').value,
-        discord: document.getElementById('discord').value,
-        playerId: document.getElementById('idJogador').value,
-        character: document.getElementById('personagem').value
-      },
-      items: dadosCarrinho.carrinho
-    };
-
-    setLoading(true);
-
-    try {
-      // Criar pagamento
-      const response = await fetch(createPaymentURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_TOKEN}`
-        },
-        body: JSON.stringify(paymentData)
-      });
-
-      const result = await response.json();
       
-      if (result.success) {
-        currentPaymentId = result.payment_id;
-        
-        // Mostrar QR Code e código PIX
-        document.getElementById('form-area').style.display = 'none';
-        document.getElementById('payment-area').style.display = 'block';
-        
-        // QR Code
-        const qrCodeDiv = document.getElementById('qr-code');
-        qrCodeDiv.innerHTML = `<img src="${result.qr_code}" alt="QR Code PIX">`;
-        
-        // Código PIX
-        document.getElementById('pix-text').textContent = result.pix_code;
-        
-        // Iniciar verificação de pagamento
-        startPaymentCheck();
-      } else {
-        alert('Erro ao gerar pagamento: ' + result.message);
-      }
-    } catch (error) {
-      console.error('Erro:', error);
-      alert('Erro ao processar pagamento. Tente novamente.');
-    } finally {
-      setLoading(false);
+      return true;
     }
-  }
 
-  // Função para verificar status do pagamento
-  async function startPaymentCheck() {
-    checkInterval = setInterval(async () => {
+    function setLoading(loading) {
+      const btn = document.getElementById('payBtn');
+      const btnText = document.getElementById('btnText');
+      const btnLoading = document.getElementById('btnLoading');
+      
+      if (loading) {
+        btn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoading.style.display = 'inline-block';
+      } else {
+        btn.disabled = false;
+        btnText.style.display = 'inline-block';
+        btnLoading.style.display = 'none';
+      }
+    }
+
+    async function processPayment() {
+      if (!validateForm()) return;
+      
+      if (!carrinho.length) {
+        alert('Carrinho vazio!');
+        return;
+      }
+      
+      setLoading(true);
+      
       try {
-        const response = await fetch(checkPaymentURL, {
+        const descricao = carrinho.map(item => `${item.quantidade}x ${item.produto}`).join(', ');
+        const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+
+        const nomeCompleto = document.getElementById('nome').value.trim();
+        const nomeParts = nomeCompleto.split(' ');
+        const firstName = nomeParts[0];
+        const lastName = nomeParts.slice(1).join(' ') || 'Cliente';
+
+        const paymentData = {
+          transaction_amount: total,
+          description: `Nova Vibe RP - ${descricao}`,
+          payer: {
+            email: document.getElementById('email').value.trim(),
+            first_name: firstName,
+            last_name: lastName
+          },
+          external_reference: generateReference(),
+          metadata: {
+            discord: document.getElementById('discord').value.trim(),
+            telefone: document.getElementById('telefone').value.trim(),
+            id_jogador: document.getElementById('idJogador').value.trim(),
+            personagem: document.getElementById('personagem').value.trim(),
+            carrinho: carrinho
+          }
+        };
+
+        const response = await fetch(createPaymentURL, {
           method: 'POST',
-          headers: {
+          headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${API_TOKEN}`
           },
-          body: JSON.stringify({ payment_id: currentPaymentId })
+          body: JSON.stringify(paymentData)
         });
 
-        const result = await response.json();
-        
-        if (result.status === 'paid') {
-          clearInterval(checkInterval);
-          document.getElementById('status').className = 'status success';
-          document.getElementById('status').innerHTML = '✅ Pagamento confirmado!';
-          
-          // Limpar carrinho
-          localStorage.removeItem('carrinho');
-          
-          setTimeout(() => {
-            alert('Pagamento confirmado! Seus itens serão entregues em breve.');
-            window.location.href = 'index.html';
-          }, 2000);
-        } else if (result.status === 'expired') {
-          clearInterval(checkInterval);
-          document.getElementById('status').className = 'status error';
-          document.getElementById('status').innerHTML = '❌ Pagamento expirado';
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Erro ao criar pagamento');
         }
+
+        if (data.status !== 'pending') {
+          throw new Error('Erro ao gerar PIX. Tente novamente.');
+        }
+
+        currentPaymentId = data.id;
+        document.getElementById('form-area').style.display = 'none';
+        document.getElementById('payment-area').style.display = 'block';
+        
+        const qrCodeImg = `<img src="data:image/png;base64,${data.point_of_interaction.transaction_data.qr_code_base64}" alt="QR Code PIX">`;
+        document.getElementById('qr-code').innerHTML = qrCodeImg;
+        document.getElementById('pix-text').textContent = data.point_of_interaction.transaction_data.qr_code;
+        
+        checkPaymentStatus(data.id);
+
       } catch (error) {
-        console.error('Erro ao verificar pagamento:', error);
+        console.error('Erro:', error);
+        alert('Erro: ' + error.message);
+      } finally {
+        setLoading(false);
       }
-    }, 5000); // Verifica a cada 5 segundos
-  }
-
-  // Função para copiar código PIX
-  function copyPixCode() {
-    const pixCode = document.getElementById('pix-text').textContent;
-    navigator.clipboard.writeText(pixCode).then(() => {
-      const copyBtn = document.querySelector('.copy-btn');
-      const originalText = copyBtn.textContent;
-      copyBtn.textContent = 'Copiado!';
-      copyBtn.style.background = '#27ae60';
-      
-      setTimeout(() => {
-        copyBtn.textContent = originalText;
-        copyBtn.style.background = '#2f3a5a';
-      }, 2000);
-    });
-  }
-
-  // Inicializar página
-  document.addEventListener('DOMContentLoaded', function() {
-    carregarCarrinho();
-    carregarDadosCliente();
-  });
-
-  // Limpar interval quando a página for fechada
-  window.addEventListener('beforeunload', function() {
-    if (checkInterval) {
-      clearInterval(checkInterval);
     }
-  });
-</script>
 
+    async function checkPaymentStatus(paymentId) {
+      if (checkInterval) clearInterval(checkInterval);
+      
+      checkInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`${checkPaymentURL}?payment_id=${paymentId}`, {
+            headers: { 'Authorization': `Bearer ${API_TOKEN}` }
+          });
+          
+          const data = await response.json();
+          
+          if (data.status === 'approved') {
+            clearInterval(checkInterval);
+            document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Obrigado pela compra!';
+            document.getElementById('status').className = 'status success';
+            
+            // Limpar carrinho após pagamento aprovado
+            localStorage.removeItem('carrinho');
+            
+            setTimeout(() => {
+              alert('🎉 Pagamento confirmado! Você receberá as informações no Discord em breve.');
+            }, 1000);
+            
+          } else if (data.status === 'rejected' || data.status === 'cancelled') {
+            clearInterval(checkInterval);
+            document.getElementById('status').innerHTML = '❌ Pagamento cancelado ou rejeitado';
+            document.getElementById('status').className = 'status error';
+          }
+        } catch (error) {
+          console.error('Erro ao verificar status:', error);
+        }
+      }, 5000);
+    }
+
+    function copyPixCode() {
+      const pixText = document.getElementById('pix-text').textContent;
+      
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(pixText).then(() => {
+          showCopySuccess();
+        }).catch(() => {
+          fallbackCopyTextToClipboard(pixText);
+        });
+      } else {
+        fallbackCopyTextToClipboard(pixText);
+      }
+    }
+
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        showCopySuccess();
+      } catch (err) {
+        console.error('Fallback: Erro ao copiar texto:', err);
+        alert('Erro ao copiar. Copie manualmente o código PIX.');
+      }
+      
+      document.body.removeChild(textArea);
+    }
+
+    function showCopySuccess() {
+      const btn = document.querySelector('.copy-btn');
+      const originalText = btn.textContent;
+      btn.textContent = 'Copiado!';
+      btn.style.background = '#27ae60';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '#00ff88';
+      }, 2000);
+    }
+
+    function goBack() {
+      // Se há um histórico, volta para a página anterior
+      if (history.length > 1) {
+        history.back();
+      } else {
+        // Se não há histórico, redireciona para uma página padrão
+        window.location.href = '/';
+      }
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      carregarCarrinhoCheckout();
+      mostrarCarrinhoCheckout();
+    });
+
+    // Limpeza ao sair da página
+    window.addEventListener('beforeunload', () => {
+      if (checkInterval) {
+        clearInterval(checkInterval);
+      }
+    });
+  </script>
 </body>
 </html>
