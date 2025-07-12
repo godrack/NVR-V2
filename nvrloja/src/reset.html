@@ -438,6 +438,9 @@
         const { createClient } = supabase;
         const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
+        // Variável para controlar se estamos em modo de recuperação de senha
+        let passwordRecoveryMode = false;
+
         // Elementos DOM
         const resetForm = document.getElementById('reset-form');
         const successScreen = document.getElementById('success-screen');
@@ -517,6 +520,9 @@
             const type = urlParams.get('type');
 
             if (accessToken && refreshToken && type === 'recovery') {
+                // Marcar que estamos em modo de recuperação de senha
+                passwordRecoveryMode = true;
+                
                 // Definir sessão com os tokens
                 supabaseClient.auth.setSession({
                     access_token: accessToken,
@@ -530,7 +536,6 @@
                     }
                 });
             }
-            // Removido o else que mostrava erro de link inválido
         }
 
         // Formulário de redefinição
@@ -625,35 +630,46 @@
 
         // Botão para ir ao login após sucesso
         document.getElementById('go-to-login').addEventListener('click', () => {
+            // Limpar dados de sessão antes de ir para o login
+            localStorage.removeItem('nova_vibe_user');
+            supabaseClient.auth.signOut();
             window.location.href = 'https://novaviberoleplay.netlify.app/login.html';
         });
 
-        // Verificar se usuário já está logado
+        // Verificar se usuário já está logado - MODIFICADO
         window.addEventListener('load', () => {
-            const storedUser = localStorage.getItem('nova_vibe_user');
-            if (storedUser) {
-                try {
-                    const userData = JSON.parse(storedUser);
-                    if (userData.logged_in) {
-                        // Usuário já está logado, redirecionar para loja
-                        window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
-                        return;
+            // Primeiro, verificar se há tokens de recuperação na URL
+            processUrlTokens();
+            
+            // Só verificar redirecionamento se NÃO estivermos em modo de recuperação
+            if (!passwordRecoveryMode) {
+                const storedUser = localStorage.getItem('nova_vibe_user');
+                if (storedUser) {
+                    try {
+                        const userData = JSON.parse(storedUser);
+                        if (userData.logged_in) {
+                            // Usuário já está logado e não está em recuperação, redirecionar para loja
+                            window.location.href = 'https://novaviberoleplay.netlify.app/loja.html';
+                            return;
+                        }
+                    } catch (error) {
+                        // Erro ao parsear, continuar normalmente
                     }
-                } catch (error) {
-                    // Erro ao parsear, continuar normalmente
                 }
             }
-            
-            // Processar tokens da URL
-            processUrlTokens();
         });
 
         // Monitorar mudanças de autenticação
         supabaseClient.auth.onAuthStateChange((event, session) => {
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('Recuperação de senha iniciada');
+                passwordRecoveryMode = true;
             } else if (event === 'SIGNED_IN') {
                 console.log('Usuário autenticado para redefinição de senha');
+                if (!passwordRecoveryMode) {
+                    // Se não estamos em modo de recuperação, pode redirecionar
+                    // Mas como chegamos aqui, vamos manter na página
+                }
             }
         });
     </script>
