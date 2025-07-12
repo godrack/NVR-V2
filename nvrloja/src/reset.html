@@ -117,46 +117,6 @@
             transform: translateY(-1px);
         }
 
-        .password-requirements {
-            margin-top: 12px;
-            font-size: 12px;
-            color: #9ca3af;
-            text-align: left;
-        }
-
-        .requirement {
-            display: flex;
-            align-items: center;
-            margin-bottom: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .requirement-icon {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .requirement.valid {
-            color: #10b981;
-        }
-
-        .requirement.valid .requirement-icon {
-            background: #10b981;
-            color: white;
-        }
-
-        .requirement.invalid .requirement-icon {
-            background: #374151;
-            color: #9ca3af;
-        }
-
         .password-match {
             margin-top: 8px;
             font-size: 12px;
@@ -188,20 +148,13 @@
             overflow: hidden;
         }
 
-        .btn:hover:not(:disabled) {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
         }
 
-        .btn:active:not(:disabled) {
+        .btn:active {
             transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
         }
 
         .btn-content {
@@ -232,6 +185,7 @@
             border-radius: 2px;
             margin-top: 16px;
             overflow: hidden;
+            display: none;
         }
 
         .progress-fill {
@@ -311,9 +265,8 @@
             font-size: 14px;
             margin-top: 16px;
             border: 1px solid #374151;
+            display: none;
         }
-
-
 
         @media (max-width: 480px) {
             .container {
@@ -339,37 +292,13 @@
         <div class="form-container" id="formContainer">
             <div class="logo">🔐</div>
             <h1>Nova Senha</h1>
-            <p class="subtitle">Crie uma senha forte e segura para sua conta</p>
-            
-
+            <p class="subtitle">Crie uma senha para sua conta</p>
             
             <form id="passwordForm">
                 <div class="form-group">
                     <label for="newPassword">Nova Senha</label>
                     <input type="password" id="newPassword" name="newPassword" required 
                            placeholder="Digite sua nova senha">
-                    <div class="password-requirements">
-                        <div class="requirement" id="req-length">
-                            <div class="requirement-icon">○</div>
-                            Pelo menos 8 caracteres
-                        </div>
-                        <div class="requirement" id="req-uppercase">
-                            <div class="requirement-icon">○</div>
-                            Uma letra maiúscula
-                        </div>
-                        <div class="requirement" id="req-lowercase">
-                            <div class="requirement-icon">○</div>
-                            Uma letra minúscula
-                        </div>
-                        <div class="requirement" id="req-number">
-                            <div class="requirement-icon">○</div>
-                            Um número
-                        </div>
-                        <div class="requirement" id="req-special">
-                            <div class="requirement-icon">○</div>
-                            Um caractere especial
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -379,17 +308,17 @@
                     <div class="password-match" id="passwordMatch"></div>
                 </div>
                 
-                <button type="submit" class="btn" id="submitBtn" disabled>
+                <button type="submit" class="btn" id="submitBtn">
                     <div class="btn-content">
                         <span>Redefinir Senha</span>
                     </div>
                 </button>
                 
-                <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-bar" id="progressBar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 
-                <div class="error-message" id="errorMessage" style="display: none;"></div>
+                <div class="error-message" id="errorMessage"></div>
             </form>
         </div>
 
@@ -426,15 +355,6 @@
         const passwordMatch = document.getElementById('passwordMatch');
         const errorMessage = document.getElementById('errorMessage');
 
-        // Requisitos de senha
-        const requirements = {
-            length: { element: document.getElementById('req-length'), test: (p) => p.length >= 8 },
-            uppercase: { element: document.getElementById('req-uppercase'), test: (p) => /[A-Z]/.test(p) },
-            lowercase: { element: document.getElementById('req-lowercase'), test: (p) => /[a-z]/.test(p) },
-            number: { element: document.getElementById('req-number'), test: (p) => /\d/.test(p) },
-            special: { element: document.getElementById('req-special'), test: (p) => /[!@#$%^&*(),.?":{}|<>]/.test(p) }
-        };
-
         // Verificar tokens na URL
         function checkUrlTokens() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -458,21 +378,6 @@
             }
         }
 
-        // Verificar requisitos da senha
-        function checkPasswordRequirements(password) {
-            let validCount = 0;
-            
-            Object.values(requirements).forEach(req => {
-                const isValid = req.test(password);
-                req.element.classList.toggle('valid', isValid);
-                req.element.classList.toggle('invalid', !isValid);
-                req.element.querySelector('.requirement-icon').textContent = isValid ? '✓' : '○';
-                if (isValid) validCount++;
-            });
-            
-            return validCount === Object.keys(requirements).length;
-        }
-
         // Verificar se senhas coincidem
         function checkPasswordMatch() {
             const password = newPasswordInput.value;
@@ -494,14 +399,6 @@
                 passwordMatch.classList.remove('valid');
                 return false;
             }
-        }
-
-        // Atualizar estado do botão
-        function updateSubmitButton() {
-            const isPasswordValid = checkPasswordRequirements(newPasswordInput.value);
-            const isPasswordMatch = checkPasswordMatch();
-            
-            submitBtn.disabled = !(isPasswordValid && isPasswordMatch);
         }
 
         // Simular progresso de carregamento
@@ -561,8 +458,7 @@
         }
 
         // Event listeners
-        newPasswordInput.addEventListener('input', updateSubmitButton);
-        confirmPasswordInput.addEventListener('input', updateSubmitButton);
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
 
         // Submissão do formulário
         form.addEventListener('submit', async (e) => {
@@ -571,9 +467,9 @@
             const newPassword = newPasswordInput.value;
             const confirmPassword = confirmPasswordInput.value;
             
-            // Validações finais
-            if (!checkPasswordRequirements(newPassword)) {
-                showError('A senha não atende aos requisitos mínimos de segurança.');
+            // Validação básica
+            if (!newPassword) {
+                showError('Por favor, digite uma senha.');
                 return;
             }
             
@@ -582,8 +478,7 @@
                 return;
             }
 
-            // Desabilitar botão e mostrar loading
-            submitBtn.disabled = true;
+            // Mostrar loading
             submitBtn.querySelector('.btn-content').innerHTML = `
                 <div class="loading-spinner"></div>
                 <span>Redefinindo...</span>
@@ -606,8 +501,7 @@
                 console.error('Erro ao atualizar senha:', error);
                 showError(`Erro ao redefinir senha: ${error.message}`);
                 
-                // Reabilitar botão
-                submitBtn.disabled = false;
+                // Restaurar botão
                 submitBtn.querySelector('.btn-content').innerHTML = '<span>Redefinir Senha</span>';
             }
         });
