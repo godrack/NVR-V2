@@ -1,388 +1,288 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <link rel="icon" href="favicon.png" type="image/png">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nova Vibe Roleplay — Loja Oficial</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Vibe RP - Loja</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    :root{--bg:#0c0c0c;--surface:#1a1a1a;--glass:rgba(255,255,255,0.05);--neon:#00ff88;--neon-glow:rgba(0,255,136,0.3);--purple:#8b5cf6;--purple-glow:rgba(139,92,246,0.3);--text:#ffffff;--text-dim:#a0a0a0;--danger:#ff4757;--success:#2ed573;--warning:#ffa502}
-    body{background:radial-gradient(circle at 20% 50%,rgba(139,92,246,0.1) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(0,255,136,0.1) 0%,transparent 50%),var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding-top:90px;overflow-x:hidden}
-    .container{max-width:1400px;margin:0 auto;padding:0 24px}
-    header{position:fixed;top:0;left:0;right:0;background:rgba(12,12,12,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass);z-index:1000;padding:16px 0}
-    .header-content{display:flex;align-items:center;justify-content:space-between;gap:24px}
-    .header-left h1{font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--neon),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;transition:all 0.4s ease;text-shadow:0 0 20px var(--neon-glow)}
-    .header-left h1:hover{transform:scale(1.05);filter:brightness(1.2)}
-    .header-center{flex:1;max-width:400px}
-    .search-container{position:relative}
-    .search-input{width:100%;padding:14px 50px 14px 20px;background:var(--surface);border:2px solid transparent;border-radius:16px;color:var(--text);font-size:15px;transition:all 0.3s ease;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-    .search-input:focus{outline:none;border-color:var(--neon);box-shadow:0 0 0 4px var(--neon-glow),0 4px 20px rgba(0,0,0,0.3)}
-    .search-input::placeholder{color:var(--text-dim)}
-    .search-icon{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:18px}
-    .header-right{display:flex;align-items:center;gap:16px}
-    .header-btn{background:var(--surface);border:2px solid var(--glass);color:var(--text);padding:12px 20px;border-radius:12px;cursor:pointer;transition:all 0.3s ease;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;text-decoration:none;position:relative;overflow:hidden}
-    .header-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);transition:left 0.5s ease}
-    .header-btn:hover::before{left:100%}
-    .header-btn:hover{border-color:var(--neon);box-shadow:0 0 20px var(--neon-glow);transform:translateY(-2px)}
-    .header-btn.login{background:linear-gradient(135deg,var(--neon),var(--purple));border:none;box-shadow:0 0 20px var(--neon-glow)}
-    .header-btn.logout{background:var(--danger);border-color:var(--danger)}
-    .user-greeting{color:var(--text-dim);font-size:14px;font-weight:500}
-    .cart-badge{position:absolute;top:-8px;right:-8px;background:var(--danger);color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;box-shadow:0 0 10px rgba(255,71,87,0.5)}
-    .filter-buttons{display:flex;justify-content:center;gap:16px;margin:40px 0;flex-wrap:wrap}
-    .filter-buttons button{background:var(--surface);border:2px solid var(--glass);color:var(--text);padding:14px 28px;border-radius:12px;cursor:pointer;font-weight:600;transition:all 0.3s ease;position:relative;overflow:hidden}
-    .filter-buttons button::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,var(--neon),var(--purple));opacity:0;transition:opacity 0.3s ease}
-    .filter-buttons button:hover,.filter-buttons button.active{border-color:var(--neon);box-shadow:0 0 20px var(--neon-glow);transform:translateY(-2px)}
-    .filter-buttons button:hover::after,.filter-buttons button.active::after{opacity:0.1}
-    .product-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,420px));gap:30px;margin-top:40px;justify-content:center}
-    .product-item{background:var(--surface);border:1px solid var(--glass);border-radius:20px;padding:24px;transition:all 0.4s ease;position:relative;overflow:hidden;backdrop-filter:blur(10px);width:420px;max-width:420px}
-    .product-item::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,var(--neon-glow),var(--purple-glow));opacity:0;transition:opacity 0.3s ease}
-    .product-item:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.3);border-color:var(--neon)}
+    :root{--bg:#0c0c0c;--surface:#1a1a1a;--glass:rgba(255,255,255,0.05);--neon:#00ff88;--neon-glow:rgba(0,255,136,0.3);--purple:#8b5cf6;--text:#fff;--text-dim:#a0a0a0;--danger:#ff4757;--success:#2ed573;--warning:#ffa502}
+    body{background:var(--bg);color:var(--text);font-family:system-ui,sans-serif;line-height:1.6;min-height:100vh}
+    .container{max-width:1200px;margin:0 auto;padding:20px}
+    .header{background:linear-gradient(135deg,var(--surface),rgba(139,92,246,0.1));border-radius:20px;padding:40px 20px;text-align:center;margin-bottom:40px;border:1px solid var(--glass);backdrop-filter:blur(20px)}
+    .header h1{font-size:3rem;background:linear-gradient(135deg,var(--neon),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+    .header p{color:var(--text-dim);font-size:1.2rem}
+    .filters{display:flex;gap:15px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+    .filter-btn{padding:12px 24px;border:2px solid var(--glass);background:transparent;color:var(--text);border-radius:25px;cursor:pointer;transition:all 0.3s;font-weight:600}
+    .filter-btn:hover,.filter-btn.active{background:linear-gradient(135deg,var(--neon),var(--purple));border-color:var(--neon);transform:translateY(-2px);box-shadow:0 5px 15px var(--neon-glow)}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px;margin-bottom:40px}
+    .product-item{background:var(--surface);border:1px solid var(--glass);border-radius:20px;padding:20px;transition:all 0.3s;backdrop-filter:blur(10px);position:relative;overflow:hidden}
+    .product-item::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(45deg,transparent,rgba(0,255,136,0.05),transparent);opacity:0;transition:opacity 0.3s}
+    .product-item:hover{transform:translateY(-10px);border-color:var(--neon);box-shadow:0 10px 30px rgba(0,255,136,0.1)}
     .product-item:hover::before{opacity:1}
-    .product-item > *{position:relative;z-index:1}
-    .product-item img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:20px;transition:all 0.3s ease}
+    .product-item img{width:100%;height:200px;object-fit:cover;border-radius:15px;margin-bottom:15px;transition:transform 0.3s}
     .product-item:hover img{transform:scale(1.05)}
-    .product-item h3{margin-bottom:10px;font-size:1.4rem;font-weight:700}
-    .product-item p{color:var(--text-dim);margin-bottom:16px;font-size:15px;line-height:1.5}
-    .product-item p strong{color:var(--text);font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--neon),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .product-item button{background:linear-gradient(135deg,var(--neon),var(--purple));color:white;border:none;padding:16px 24px;border-radius:12px;cursor:pointer;font-weight:700;transition:all 0.3s ease;width:100%;font-size:15px;position:relative;overflow:hidden}
-    .product-item button::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);transition:left 0.5s ease}
-    .product-item button:hover::before{left:100%}
-    .product-item button:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--neon-glow)}
-    #cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(5px);z-index:1001;display:none}
-    #cart{position:fixed;top:0;right:-400px;width:400px;height:100%;background:var(--surface);border-left:1px solid var(--glass);padding:30px;transition:right 0.4s cubic-bezier(0.4,0,0.2,1);overflow-y:auto;z-index:1002;backdrop-filter:blur(20px)}
-    #cart.open{right:0}
-    #cart h2{font-size:1.8rem;margin-bottom:24px;font-weight:800;background:linear-gradient(135deg,var(--neon),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    #cart ul{list-style:none;margin-bottom:30px}
-    #cart ul li{margin-bottom:20px;padding:16px;background:var(--glass);border-radius:12px;border:1px solid var(--glass);backdrop-filter:blur(10px)}
-    #cart ul li .item-info{margin-bottom:12px}
-    #cart ul li .item-controls{display:flex;align-items:center;gap:12px}
-    #cart ul li .item-controls button{background:var(--neon);border:none;color:black;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.3s ease}
-    #cart ul li .item-controls button:hover{background:var(--purple);color:white;transform:scale(1.1)}
-    #cart ul li .item-controls button:last-child{background:var(--danger);color:white;margin-left:auto}
-    
-    .terms-container{margin:20px 0;padding:20px;background:var(--glass);border-radius:12px;border:1px solid var(--glass);backdrop-filter:blur(10px)}
-    .terms-checkbox{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
-    .terms-checkbox input[type="checkbox"]{width:18px;height:18px;accent-color:var(--neon);cursor:pointer;margin-top:2px}
-    .terms-text{font-size:14px;line-height:1.4;color:var(--text-dim)}
-    .terms-text a{color:var(--neon);text-decoration:none;font-weight:600;transition:all 0.3s ease}
-    .terms-text a:hover{color:var(--purple);text-decoration:underline}
-    
-    #cart button{background:linear-gradient(135deg,var(--neon),var(--purple));border:none;color:white;padding:16px;width:100%;border-radius:12px;cursor:pointer;font-weight:700;margin-top:16px;transition:all 0.3s ease;font-size:16px}
-    #cart button:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--neon-glow)}
-    #cart button:disabled{background:var(--text-dim);cursor:not-allowed;opacity:0.5}
-    #cart button:disabled:hover{transform:none;box-shadow:none}
-    
-    #cart-total{margin-top:24px;font-weight:800;font-size:1.3rem;padding:20px;background:var(--glass);border-radius:12px;border:1px solid var(--glass);text-align:center;backdrop-filter:blur(10px)}
-    footer{margin-top:80px;padding:40px 0;text-align:center;border-top:1px solid var(--glass);color:var(--text-dim)}
+    .product-item h3{color:var(--neon);margin-bottom:10px;font-size:1.3rem}
+    .product-item p{color:var(--text-dim);margin-bottom:15px;font-size:0.95rem}
+    .product-item .price{font-size:1.4rem;font-weight:800;color:var(--neon);margin-bottom:15px;text-shadow:0 0 10px var(--neon-glow)}
+    .product-item button{width:100%;padding:12px;background:linear-gradient(135deg,var(--neon),var(--purple));border:none;border-radius:10px;color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s;font-size:1rem}
+    .product-item button:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,255,136,0.3)}
+    .cart{position:fixed;top:20px;right:20px;background:var(--surface);border:1px solid var(--glass);border-radius:15px;padding:15px;backdrop-filter:blur(20px);z-index:1000;min-width:200px}
+    .cart h3{color:var(--neon);margin-bottom:10px;font-size:1.1rem}
+    .cart-items{max-height:200px;overflow-y:auto;margin-bottom:10px}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--glass);font-size:0.9rem}
+    .cart-item:last-child{border-bottom:none}
+    .cart-total{font-weight:800;color:var(--neon);font-size:1.1rem;margin-bottom:10px}
+    .cart button{width:100%;padding:10px;background:linear-gradient(135deg,var(--success),var(--neon));border:none;border-radius:8px;color:#fff;font-weight:600;cursor:pointer;transition:all 0.3s}
+    .cart button:hover{transform:translateY(-2px)}
+    .empty-cart{color:var(--text-dim);font-size:0.9rem;text-align:center;padding:20px}
+    .sync-status{position:fixed;bottom:20px;right:20px;background:var(--surface);border:1px solid var(--glass);border-radius:10px;padding:10px 15px;backdrop-filter:blur(20px);z-index:1000;font-size:0.9rem;opacity:0;transition:opacity 0.3s}
+    .sync-status.show{opacity:1}
+    .sync-status.success{border-color:var(--success);color:var(--success)}
+    .sync-status.warning{border-color:var(--warning);color:var(--warning)}
+    .loading{text-align:center;padding:40px;color:var(--text-dim)}
+    .loading::after{content:'';display:inline-block;width:20px;height:20px;border:2px solid var(--neon);border-top:2px solid transparent;border-radius:50%;animation:spin 1s linear infinite;margin-left:10px}
+    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    .no-products{text-align:center;padding:60px 20px;color:var(--text-dim)}
+    .no-products h3{color:var(--neon);margin-bottom:10px;font-size:1.5rem}
     @media (max-width:768px){
-      .header-content{flex-direction:column;gap:16px}
-      .header-center{max-width:100%}
-      .product-list{grid-template-columns:repeat(auto-fill,minmax(320px,320px));gap:20px}
-      .product-item{width:320px;max-width:320px}
-      #cart{width:100%;right:-100%}
-      .filter-buttons{flex-direction:column;align-items:center}
-      .filter-buttons button{width:200px}
+      .container{padding:10px}
+      .header{padding:20px 15px}
+      .header h1{font-size:2rem}
+      .filters{gap:10px}
+      .filter-btn{padding:10px 20px;font-size:0.9rem}
+      .products-grid{grid-template-columns:1fr;gap:20px}
+      .cart{position:relative;top:auto;right:auto;margin-bottom:20px}
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="container">
-    <div class="header-content">
-      <div class="header-left">
-        <h1 onclick="window.location.href='https://novaviberoleplay.netlify.app'">Nova Vibe Roleplay</h1>
-      </div>
-      <div class="header-center">
-        <div class="search-container">
-          <input type="text" id="search-input" class="search-input" placeholder="Pesquisar produtos..." onkeyup="searchProducts(this.value)">
-          <span class="search-icon">🔍</span>
-        </div>
-      </div>
-      <div class="header-right">
-        <span id="user-greeting" class="user-greeting" style="display: none;"></span>
-        <button class="header-btn" onclick="openCart()">🛒 Carrinho<span id="cart-badge-header" class="cart-badge" style="display: none;">0</span></button>
-        <button class="header-btn login" id="login-btn" onclick="irParaLogin()">Entrar</button>
-        <button class="header-btn logout" id="logout-btn" onclick="fazerLogout()" style="display: none;">Sair</button>
-      </div>
-    </div>
-  </div>
-</header>
-
 <div class="container">
-  <div class="filter-buttons">
-    <button data-filter="all" class="active" onclick="filterProducts('all')">Todos</button>
-    <button data-filter="casas" onclick="filterProducts('casas')">Casas</button>
-    <button data-filter="veiculos" onclick="filterProducts('veiculos')">Veículos</button>
-    <button data-filter="extras" onclick="filterProducts('extras')">Extras</button>
+  <div class="header">
+    <h1>🎮 Nova Vibe RP</h1>
+    <p>Sua loja de itens premium para GTA V Roleplay</p>
   </div>
 
-  <main>
-    <section class="product-list">
-      <div class="product-item" data-category="casas">
-        <img src="https://five-rp.de/wp-content/uploads/2024/07/chrome_nQisegy55l-1024x573.jpg.webp" alt="Mansão Vista Mar" />
-        <h3>Mansão Vista Mar</h3>
-        <p>Luxo à beira-mar com garagem p/ 5 carros.</p>
-        <p><strong>R$ 259,00</strong></p>
-        <button onclick="addToCart('Mansão Vista Mar', 259)">Adicionar ao Carrinho</button>
-      </div>
-      <div class="product-item" data-category="veiculos">
-        <img src="https://img.gta5-mods.com/q95/images/lamborghini-urus-2018-add-on/2b9a2a-PGTA51544780450.jpg" alt="Supercarro ZX9" />
-        <h3>Lamborghini Urus</h3>
-        <p>V12 Biturbo, o mais veloz da cidade.</p>
-        <p><strong>R$ 149,00</strong></p>
-        <button onclick="addToCart('Lamborghini Urus', 149)">Adicionar ao Carrinho</button>
-      </div>
-      <div class="product-item" data-category="extras">
-        <img src="https://storage.hydrus.gg/production/packages/mwUds4zV929tBziSfiAs5gG64TqNnwOlcjCXZsKIqVPsixKUiR1DXeGtOUjmGPfq.png" alt="VIP Gold" />
-        <h3>VIP Ouro (30d)</h3>
-        <p>Acesso VIP com benefícios exclusivos.</p>
-        <p><strong>R$ 99,00</strong></p>
-        <button onclick="addToCart('VIP Ouro (30d)', 99)">Adicionar ao Carrinho</button>
-      </div>
-      <div class="product-item" data-category="casas">
-        <img src="https://img.gta5-mods.com/q95/images/single-player-mode-custom-apartment-menyoo-mapeditor-adco1234/6f0395-9e73e5-46f5ac-GTA5%202016-05-02%2012-17-12-54_%E5%89%AF%E6%9C%AC.png" alt="Apartamento Moderno" />
-        <h3>Apartamento Moderno</h3>
-        <p>Localização central com vista panorâmica.</p>
-        <p><strong>R$ 180,00</strong></p>
-        <button onclick="addToCart('Apartamento Moderno', 180)">Adicionar ao Carrinho</button>
-      </div>
-      <div class="product-item" data-category="veiculos">
-        <img src="https://img.gta5-mods.com/q95/images/2020-yamaha-yzf-r1-r1m/b82192-a.jpg" alt="Moto Esportiva" />
-        <h3>Moto Esportiva R1</h3>
-        <p>Velocidade e agilidade nas ruas.</p>
-        <p><strong>R$ 85,00</strong></p>
-        <button onclick="addToCart('Moto Esportiva R1', 85)">Adicionar ao Carrinho</button>
-      </div>
-      <div class="product-item" data-category="extras">
-        <img src="https://storage.hydrus.gg/production/packages/yKxKYS3wtu4Xz1Y6N2ui9TM0oTUpYOKTrLx7bTSqW8BREpXUWLp5wojEkwMRBkgc.png" alt="VIP Premium" />
-        <h3>VIP Permanente</h3>
-        <p>Máximo de privilégios no servidor.</p>
-        <p><strong>R$ 1.390,00</strong></p>
-        <button onclick="addToCart('VIP Permanente', 1390)">Adicionar ao Carrinho</button>
-      </div>
-      <div class="product-item" data-category="extras">
-        <img src="https://s2-techtudo.glbimg.com/Dx-d7zd6abaVIdY1QqGVKl_QvJ4=/0x0:620x349/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/s/i/R6L1HDR3GxheHSo2ECLQ/2013-10-11-grand-theft-auto-5-gta-finais.jpg" />
-        <h3>GTA V PREMIUM EDITION</h3>
-        <p>Máximo de privilégios no servidor.</p>
-        <p><strong>R$ 178,00</strong></p>
-        <button onclick="addToCart('GTA V PREMIUM EDITION', 178)">Adicionar ao Carrinho</button>
-      </div>
-    </section>
-  </main>
-</div>
-
-<footer>
-  <div class="container">&copy; 2025 Nova Vibe RP — Todos os direitos reservados.</div>
-</footer>
-
-<div id="cart-overlay" onclick="closeCart()"></div>
-<div id="cart">
-  <h2>Carrinho</h2>
-  <ul id="cart-items"></ul>
-  <div id="cart-total">Total: R$ 0,00</div>
-  
-  <div class="terms-container" id="terms-container" style="display: none;">
-    <div class="terms-checkbox">
-      <input type="checkbox" id="terms-checkbox" onchange="updateFinalizarButton()">
-      <div class="terms-text">
-        Li e concordo com os <a href="https://novaviberoleplay.netlify.app/termos.html" target="_blank">Termos de Compra</a> e Política de Privacidade da Nova Vibe RP.
-      </div>
-    </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterProducts('all')">🌟 Todos</button>
+    <button class="filter-btn" onclick="filterProducts('casas')">🏠 Casas</button>
+    <button class="filter-btn" onclick="filterProducts('veiculos')">🚗 Veículos</button>
+    <button class="filter-btn" onclick="filterProducts('extras')">⭐ Extras</button>
   </div>
-  
-  <button id="finalizar-btn" style="display:none;" onclick="finalizarCompra()" disabled>Finalizar Compra</button>
-  <button id="limpar-btn" style="display:none;" onclick="limparCarrinho()">Limpar Carrinho</button>
+
+  <div id="products-container">
+    <div class="loading">Carregando produtos...</div>
+  </div>
 </div>
+
+<div class="cart">
+  <h3>🛒 Carrinho</h3>
+  <div id="cart-items" class="cart-items"></div>
+  <div id="cart-total" class="cart-total">Total: R$ 0,00</div>
+  <button onclick="checkout()">Finalizar Compra</button>
+</div>
+
+<div id="sync-status" class="sync-status"></div>
 
 <script>
-const $ = id => document.getElementById(id);
-const cartItems = $('cart-items'), cart = $('cart'), cartOverlay = $('cart-overlay'), cartTotal = $('cart-total'), userGreeting = $('user-greeting'), loginBtn = $('login-btn'), logoutBtn = $('logout-btn'), badges = [$('cart-badge'), $('cart-badge-header')], finalizarBtn = $('finalizar-btn'), limparBtn = $('limpar-btn'), termsContainer = $('terms-container'), termsCheckbox = $('terms-checkbox');
-let carrinho = [];
+let products = [];
+let cart = [];
+let currentFilter = 'all';
 
-const getUserData = () => JSON.parse(localStorage.getItem('nova_vibe_user') || '{}');
-const isValidToken = userData => userData.expires_at && new Date(userData.expires_at * 1000) > new Date();
-const isLoggedIn = () => {
-  const userData = getUserData();
-  if (userData?.logged_in && userData.name && userData.email) {
-    if (isValidToken(userData)) return true;
-    localStorage.removeItem('nova_vibe_user');
-  }
-  return false;
-};
+// Produtos padrão (fallback caso não haja dados no localStorage)
+const defaultProducts = [
+  {id:1,name:'Mansão Vista Mar',description:'Luxo à beira-mar com garagem p/ 5 carros.',price:259,category:'casas',image:'https://five-rp.de/wp-content/uploads/2024/07/chrome_nQisegy55l-1024x573.jpg.webp'},
+  {id:2,name:'Lamborghini Urus',description:'V12 Biturbo, o mais veloz da cidade.',price:149,category:'veiculos',image:'https://img.gta5-mods.com/q95/images/lamborghini-urus-2018-add-on/2b9a2a-PGTA51544780450.jpg'},
+  {id:3,name:'VIP Ouro (30d)',description:'Acesso VIP com benefícios exclusivos.',price:99,category:'extras',image:'https://storage.hydrus.gg/production/packages/mwUds4zV929tBziSfiAs5gG64TqNnwOlcjCXZsKIqVPsixKUiR1DXeGtOUjmGPfq.png'},
+  {id:4,name:'Apartamento Moderno',description:'Localização central com vista panorâmica.',price:180,category:'casas',image:'https://img.gta5-mods.com/q95/images/single-player-mode-custom-apartment-menyoo-mapeditor-adco1234/6f0395-9e73e5-46f5ac-GTA5%202016-05-02%2012-17-12-54_%E5%89%AF%E6%9C%AC.png'},
+  {id:5,name:'Moto Esportiva R1',description:'Velocidade e agilidade nas ruas.',price:85,category:'veiculos',image:'https://img.gta5-mods.com/q95/images/2020-yamaha-yzf-r1-r1m/b82192-a.jpg'},
+  {id:6,name:'VIP Permanente',description:'Máximo de privilégios no servidor.',price:1390,category:'extras',image:'https://storage.hydrus.gg/production/packages/yKxKYS3wtu4Xz1Y6N2ui9TM0oTUpYOKTrLx7bTSqW8BREpXUWLp5wojEkwMRBkgc.png'},
+  {id:7,name:'GTA V PREMIUM EDITION',description:'Máximo de privilégios no servidor.',price:178,category:'extras',image:'https://s2-techtudo.glbimg.com/Dx-d7zd6abaVIdY1QqGVKl_QvJ4=/0x0:620x349/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2021/s/i/R6L1HDR3GxheHSo2ECLQ/2013-10-11-grand-theft-auto-5-gta-finais.jpg'}
+];
 
-function updateLoginUI() {
-  if (isLoggedIn()) {
-    const userData = getUserData();
-    userGreeting.textContent = `Olá, ${userData.name.trim().split(' ')[0]}`;
-    userGreeting.style.display = 'block';
-    loginBtn.style.display = 'none';
-    logoutBtn.style.display = 'block';
-  } else {
-    userGreeting.style.display = 'none';
-    loginBtn.style.display = 'block';
-    logoutBtn.style.display = 'none';
-  }
-}
-
-function updateFinalizarButton() {
-  const isChecked = termsCheckbox.checked;
-  finalizarBtn.disabled = !isChecked;
-  finalizarBtn.style.opacity = isChecked ? '1' : '0.5';
-  finalizarBtn.style.cursor = isChecked ? 'pointer' : 'not-allowed';
-}
-
-function searchProducts(query) {
-  document.querySelectorAll('.product-item').forEach(product => {
-    const title = product.querySelector('h3').textContent.toLowerCase();
-    const description = product.querySelector('p').textContent.toLowerCase();
-    product.style.display = (!query || title.includes(query.toLowerCase()) || description.includes(query.toLowerCase())) ? 'block' : 'none';
-  });
-  if (query) document.querySelectorAll('.filter-buttons button').forEach(btn => btn.classList.remove('active'));
-}
-
-function addToCart(produto, preco) {
-  if (!isLoggedIn()) {
-    alert("Você precisa estar logado para adicionar itens ao carrinho.");
-    return window.location.href = "login.html";
-  }
-  const item = carrinho.find(item => item.produto === produto);
-  if (item) item.quantidade++; else carrinho.push({ produto, preco: parseFloat(preco), quantidade: 1 });
-  atualizarCarrinho();
-  salvarCarrinho();
-  const btn = event.target, orig = btn.textContent;
-  btn.textContent = 'Adicionado!';
-  btn.style.background = getComputedStyle(document.documentElement).getPropertyValue('--success');
-  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1000);
-}
-
-function aumentarQuantidade(produto) {
-  const item = carrinho.find(item => item.produto === produto);
-  if (item) { item.quantidade++; atualizarCarrinho(); salvarCarrinho(); }
-}
-
-function diminuirQuantidade(produto) {
-  const item = carrinho.find(item => item.produto === produto);
-  if (item) {
-    item.quantidade--;
-    if (item.quantidade <= 0) carrinho = carrinho.filter(i => i.produto !== produto);
-    atualizarCarrinho();
-    salvarCarrinho();
-  }
-}
-
-function removerItem(produto) {
-  carrinho = carrinho.filter(i => i.produto !== produto);
-  atualizarCarrinho();
-  salvarCarrinho();
-}
-
-function limparCarrinho() {
-  if (confirm('Tem certeza que deseja limpar o carrinho?')) {
-    carrinho = [];
-    atualizarCarrinho();
-    salvarCarrinho();
-  }
-}
-
-function salvarCarrinho() { localStorage.setItem('carrinho', JSON.stringify(carrinho)); }
-
-function carregarCarrinho() {
-  const carrinhoSalvo = localStorage.getItem('carrinho');
-  if (carrinhoSalvo) { carrinho = JSON.parse(carrinhoSalvo); atualizarCarrinho(); }
-}
-
-function atualizarCarrinho() {
-  cartItems.innerHTML = '';
-  let total = 0, totalItens = 0;
-  carrinho.forEach(item => {
-    const li = document.createElement('li');
-    li.innerHTML = `<div class="item-info"><strong>${item.produto}</strong><br>R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</div><div class="item-controls"><button onclick="diminuirQuantidade('${item.produto}')">-</button><span>${item.quantidade}</span><button onclick="aumentarQuantidade('${item.produto}')">+</button><button onclick="removerItem('${item.produto}')" style="background: var(--danger); margin-left: auto;">✕</button></div>`;
-    cartItems.appendChild(li);
-    total += item.preco * item.quantidade;
-    totalItens += item.quantidade;
-  });
-  cartTotal.textContent = `Total: R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-  badges.forEach(badge => {
-    if (badge) {
-      badge.textContent = totalItens;
-      badge.style.display = totalItens > 0 ? 'flex' : 'none';
+// Função para carregar produtos do localStorage ou usar padrão
+function loadProducts() {
+  try {
+    const savedProducts = localStorage.getItem('nova_vibe_products');
+    if (savedProducts) {
+      products = JSON.parse(savedProducts);
+      showSyncStatus('Produtos sincronizados com sucesso!', 'success');
+    } else {
+      products = defaultProducts;
+      showSyncStatus('Usando produtos padrão', 'warning');
     }
+  } catch (error) {
+    console.error('Erro ao carregar produtos:', error);
+    products = defaultProducts;
+    showSyncStatus('Erro na sincronização - usando padrão', 'warning');
+  }
+  
+  renderProducts();
+}
+
+// Função para mostrar status de sincronização
+function showSyncStatus(message, type) {
+  const statusEl = document.getElementById('sync-status');
+  statusEl.textContent = message;
+  statusEl.className = `sync-status show ${type}`;
+  
+  setTimeout(() => {
+    statusEl.classList.remove('show');
+  }, 3000);
+}
+
+// Função para renderizar produtos
+function renderProducts() {
+  const container = document.getElementById('products-container');
+  
+  if (products.length === 0) {
+    container.innerHTML = `
+      <div class="no-products">
+        <h3>🛍️ Nenhum produto encontrado</h3>
+        <p>Aguarde o administrador adicionar produtos à loja</p>
+      </div>
+    `;
+    return;
+  }
+
+  const filteredProducts = currentFilter === 'all' 
+    ? products 
+    : products.filter(p => p.category === currentFilter);
+
+  if (filteredProducts.length === 0) {
+    container.innerHTML = `
+      <div class="no-products">
+        <h3>🔍 Nenhum produto nesta categoria</h3>
+        <p>Tente filtrar por uma categoria diferente</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="products-grid">
+      ${filteredProducts.map(product => `
+        <div class="product-item" data-category="${product.category}">
+          <img src="${product.image}" alt="${product.name}" 
+               onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMyMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iMjAwIiBmaWxsPSIjMWExYTFhIi8+Cjx0ZXh0IHg9IjE2MCIgeT0iMTAwIiBmaWxsPSIjNjY2NjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC1zaXplPSIxNHB4Ij5JbWFnZW0gTsOjbyBFbmNvbnRyYWRhPC90ZXh0Pgo8L3N2Zz4='">
+          <h3>${product.name}</h3>
+          <p>${product.description}</p>
+          <div class="price">R$ ${product.price.toFixed(2).replace('.', ',')}</div>
+          <button onclick="addToCart('${product.name}', ${product.price})">
+            Adicionar ao Carrinho
+          </button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+// Função para filtrar produtos
+function filterProducts(category) {
+  currentFilter = category;
+  
+  // Atualizar botões ativos
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
   });
-  const hasItems = carrinho.length > 0;
-  finalizarBtn.style.display = hasItems ? 'block' : 'none';
-  limparBtn.style.display = hasItems ? 'block' : 'none';
-  termsContainer.style.display = hasItems ? 'block' : 'none';
+  event.target.classList.add('active');
   
-  // Reset checkbox and button state when cart changes
-  if (hasItems) {
-    termsCheckbox.checked = false;
-    updateFinalizarButton();
-  }
+  renderProducts();
 }
 
-function openCart() {
-  cart.classList.add('open');
-  cartOverlay.style.display = 'block';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeCart() {
-  cart.classList.remove('open');
-  cartOverlay.style.display = 'none';
-  document.body.style.overflow = 'auto';
-}
-
-function finalizarCompra() {
-  if (!carrinho.length) return alert('Carrinho vazio!');
-  if (!isLoggedIn()) {
-    alert("Você precisa estar logado para finalizar a compra.");
-    return window.location.href = "login.html";
+// Função para adicionar ao carrinho
+function addToCart(name, price) {
+  const existingItem = cart.find(item => item.name === name);
+  
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cart.push({ name, price, quantity: 1 });
   }
   
-  if (!termsCheckbox.checked) {
-    alert('Você deve concordar com os Termos de Compra para continuar.');
+  updateCartDisplay();
+  showSyncStatus('Item adicionado ao carrinho!', 'success');
+}
+
+// Função para atualizar exibição do carrinho
+function updateCartDisplay() {
+  const cartItems = document.getElementById('cart-items');
+  const cartTotal = document.getElementById('cart-total');
+  
+  if (cart.length === 0) {
+    cartItems.innerHTML = '<div class="empty-cart">Carrinho vazio</div>';
+    cartTotal.textContent = 'Total: R$ 0,00';
     return;
   }
   
-  // Procede para o checkout
-  window.location.href = 'checkout.html';
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <span>${item.name} x${item.quantity}</span>
+      <span>R$ ${(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
+    </div>
+  `).join('');
+  
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  cartTotal.textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
 }
 
-function irParaLogin() { window.location.href = 'login.html'; }
-function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-function fazerLogout() {
-  if (confirm('Tem certeza que deseja fazer logout?')) {
-    localStorage.removeItem('nova_vibe_user');
-    localStorage.removeItem('carrinho');
-    alert('Logout realizado com sucesso!');
-    updateLoginUI();
-    carrinho = [];
-    atualizarCarrinho();
+// Função para finalizar compra
+function checkout() {
+  if (cart.length === 0) {
+    showSyncStatus('Carrinho vazio!', 'warning');
+    return;
+  }
+  
+  const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const itemsList = cart.map(item => `${item.name} x${item.quantity}`).join(', ');
+  
+  if (confirm(`Finalizar compra?\n\nItens: ${itemsList}\nTotal: R$ ${total.toFixed(2).replace('.', ',')}`)) {
+    cart = [];
+    updateCartDisplay();
+    showSyncStatus('Compra finalizada com sucesso!', 'success');
   }
 }
 
-function filterProducts(category) {
-  const products = document.querySelectorAll('.product-item');
-  const buttons = document.querySelectorAll('.filter-buttons button');
-  buttons.forEach(btn => btn.classList.remove('active'));
-  document.querySelector(`[data-filter="${category}"]`).classList.add('active');
-  products.forEach(product => {
-    product.style.display = (category === 'all' || product.dataset.category === category) ? 'block' : 'none';
+// Função para monitorar mudanças no localStorage
+function monitorLocalStorage() {
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'nova_vibe_products') {
+      loadProducts();
+    }
   });
-  $('search-input').value = '';
+  
+  // Verificar mudanças a cada 2 segundos (para mudanças na mesma aba)
+  setInterval(() => {
+    try {
+      const savedProducts = localStorage.getItem('nova_vibe_products');
+      if (savedProducts) {
+        const newProducts = JSON.parse(savedProducts);
+        if (JSON.stringify(newProducts) !== JSON.stringify(products)) {
+          products = newProducts;
+          renderProducts();
+          showSyncStatus('Produtos atualizados!', 'success');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao verificar atualizações:', error);
+    }
+  }, 2000);
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && cart.classList.contains('open')) closeCart();
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+  loadProducts();
+  updateCartDisplay();
+  monitorLocalStorage();
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateLoginUI();
-  carregarCarrinho();
-});
+// Remover item do carrinho (função adicional)
+function removeFromCart(name) {
+  cart = cart.filter(item => item.name !== name);
+  updateCartDisplay();
+  showSyncStatus('Item removido do carrinho', 'warning');
+}
 </script>
 
 </body>
