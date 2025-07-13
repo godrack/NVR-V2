@@ -66,6 +66,47 @@
     }
     .header-left h1:hover { color: var(--accent); }
     
+    .header-center {
+      flex-grow: 1;
+      max-width: 300px;
+      margin: 0 20px;
+    }
+    
+    .search-container {
+      position: relative;
+      width: 100%;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 40px 10px 15px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+    
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+    
+    .search-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+    
     .header-right { 
       display: flex; 
       align-items: center; 
@@ -311,11 +352,13 @@
       .header-btn { padding: 6px 10px; font-size: 0.8rem; }
       .header-left h1 { font-size: 1.5rem; }
       .user-greeting { font-size: 0.8rem; }
+      .header-center { max-width: 200px; margin: 0 15px; }
     }
     
     @media (max-width: 500px) { 
       .product-list { grid-template-columns: 1fr; }
-      .header-content { width: 95%; }
+      .header-content { width: 95%; flex-direction: column; gap: 10px; }
+      .header-center { max-width: 100%; margin: 0; }
       .header-right { gap: 8px; }
       .header-btn { padding: 5px 8px; font-size: 0.75rem; }
       .header-left h1 { font-size: 1.3rem; }
@@ -329,6 +372,12 @@
   <div class="header-content">
     <div class="header-left">
       <h1 style="cursor:pointer;" onclick="window.location.href='https://novaviberoleplay.netlify.app'">Nova Vibe Roleplay</h1>
+    </div>
+    <div class="header-center">
+      <div class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="Pesquisar produtos..." onkeyup="searchProducts(this.value)">
+        <span class="search-icon">🔍</span>
+      </div>
     </div>
     <div class="header-right" id="header-right">
       <span id="user-greeting" class="user-greeting" style="display: none;"></span>
@@ -470,6 +519,29 @@
       userGreeting.style.display = 'none';
       loginBtn.style.display = 'block';
       logoutBtn.style.display = 'none';
+    }
+  }
+
+  // Search function
+  function searchProducts(query) {
+    const products = document.querySelectorAll('.product-item');
+    const searchTerm = query.toLowerCase().trim();
+    
+    products.forEach(product => {
+      const title = product.querySelector('h3').textContent.toLowerCase();
+      const description = product.querySelector('p').textContent.toLowerCase();
+      
+      if (searchTerm === '' || title.includes(searchTerm) || description.includes(searchTerm)) {
+        product.style.display = 'flex';
+      } else {
+        product.style.display = 'none';
+      }
+    });
+    
+    // Reset filter buttons when searching
+    if (searchTerm !== '') {
+      const buttons = document.querySelectorAll('.filter-buttons button');
+      buttons.forEach(btn => btn.classList.remove('active'));
     }
   }
 
@@ -655,6 +727,9 @@
     products.forEach(product => {
       product.style.display = (category === 'all' || product.dataset.category === category) ? 'flex' : 'none';
     });
+    
+    // Clear search when using filters
+    document.getElementById('search-input').value = '';
   }
 
   // Event listeners
