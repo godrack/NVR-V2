@@ -6,34 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Autenticação — Nova Vibe RP</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0c0c0c;--surface:#1a1a1a;--glass:rgba(255,255,255,0.05);--neon:#00ff88;--neon-glow:rgba(0,255,136,0.3);--purple:#8b5cf6;--purple-glow:rgba(139,92,246,0.3);--text:#ffffff;--text-dim:#a0a0a0;--danger:#ff4757;--success:#2ed573;--warning:#ffa502}
+    
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+      background: radial-gradient(circle at 20% 50%, rgba(139,92,246,0.1) 0%, transparent 50%), 
+                  radial-gradient(circle at 80% 20%, rgba(0,255,136,0.1) 0%, transparent 50%), 
+                  var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      color: #e2e8f0;
+      overflow-x: hidden;
     }
 
     .container {
-      background: rgba(15, 23, 42, 0.95);
+      background: var(--surface);
       backdrop-filter: blur(20px);
       border-radius: 24px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--glass);
       padding: 48px;
       width: 100%;
       max-width: 420px;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass);
+      transition: all 0.4s ease;
     }
 
     .container::before {
@@ -43,7 +44,13 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+      background: linear-gradient(90deg, var(--neon), var(--purple));
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
     }
 
     .container::after {
@@ -53,14 +60,14 @@
       left: -50%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+      background: radial-gradient(circle, var(--neon-glow) 0%, transparent 70%);
       animation: pulse 4s ease-in-out infinite;
       z-index: -1;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.5; }
-      50% { transform: scale(1.1); opacity: 0.8; }
+      0%, 100% { transform: scale(1); opacity: 0.3; }
+      50% { transform: scale(1.1); opacity: 0.6; }
     }
 
     .logo {
@@ -69,18 +76,24 @@
     }
 
     .logo h1 {
-      color: #f8fafc;
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--neon), var(--purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
+      margin-bottom: 8px;
+      text-shadow: 0 0 20px var(--neon-glow);
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .logo h1:hover {
+      transform: scale(1.05);
+      filter: brightness(1.2);
     }
 
     .logo p {
-      color: #94a3b8;
+      color: var(--text-dim);
       font-size: 14px;
       font-weight: 500;
     }
@@ -105,7 +118,7 @@
 
     label {
       display: block;
-      color: #f1f5f9;
+      color: var(--text);
       font-weight: 500;
       margin-bottom: 8px;
       font-size: 14px;
@@ -114,39 +127,40 @@
     input {
       width: 100%;
       padding: 14px 16px;
-      border: 2px solid #334155;
+      border: 2px solid var(--glass);
       border-radius: 12px;
       font-size: 16px;
       transition: all 0.3s ease;
-      background: rgba(30, 41, 59, 0.5);
-      color: #f8fafc;
+      background: var(--surface);
+      color: var(--text);
       backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     input::placeholder {
-      color: #64748b;
+      color: var(--text-dim);
     }
 
     input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
-      background: rgba(30, 41, 59, 0.8);
+      border-color: var(--neon);
+      box-shadow: 0 0 0 4px var(--neon-glow), 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .btn {
       width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 16px;
+      background: linear-gradient(135deg, var(--neon), var(--purple));
       color: white;
       border: none;
       border-radius: 12px;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 20px var(--neon-glow);
     }
 
     .btn::before {
@@ -156,13 +170,13 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
     }
 
     .btn:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 15px 35px var(--neon-glow);
     }
 
     .btn:hover:not(:disabled)::before {
@@ -194,7 +208,7 @@
     .link-btn {
       background: none;
       border: none;
-      color: #94a3b8;
+      color: var(--text-dim);
       text-decoration: underline;
       cursor: pointer;
       font-size: 14px;
@@ -202,11 +216,12 @@
       margin-top: 20px;
       display: block;
       text-align: center;
-      transition: color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .link-btn:hover {
-      color: #667eea;
+      color: var(--neon);
+      transform: translateY(-1px);
     }
 
     .alert {
@@ -216,18 +231,27 @@
       font-size: 14px;
       font-weight: 500;
       backdrop-filter: blur(10px);
+      border: 1px solid;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
     .alert.error {
-      background: rgba(239, 68, 68, 0.1);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(255, 71, 87, 0.1);
+      color: #ff6b7d;
+      border-color: rgba(255, 71, 87, 0.3);
+      box-shadow: 0 0 20px rgba(255, 71, 87, 0.2);
     }
 
     .alert.success {
-      background: rgba(34, 197, 94, 0.1);
-      color: #86efac;
-      border: 1px solid rgba(34, 197, 94, 0.3);
+      background: rgba(46, 213, 115, 0.1);
+      color: #2ed573;
+      border-color: rgba(46, 213, 115, 0.3);
+      box-shadow: 0 0 20px rgba(46, 213, 115, 0.2);
     }
 
     .password-strength {
@@ -236,10 +260,11 @@
 
     .strength-bar {
       height: 6px;
-      background: rgba(51, 65, 85, 0.5);
+      background: var(--glass);
       border-radius: 3px;
       overflow: hidden;
       margin-bottom: 8px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .strength-fill {
@@ -247,32 +272,39 @@
       transition: all 0.3s ease;
       width: 0%;
       border-radius: 3px;
+      background: linear-gradient(90deg, var(--danger), var(--warning), var(--success));
     }
 
     .strength-text {
       font-size: 12px;
       font-weight: 500;
-      color: #94a3b8;
+      color: var(--text-dim);
+      transition: color 0.3s ease;
     }
 
     .form-links {
       display: flex;
       justify-content: space-between;
       margin-top: 24px;
+      gap: 16px;
     }
 
     .form-links button {
       background: none;
       border: none;
-      color: #94a3b8;
+      color: var(--text-dim);
       font-size: 14px;
       cursor: pointer;
       text-decoration: underline;
-      transition: color 0.3s ease;
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+      border-radius: 8px;
     }
 
     .form-links button:hover {
-      color: #667eea;
+      color: var(--neon);
+      background: var(--glass);
+      transform: translateY(-1px);
     }
 
     /* Responsive */
@@ -283,7 +315,7 @@
       }
       
       .logo h1 {
-        font-size: 28px;
+        font-size: 1.8rem;
       }
       
       .form-links {
@@ -291,6 +323,43 @@
         gap: 12px;
         text-align: center;
       }
+      
+      .form-links button {
+        width: 100%;
+      }
+    }
+
+    /* Adicionar efeitos visuais extras */
+    .container:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--glass);
+    }
+
+    /* Efeito de brilho nos inputs */
+    input:focus {
+      background: rgba(26, 26, 26, 0.8);
+    }
+
+    /* Animação suave para os alertas */
+    .alert {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .alert::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: alertShimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes alertShimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
   </style>
 </head>
@@ -438,13 +507,13 @@
       if (/[0-9]/.test(p)) strength++;
       if (/[^A-Za-z0-9]/.test(p)) strength++;
 
-      const colors = ['#ef4444', '#f59e0b', '#eab308', '#22c55e', '#16a34a'];
+      const colors = ['#ff4757', '#ffa502', '#ff6b7d', '#2ed573', '#00ff88'];
       const labels = ['Muito fraca', 'Fraca', 'Média', 'Forte', 'Muito forte'];
 
       fill.style.width = `${(strength / 5) * 100}%`;
-      fill.style.backgroundColor = colors[strength - 1] || '#ef4444';
+      fill.style.background = colors[strength - 1] || '#ff4757';
       text.textContent = labels[strength - 1] || 'Muito fraca';
-      text.style.color = colors[strength - 1] || '#ef4444';
+      text.style.color = colors[strength - 1] || '#ff4757';
     });
 
     // LOGIN
