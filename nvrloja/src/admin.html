@@ -215,6 +215,9 @@ document.getElementById('product-form').addEventListener('submit', function(e) {
 });
 
 function generateUpdatedHTML() {
+  // Salva os produtos no localStorage para sincronização
+  localStorage.setItem('nova_vibe_products', JSON.stringify(products));
+  
   const productsHTML = products.map(p => `
       <div class="product-item" data-category="${p.category}">
         <img src="${p.image}" alt="${p.name}" />
@@ -224,7 +227,8 @@ function generateUpdatedHTML() {
         <button onclick="addToCart('${p.name}', ${p.price})">Adicionar ao Carrinho</button>
       </div>`).join('');
   
-  console.log('HTML atualizado gerado! Cole isso na sua loja principal:');
+  console.log('✅ Produtos sincronizados com a loja principal!');
+  console.log('HTML atualizado gerado:');
   console.log(productsHTML);
 }
 
