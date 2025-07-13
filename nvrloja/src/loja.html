@@ -60,8 +60,19 @@
     #cart ul li .item-controls button{background:var(--neon);border:none;color:black;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;transition:all 0.3s ease}
     #cart ul li .item-controls button:hover{background:var(--purple);color:white;transform:scale(1.1)}
     #cart ul li .item-controls button:last-child{background:var(--danger);color:white;margin-left:auto}
+    
+    .terms-container{margin:20px 0;padding:20px;background:var(--glass);border-radius:12px;border:1px solid var(--glass);backdrop-filter:blur(10px)}
+    .terms-checkbox{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+    .terms-checkbox input[type="checkbox"]{width:18px;height:18px;accent-color:var(--neon);cursor:pointer;margin-top:2px}
+    .terms-text{font-size:14px;line-height:1.4;color:var(--text-dim)}
+    .terms-text a{color:var(--neon);text-decoration:none;font-weight:600;transition:all 0.3s ease}
+    .terms-text a:hover{color:var(--purple);text-decoration:underline}
+    
     #cart button{background:linear-gradient(135deg,var(--neon),var(--purple));border:none;color:white;padding:16px;width:100%;border-radius:12px;cursor:pointer;font-weight:700;margin-top:16px;transition:all 0.3s ease;font-size:16px}
     #cart button:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--neon-glow)}
+    #cart button:disabled{background:var(--text-dim);cursor:not-allowed;opacity:0.5}
+    #cart button:disabled:hover{transform:none;box-shadow:none}
+    
     #cart-total{margin-top:24px;font-weight:800;font-size:1.3rem;padding:20px;background:var(--glass);border-radius:12px;border:1px solid var(--glass);text-align:center;backdrop-filter:blur(10px)}
     footer{margin-top:80px;padding:40px 0;text-align:center;border-top:1px solid var(--glass);color:var(--text-dim)}
     @media (max-width:768px){
@@ -171,13 +182,23 @@
   <h2>Carrinho</h2>
   <ul id="cart-items"></ul>
   <div id="cart-total">Total: R$ 0,00</div>
-  <button id="finalizar-btn" style="display:none;" onclick="finalizarCompra()">Finalizar Compra</button>
+  
+  <div class="terms-container" id="terms-container" style="display: none;">
+    <div class="terms-checkbox">
+      <input type="checkbox" id="terms-checkbox" onchange="updateFinalizarButton()">
+      <div class="terms-text">
+        Li e concordo com os <a href="https://novaviberoleplay.netlify.app/termos.html" target="_blank">Termos de Compra</a> e Política de Privacidade da Nova Vibe RP.
+      </div>
+    </div>
+  </div>
+  
+  <button id="finalizar-btn" style="display:none;" onclick="finalizarCompra()" disabled>Finalizar Compra</button>
   <button id="limpar-btn" style="display:none;" onclick="limparCarrinho()">Limpar Carrinho</button>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
-const cartItems = $('cart-items'), cart = $('cart'), cartOverlay = $('cart-overlay'), cartTotal = $('cart-total'), userGreeting = $('user-greeting'), loginBtn = $('login-btn'), logoutBtn = $('logout-btn'), badges = [$('cart-badge'), $('cart-badge-header')], finalizarBtn = $('finalizar-btn'), limparBtn = $('limpar-btn');
+const cartItems = $('cart-items'), cart = $('cart'), cartOverlay = $('cart-overlay'), cartTotal = $('cart-total'), userGreeting = $('user-greeting'), loginBtn = $('login-btn'), logoutBtn = $('logout-btn'), badges = [$('cart-badge'), $('cart-badge-header')], finalizarBtn = $('finalizar-btn'), limparBtn = $('limpar-btn'), termsContainer = $('terms-container'), termsCheckbox = $('terms-checkbox');
 let carrinho = [];
 
 const getUserData = () => JSON.parse(localStorage.getItem('nova_vibe_user') || '{}');
@@ -189,29 +210,6 @@ const isLoggedIn = () => {
     localStorage.removeItem('nova_vibe_user');
   }
   return false;
-};
-
-// Função para verificar se o usuário já aceitou os termos
-const hasAcceptedTerms = () => {
-  const userData = getUserData();
-  return userData?.termos_aceitos === true;
-};
-
-// Função para marcar que o usuário aceitou os termos
-const markTermsAccepted = () => {
-  const userData = getUserData();
-  userData.termos_aceitos = true;
-  localStorage.setItem('nova_vibe_user', JSON.stringify(userData));
-};
-
-// Função para verificar se o usuário voltou da página de termos
-const checkReturnFromTerms = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('from') === 'termos') {
-    markTermsAccepted();
-    // Remove o parâmetro da URL sem recarregar a página
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
 };
 
 function updateLoginUI() {
@@ -226,6 +224,13 @@ function updateLoginUI() {
     loginBtn.style.display = 'block';
     logoutBtn.style.display = 'none';
   }
+}
+
+function updateFinalizarButton() {
+  const isChecked = termsCheckbox.checked;
+  finalizarBtn.disabled = !isChecked;
+  finalizarBtn.style.opacity = isChecked ? '1' : '0.5';
+  finalizarBtn.style.cursor = isChecked ? 'pointer' : 'not-allowed';
 }
 
 function searchProducts(query) {
@@ -308,6 +313,13 @@ function atualizarCarrinho() {
   const hasItems = carrinho.length > 0;
   finalizarBtn.style.display = hasItems ? 'block' : 'none';
   limparBtn.style.display = hasItems ? 'block' : 'none';
+  termsContainer.style.display = hasItems ? 'block' : 'none';
+  
+  // Reset checkbox and button state when cart changes
+  if (hasItems) {
+    termsCheckbox.checked = false;
+    updateFinalizarButton();
+  }
 }
 
 function openCart() {
@@ -329,14 +341,13 @@ function finalizarCompra() {
     return window.location.href = "login.html";
   }
   
-  // Verifica se o usuário já aceitou os termos
-  if (!hasAcceptedTerms()) {
-    // Primeira vez clicando em finalizar compra - redireciona para os termos
-    window.location.href = 'https://novaviberoleplay.netlify.app/termos.html';
-  } else {
-    // Usuário já aceitou os termos - vai para o checkout
-    window.location.href = 'checkout.html';
+  if (!termsCheckbox.checked) {
+    alert('Você deve concordar com os Termos de Compra para continuar.');
+    return;
   }
+  
+  // Procede para o checkout
+  window.location.href = 'checkout.html';
 }
 
 function irParaLogin() { window.location.href = 'login.html'; }
@@ -369,7 +380,6 @@ document.addEventListener('keydown', e => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkReturnFromTerms();
   updateLoginUI();
   carregarCarrinho();
 });
