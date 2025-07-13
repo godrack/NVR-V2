@@ -4,194 +4,350 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout — Nova Vibe RP</title>
+  <link rel="icon" href="favicon.png" type="image/png">
   <style>
-    body { 
-      background: #121216; 
-      color: #fff; 
-      font-family: sans-serif; 
-      padding: 20px; 
-      max-width: 600px; 
-      margin: 0 auto; 
-    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--bg:#0c0c0c;--surface:#1a1a1a;--glass:rgba(255,255,255,0.05);--neon:#00ff88;--neon-glow:rgba(0,255,136,0.3);--purple:#8b5cf6;--purple-glow:rgba(139,92,246,0.3);--text:#ffffff;--text-dim:#a0a0a0;--danger:#ff4757;--success:#2ed573;--warning:#ffa502}
+    body{background:radial-gradient(circle at 20% 50%,rgba(139,92,246,0.1) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(0,255,136,0.1) 0%,transparent 50%),var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;padding:40px 20px;overflow-x:hidden}
+    
     .container {
-      background: #1a1a1e;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--glass);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
     }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--neon-glow), var(--purple-glow));
+      opacity: 0.1;
+      pointer-events: none;
+    }
+    
+    .container > * {
+      position: relative;
+      z-index: 1;
+    }
+    
     h1 {
       text-align: center;
-      color: #00ff88;
-      margin-bottom: 30px;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--neon), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 40px;
+      text-shadow: 0 0 30px var(--neon-glow);
     }
+    
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
+    
     label {
       display: block;
-      margin-bottom: 5px;
-      color: #ccc;
-      font-weight: bold;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 14px;
     }
+    
     input {
       width: 100%;
-      padding: 12px;
-      border: 2px solid #333;
-      border-radius: 5px;
-      background: #2a2a2e;
-      color: #fff;
-      font-size: 16px;
-      box-sizing: border-box;
+      padding: 16px 20px;
+      background: var(--glass);
+      border: 2px solid var(--glass);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 15px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
+    
     input:focus {
       outline: none;
-      border-color: #00ff88;
+      border-color: var(--neon);
+      box-shadow: 0 0 0 4px var(--neon-glow);
     }
+    
+    input::placeholder {
+      color: var(--text-dim);
+    }
+    
     button {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(45deg, #00ff88, #00cc6a);
-      color: #000;
+      background: linear-gradient(135deg, var(--neon), var(--purple));
+      color: white;
       border: none;
-      border-radius: 5px;
-      font-size: 18px;
-      font-weight: bold;
+      padding: 18px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
       margin-top: 20px;
     }
-    button:hover {
-      background: linear-gradient(45deg, #00cc6a, #00ff88);
-      transform: translateY(-2px);
+    
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s ease;
     }
+    
+    button:hover::before {
+      left: 100%;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--neon-glow);
+    }
+    
     button:disabled {
-      background: #666;
+      background: var(--text-dim);
       cursor: not-allowed;
       transform: none;
     }
+    
     .payment-area {
-      margin-top: 30px;
-      padding: 20px;
-      background: #2a2a2e;
-      border-radius: 10px;
+      margin-top: 40px;
+      padding: 30px;
+      background: var(--glass);
+      border: 1px solid var(--glass);
+      border-radius: 16px;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
+    
+    .payment-area h3 {
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+      color: var(--neon);
+    }
+    
     .qr-code img {
       max-width: 280px;
       margin: 20px auto;
       display: block;
-      border: 3px solid #00ff88;
-      border-radius: 10px;
+      border: 3px solid var(--neon);
+      border-radius: 16px;
+      box-shadow: 0 0 20px var(--neon-glow);
     }
+    
     .pix-code {
-      background: #333;
-      padding: 15px;
+      background: var(--surface);
+      border: 1px solid var(--glass);
+      padding: 20px;
       word-break: break-all;
       margin: 20px 0;
-      border-radius: 5px;
+      border-radius: 12px;
       font-family: monospace;
       font-size: 14px;
       position: relative;
+      backdrop-filter: blur(10px);
     }
+    
     .copy-btn {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #00ff88;
-      color: #000;
+      top: 12px;
+      right: 12px;
+      background: var(--neon);
+      color: black;
       border: none;
-      padding: 5px 10px;
-      border-radius: 3px;
+      padding: 8px 16px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 12px;
+      font-weight: 700;
       width: auto;
+      margin: 0;
+      transition: all 0.3s ease;
     }
+    
+    .copy-btn:hover {
+      background: var(--purple);
+      color: white;
+      transform: scale(1.05);
+    }
+    
     .status {
       margin: 20px 0;
-      padding: 15px;
-      border-radius: 5px;
-      font-weight: bold;
+      padding: 20px;
+      border-radius: 12px;
+      font-weight: 600;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
+    
     .success {
-      background: #27ae60;
-      color: #fff;
+      background: var(--success);
+      color: white;
+      box-shadow: 0 0 20px rgba(46, 213, 115, 0.3);
     }
+    
     .error {
-      background: #e74c3c;
-      color: #fff;
+      background: var(--danger);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 71, 87, 0.3);
     }
+    
     .pending {
-      background: #f1c40f;
-      color: #000;
+      background: var(--warning);
+      color: black;
+      box-shadow: 0 0 20px rgba(255, 165, 2, 0.3);
     }
+    
     .info {
-      background: #3498db;
-      color: #fff;
+      background: var(--glass);
+      color: var(--text);
+      border: 1px solid var(--glass);
     }
+    
     .loading {
       display: inline-block;
       width: 20px;
       height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #00ff88;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid var(--neon);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    
     .product-info {
-      background: #2a2a2e;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      border-left: 4px solid #00ff88;
+      background: var(--glass);
+      border: 1px solid var(--glass);
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 40px;
+      border-left: 4px solid var(--neon);
+      backdrop-filter: blur(10px);
     }
+    
+    .product-info h3 {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      color: var(--neon);
+    }
+    
+    .product-info ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .product-info li {
+      margin-bottom: 12px;
+      padding: 16px;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid var(--glass);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
     .price {
-      font-size: 24px;
-      font-weight: bold;
-      color: #00ff88;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--neon), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       text-align: center;
-      margin: 10px 0;
+      margin: 20px 0;
+      padding: 20px;
+      border-top: 2px solid var(--neon);
     }
+    
     .back-btn {
-      background: #666;
-      color: #fff;
-      padding: 10px 20px;
+      background: var(--text-dim);
+      color: var(--text);
+      padding: 12px 24px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
       margin-bottom: 20px;
       width: auto;
+      font-size: 14px;
+      transition: all 0.3s ease;
     }
+    
     .back-btn:hover {
-      background: #777;
+      background: var(--surface);
+      transform: translateY(-2px);
     }
+    
     .redirect-message {
-      background: #27ae60;
-      color: #fff;
-      padding: 20px;
-      border-radius: 10px;
+      background: var(--success);
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
       text-align: center;
       margin-top: 20px;
       animation: pulse 2s infinite;
+      box-shadow: 0 0 30px rgba(46, 213, 115, 0.3);
     }
+    
     @keyframes pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      50% { transform: scale(1.02); }
       100% { transform: scale(1); }
     }
+    
     .countdown {
-      font-size: 24px;
-      font-weight: bold;
-      color: #00ff88;
-      margin: 10px 0;
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 16px 0;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 24px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .qr-code img {
+        max-width: 240px;
+      }
+      
+      .pix-code {
+        font-size: 12px;
+      }
+      
+      .copy-btn {
+        position: static;
+        margin-top: 12px;
+        width: 100%;
+      }
     }
   </style>
 </head>
-  <link rel="icon" href="favicon.png" type="image/png">
 <body>
   <div class="container">
     <h1>Nova Vibe RP — Checkout</h1>
@@ -313,22 +469,24 @@
       }
       
       let html = '<h3>🛒 Itens do Carrinho</h3>';
-      html += '<ul style="padding-left:0; list-style:none; margin:0;">';
+      html += '<ul>';
       
       let total = 0;
       carrinho.forEach(item => {
         const subtotal = item.preco * item.quantidade;
         total += subtotal;
         
-        html += `<li style="margin-bottom:10px; padding:10px; background:#333; border-radius:5px;">
-          <strong>${item.produto}</strong><br>
-          <span style="color:#ccc;">R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})} x ${item.quantidade}</span>
-          <span style="float:right; color:#00ff88;">R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
+        html += `<li>
+          <div>
+            <strong>${item.produto}</strong><br>
+            <span style="color: var(--text-dim);">R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})} x ${item.quantidade}</span>
+          </div>
+          <span style="color: var(--neon); font-weight: 700;">R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
         </li>`;
       });
       
       html += '</ul>';
-      html += `<div class="price" style="margin-top:20px; border-top:2px solid #00ff88; padding-top:10px;">
+      html += `<div class="price">
         Total: R$ ${total.toLocaleString('pt-BR', {minimumFractionDigits:2})}
       </div>`;
       
@@ -383,7 +541,6 @@
       try {
         const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
         
-        // Criar lista de itens formatada
         const itemsList = carrinho.map(item => {
           const subtotal = item.preco * item.quantidade;
           return `• **${item.produto}** - R$ ${item.preco.toLocaleString('pt-BR', {minimumFractionDigits:2})} x ${item.quantidade} = R$ ${subtotal.toLocaleString('pt-BR', {minimumFractionDigits:2})}`;
@@ -453,7 +610,6 @@
         
       } catch (error) {
         console.error('Erro ao enviar webhook Discord:', error);
-        // Não interromper o fluxo mesmo se o webhook falhar
       }
     }
 
@@ -462,7 +618,6 @@
       const paymentArea = document.getElementById('payment-area');
       const countdownEl = document.getElementById('countdown');
       
-      // Esconder área de pagamento e mostrar área de redirecionamento
       paymentArea.style.display = 'none';
       redirectArea.style.display = 'block';
       
@@ -475,7 +630,6 @@
         
         if (countdown <= 0) {
           clearInterval(countdownInterval);
-          // Redirecionar para a página de sucesso
           window.location.href = 'sucess.html';
         }
       }, 1000);
@@ -572,13 +726,11 @@
             document.getElementById('status').innerHTML = '✅ Pagamento aprovado! Enviando dados...';
             document.getElementById('status').className = 'status success';
             
-            // Enviar webhook para Discord
             await sendDiscordWebhook(data);
             
-            // Limpar carrinho após pagamento aprovado
-            localStorage.removeItem('carrinho');
+            // Usar dados em memória ao invés de localStorage
+            carrinho = [];
             
-            // Iniciar countdown e redirecionamento
             setTimeout(() => {
               startCountdownRedirect();
             }, 1000);
@@ -630,19 +782,17 @@
       const btn = document.querySelector('.copy-btn');
       const originalText = btn.textContent;
       btn.textContent = 'Copiado!';
-      btn.style.background = '#27ae60';
+      btn.style.background = 'var(--success)';
       setTimeout(() => {
         btn.textContent = originalText;
-        btn.style.background = '#00ff88';
+        btn.style.background = 'var(--neon)';
       }, 2000);
     }
 
     function goBack() {
-      // Se há um histórico, volta para a página anterior
       if (history.length > 1) {
         history.back();
       } else {
-        // Se não há histórico, redireciona para uma página padrão
         window.location.href = '/';
       }
     }
