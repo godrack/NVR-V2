@@ -191,6 +191,29 @@ const isLoggedIn = () => {
   return false;
 };
 
+// Função para verificar se o usuário já aceitou os termos
+const hasAcceptedTerms = () => {
+  const userData = getUserData();
+  return userData?.termos_aceitos === true;
+};
+
+// Função para marcar que o usuário aceitou os termos
+const markTermsAccepted = () => {
+  const userData = getUserData();
+  userData.termos_aceitos = true;
+  localStorage.setItem('nova_vibe_user', JSON.stringify(userData));
+};
+
+// Função para verificar se o usuário voltou da página de termos
+const checkReturnFromTerms = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('from') === 'termos') {
+    markTermsAccepted();
+    // Remove o parâmetro da URL sem recarregar a página
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+};
+
 function updateLoginUI() {
   if (isLoggedIn()) {
     const userData = getUserData();
@@ -305,7 +328,15 @@ function finalizarCompra() {
     alert("Você precisa estar logado para finalizar a compra.");
     return window.location.href = "login.html";
   }
-  window.location.href = 'checkout.html';
+  
+  // Verifica se o usuário já aceitou os termos
+  if (!hasAcceptedTerms()) {
+    // Primeira vez clicando em finalizar compra - redireciona para os termos
+    window.location.href = 'https://novaviberoleplay.netlify.app/termos.html';
+  } else {
+    // Usuário já aceitou os termos - vai para o checkout
+    window.location.href = 'checkout.html';
+  }
 }
 
 function irParaLogin() { window.location.href = 'login.html'; }
@@ -338,6 +369,7 @@ document.addEventListener('keydown', e => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  checkReturnFromTerms();
   updateLoginUI();
   carregarCarrinho();
 });
