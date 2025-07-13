@@ -208,7 +208,7 @@ function searchProducts(query) {
   document.querySelectorAll('.product-item').forEach(product => {
     const title = product.querySelector('h3').textContent.toLowerCase();
     const description = product.querySelector('p').textContent.toLowerCase();
-    product.style.display = (!query || title.includes(query.toLowerCase()) || description.includes(query.toLowerCase())) ? 'flex' : 'none';
+    product.style.display = (!query || title.includes(query.toLowerCase()) || description.includes(query.toLowerCase())) ? 'block' : 'none';
   });
   if (query) document.querySelectorAll('.filter-buttons button').forEach(btn => btn.classList.remove('active'));
 }
@@ -327,7 +327,7 @@ function filterProducts(category) {
   buttons.forEach(btn => btn.classList.remove('active'));
   document.querySelector(`[data-filter="${category}"]`).classList.add('active');
   products.forEach(product => {
-    product.style.display = (category === 'all' || product.dataset.category === category) ? 'flex' : 'none';
+    product.style.display = (category === 'all' || product.dataset.category === category) ? 'block' : 'none';
   });
   $('search-input').value = '';
 }
