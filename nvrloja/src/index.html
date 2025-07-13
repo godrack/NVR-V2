@@ -12,11 +12,34 @@
       box-sizing: border-box;
     }
     
+    :root {
+      --bg: #0c0c0c;
+      --surface: #1a1a1a;
+      --glass: rgba(255,255,255,0.05);
+      --neon: #00ff88;
+      --neon-glow: rgba(0,255,136,0.3);
+      --purple: #8b5cf6;
+      --purple-glow: rgba(139,92,246,0.3);
+      --text: #ffffff;
+      --text-dim: #a0a0a0;
+      --danger: #ff4757;
+      --success: #2ed573;
+      --warning: #ffa502;
+    }
+    
     body {
-      background: linear-gradient(135deg, #121216 0%, #1c1e28 100%);
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at 20% 50%, rgba(139,92,246,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(0,255,136,0.1) 0%, transparent 50%),
+                  var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
       overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 24px;
     }
     
     /* Header */
@@ -24,12 +47,12 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      background: rgba(18, 18, 22, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(47, 58, 90, 0.3);
+      right: 0;
+      background: rgba(12,12,12,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass);
       z-index: 1000;
-      padding: 15px 0;
+      padding: 16px 0;
       transition: all 0.3s ease;
     }
     
@@ -37,88 +60,102 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
+      gap: 24px;
     }
     
     .logo {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(45deg, #667eea, #764ba2);
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--neon), var(--purple));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: all 0.4s ease;
+      text-shadow: 0 0 20px var(--neon-glow);
     }
     
     .logo:hover {
       transform: scale(1.05);
+      filter: brightness(1.2);
     }
     
     .header-actions {
       display: flex;
-      gap: 15px;
       align-items: center;
+      gap: 16px;
     }
     
     .btn {
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
+      background: var(--surface);
+      border: 2px solid var(--glass);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
-      text-decoration: none;
-      font-size: 0.9rem;
-      border: none;
-      display: inline-flex;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover {
+      border-color: var(--neon);
+      box-shadow: 0 0 20px var(--neon-glow);
+      transform: translateY(-2px);
     }
     
     .btn-primary {
-      background: linear-gradient(45deg, #667eea, #764ba2);
-      color: #fff;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      background: linear-gradient(135deg, var(--neon), var(--purple));
+      border: none;
+      box-shadow: 0 0 20px var(--neon-glow);
     }
     
     .btn-secondary {
-      background: transparent;
-      color: #fff;
-      border: 1px solid #2f3a5a;
+      background: var(--surface);
+      border: 2px solid var(--glass);
     }
     
-    .btn-secondary:hover {
-      background: #2f3a5a;
-      transform: translateY(-1px);
+    .btn-logout {
+      background: var(--danger);
+      border: 2px solid var(--danger);
+    }
+    
+    .btn-logout:hover {
+      background: #c0392b;
+      border-color: #c0392b;
     }
     
     .user-info {
       display: flex;
       align-items: center;
       gap: 15px;
-      color: #fff;
+      color: var(--text);
     }
     
     .user-greeting {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-    
-    .btn-logout {
-      background: #e74c3c;
-      color: #fff;
-      border: 1px solid #e74c3c;
-    }
-    
-    .btn-logout:hover {
-      background: #c0392b;
-      border-color: #c0392b;
+      color: var(--text-dim);
+      font-size: 14px;
+      font-weight: 500;
     }
     
     /* Hero Section */
@@ -141,7 +178,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+      background: radial-gradient(circle at 50% 50%, var(--neon-glow) 0%, transparent 70%);
       animation: pulse 4s ease-in-out infinite;
     }
     
@@ -159,7 +196,7 @@
       font-size: 4rem;
       font-weight: 800;
       margin-bottom: 20px;
-      background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+      background: linear-gradient(135deg, var(--neon), var(--purple), var(--neon));
       background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -174,7 +211,7 @@
     
     .hero p {
       font-size: 1.3rem;
-      color: #a0a0a0;
+      color: var(--text-dim);
       margin-bottom: 40px;
       line-height: 1.6;
     }
@@ -187,45 +224,47 @@
     }
     
     .btn-hero {
-      padding: 15px 30px;
+      padding: 16px 32px;
       font-size: 1.1rem;
-      border-radius: 10px;
+      border-radius: 12px;
       min-width: 180px;
+      font-weight: 700;
     }
     
     /* Features Section */
     .features {
       padding: 80px 20px;
-      background: rgba(28, 30, 40, 0.5);
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
+      background: var(--surface);
+      border-top: 1px solid var(--glass);
     }
     
     .features h2 {
       text-align: center;
       font-size: 2.5rem;
       margin-bottom: 60px;
-      color: #fff;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--neon), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
     }
     
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
     }
     
     .feature-card {
-      background: rgba(28, 30, 40, 0.8);
+      background: var(--bg);
       padding: 30px;
-      border-radius: 15px;
+      border-radius: 20px;
       text-align: center;
-      border: 1px solid rgba(47, 58, 90, 0.3);
-      transition: all 0.3s ease;
+      border: 1px solid var(--glass);
+      transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(10px);
     }
     
     .feature-card::before {
@@ -234,19 +273,25 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--neon-glow), var(--purple-glow));
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     
     .feature-card:hover::before {
-      transform: scaleX(1);
+      opacity: 1;
     }
     
     .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      border-color: var(--neon);
+    }
+    
+    .feature-card > * {
+      position: relative;
+      z-index: 1;
     }
     
     .feature-icon {
@@ -258,20 +303,21 @@
     .feature-card h3 {
       font-size: 1.5rem;
       margin-bottom: 15px;
-      color: #fff;
+      color: var(--text);
+      font-weight: 700;
     }
     
     .feature-card p {
-      color: #a0a0a0;
+      color: var(--text-dim);
       line-height: 1.6;
     }
     
     /* Footer */
     footer {
-      background: #121216;
+      background: var(--bg);
       padding: 40px 20px;
       text-align: center;
-      border-top: 1px solid rgba(47, 58, 90, 0.3);
+      border-top: 1px solid var(--glass);
     }
     
     .footer-content {
@@ -288,52 +334,26 @@
     }
     
     .footer-links a {
-      color: #a0a0a0;
+      color: var(--text-dim);
       text-decoration: none;
       transition: color 0.3s ease;
+      font-weight: 500;
     }
     
     .footer-links a:hover {
-      color: #667eea;
+      color: var(--neon);
     }
     
     .footer-bottom {
-      color: #666;
+      color: var(--text-dim);
       font-size: 0.9rem;
-    }
-    
-    /* Loading Animation */
-    .loading {
-      display: none;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(18, 18, 22, 0.9);
-      z-index: 9999;
-    }
-    
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid #333;
-      border-top: 4px solid #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
     }
     
     /* Responsive */
     @media (max-width: 768px) {
       .header-content {
-        width: 95%;
+        flex-direction: column;
+        gap: 16px;
       }
       
       .logo {
@@ -345,8 +365,8 @@
       }
       
       .btn {
-        padding: 8px 15px;
-        font-size: 0.8rem;
+        padding: 10px 16px;
+        font-size: 12px;
       }
       
       .hero h1 {
@@ -393,6 +413,11 @@
       .feature-card {
         padding: 20px;
       }
+      
+      .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
     }
     
     /* Scroll animations */
@@ -406,6 +431,34 @@
       opacity: 1;
       transform: translateY(0);
     }
+    
+    /* Loading Animation */
+    .loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(12,12,12,0.9);
+      z-index: 9999;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--glass);
+      border-top: 4px solid var(--neon);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -416,10 +469,12 @@
 
   <!-- Header -->
   <header>
-    <div class="header-content">
-      <div class="logo" onclick="scrollToTop()">Nova Vibe RP</div>
-      <div class="header-actions" id="header-actions">
-        <!-- Conteúdo será preenchido pelo JavaScript -->
+    <div class="container">
+      <div class="header-content">
+        <div class="logo" onclick="scrollToTop()">Nova Vibe RP</div>
+        <div class="header-actions" id="header-actions">
+          <!-- Conteúdo será preenchido pelo JavaScript -->
+        </div>
       </div>
     </div>
   </header>
@@ -482,16 +537,18 @@
 
   <!-- Footer -->
   <footer>
-    <div class="footer-content">
-      <div class="footer-links">
-        <a href="#" onclick="scrollToTop()">Início</a>
-        <a href="login2.html">Entrar</a>
-        <a href="#">Discord</a>
-        <a href="#">Regras</a>
-        <a href="#">Suporte</a>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 Nova Vibe RP. Todos os direitos reservados.</p>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="#" onclick="scrollToTop()">Início</a>
+          <a href="login2.html">Entrar</a>
+          <a href="#">Discord</a>
+          <a href="#">Regras</a>
+          <a href="#">Suporte</a>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Nova Vibe RP. Todos os direitos reservados.</p>
+        </div>
       </div>
     </div>
   </footer>
@@ -568,10 +625,10 @@
     window.addEventListener('scroll', function() {
       const header = document.querySelector('header');
       if (window.scrollY > 100) {
-        header.style.background = 'rgba(18, 18, 22, 0.98)';
-        header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.3)';
+        header.style.background = 'rgba(12,12,12,0.95)';
+        header.style.boxShadow = '0 2px 20px rgba(0,0,0,0.3)';
       } else {
-        header.style.background = 'rgba(18, 18, 22, 0.95)';
+        header.style.background = 'rgba(12,12,12,0.8)';
         header.style.boxShadow = 'none';
       }
     });
