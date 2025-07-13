@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Compra - Nova Vibe Roleplay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #111111;
+            min-height: 100vh;
+            border-left: 1px solid #1a1a1a;
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border-bottom: 1px solid #222;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: #888;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .intro {
+            background: #161616;
+            border: 1px solid #222;
+            padding: 30px;
+            border-radius: 4px;
+            margin-bottom: 40px;
+            border-left: 3px solid #333;
+        }
+
+        .intro p {
+            font-size: 1rem;
+            color: #ccc;
+            font-weight: 400;
+        }
+
+        .term-section {
+            margin-bottom: 32px;
+            background: #161616;
+            border: 1px solid #222;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+
+        .term-section:hover {
+            border-color: #333;
+        }
+
+        .term-header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #222;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .term-number {
+            background: #222;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 16px;
+        }
+
+        .term-title {
+            font-size: 1.3rem;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .term-content {
+            padding: 30px;
+            color: #ccc;
+        }
+
+        .term-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .term-content li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .term-content li::before {
+            content: '•';
+            color: #666;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .warning-section {
+            background: #1a0f0f;
+            border: 1px solid #2a1a1a;
+            border-left: 3px solid #d32f2f;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .warning-section .warning-title {
+            color: #ff5252;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .warning-section .warning-text {
+            color: #ffcdd2;
+            font-size: 0.95rem;
+        }
+
+        .highlight {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .footer {
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+            padding: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #222;
+            margin: 40px 0;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: #1a1a1a;
+            color: #888;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 12px;
+        }
+
+        .important-note {
+            background: #0f1419;
+            border: 1px solid #1a2332;
+            border-left: 3px solid #1976d2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .important-note .note-title {
+            color: #42a5f5;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .important-note .note-text {
+            color: #bbdefb;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-left: none;
+                border-right: none;
+            }
+            
+            .header {
+                padding: 40px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .term-header {
+                padding: 16px 20px;
+            }
+            
+            .term-content {
+                padding: 20px;
+            }
+        }
+
+        /* Subtle animations */
+        .term-section {
+            transform: translateY(0);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .term-section:hover {
+            transform: translateY(-1px);
+        }
+
+        .term-number {
+            transition: background-color 0.2s ease;
+        }
+
+        .term-section:hover .term-number {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Termos de Compra</h1>
+            <p class="subtitle">Nova Vibe Roleplay</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <p>
+                    Ao efetuar a compra de qualquer produto ou serviço disponibilizado pela Nova Vibe Roleplay, 
+                    o cliente declara estar ciente e de acordo com os seguintes termos e condições estabelecidos 
+                    neste documento.
+                </p>
+            </div>
+
+            <div class="term-section">
+                <div class="term-header">
+                    <div class="term-number">1</div>
+                    <div class="term-title">Sobre a Compra</div>
+                    <div class="section-badge">Procedimentos</div>
+                </div>
+                <div class="term-content">
+                    <ul>
+                        <li>Todas as compras são realizadas exclusivamente por meio da administração oficial do servidor, através de contato direto via Discord ou website autorizado.</li>
+                        <li>Nenhuma venda é feita por terceiros ou fora dos meios autorizados pelo servidor.</li>
+                        <li>O cliente deve <span class="highlight">desconfiar de intermediários</span> ou supostas promoções externas não autorizadas.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="term-section">
+                <div class="term-header">
+                    <div class="term-number">2</div>
+                    <div class="term-title">Itens e Benefícios Virtuais</div>
+                    <div class="section-badge">Produtos</div>
+                </div>
+                <div class="term-content">
+                    <ul>
+                        <li>Os produtos comercializados consistem em itens, pacotes VIP ou serviços virtuais exclusivos do servidor FiveM.</li>
+                        <li>Todos os itens adquiridos são <span class="highlight">pessoais e intransferíveis</span>, salvo autorização expressa da administração.</li>
+                        <li>Os benefícios são válidos exclusivamente no ambiente do servidor especificado.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="term-section">
+                <div class="term-header">
+                    <div class="term-number">3</div>
+                    <div class="term-title">Política de Cancelamento e Reembolso</div>
+                    <div class="section-badge">Crítico</div>
+                </div>
+                <div class="term-content">
+                    <div class="warning-section">
+                        <div class="warning-title">Aviso Importante</div>
+                        <div class="warning-text">
+                            Não será realizado reembolso ou devolução de valores após a conclusão da compra, 
+                            independentemente do motivo apresentado.
+                        </div>
+                    </div>
+                    <ul>
+                        <li>Ao confirmar a compra, o cliente renuncia expressamente a qualquer direito de reembolso, chargeback ou contestação de pagamento.</li>
+                        <li>Em caso de banimento ou exclusão do servidor por descumprimento de regras, os benefícios adquiridos serão automaticamente cancelados <span class="highlight">sem restituição de valores</span>.</li>
+                        <li>A política de não reembolso é aplicada rigorosamente em todos os casos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="term-section">
+                <div class="term-header">
+                    <div class="term-number">4</div>
+                    <div class="term-title">Entrega dos Produtos</div>
+                    <div class="section-badge">Prazo</div>
+                </div>
+                <div class="term-content">
+                    <div class="important-note">
+                        <div class="note-title">Prazo de Entrega</div>
+                        <div class="note-text">
+                            Os itens e serviços serão entregues em até 24 horas após a confirmação do pagamento.
+                        </div>
+                    </div>
+                    <ul>
+                        <li>O prazo de entrega pode variar conforme disponibilidade da equipe técnica.</li>
+                        <li>Eventuais instabilidades no servidor podem afetar o tempo de processamento.</li>
+                        <li>A administração se compromete a informar sobre quaisquer atrasos excepcionais.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="term-section">
+                <div class="term-header">
+                    <div class="term-number">5</div>
+                    <div class="term-title">Segurança e Autenticidade</div>
+                    <div class="section-badge">Segurança</div>
+                </div>
+                <div class="term-content">
+                    <ul>
+                        <li>Para garantia de segurança, todas as transações devem ocorrer exclusivamente nos <span class="highlight">canais oficiais</span> com administradores devidamente identificados.</li>
+                        <li>A administração não se responsabiliza por compras realizadas com pessoas não autorizadas ou fora dos meios oficiais.</li>
+                        <li>Recomenda-se verificar sempre a autenticidade dos canais de comunicação antes de efetuar qualquer pagamento.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="term-section">
+                <div class="term-header">
+                    <div class="term-number">6</div>
+                    <div class="term-title">Alterações nos Termos</div>
+                    <div class="section-badge">Atualizações</div>
+                </div>
+                <div class="term-content">
+                    <ul>
+                        <li>Este documento pode ser alterado ou atualizado a qualquer momento <span class="highlight">sem notificação prévia</span>.</li>
+                        <li>É responsabilidade exclusiva do cliente manter-se informado sobre as versões mais recentes destes termos.</li>
+                        <li>A continuidade do uso dos serviços após modificações implica aceitação automática dos novos termos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="important-note">
+                <div class="note-title">Aceitação dos Termos</div>
+                <div class="note-text">
+                    Ao prosseguir com qualquer transação, o cliente confirma ter lido, compreendido e aceito 
+                    integralmente todos os termos e condições estabelecidos neste documento.
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Nova Vibe Roleplay - FiveM Server</p>
+            <p>Documento oficial • Versão 1.0 • Julho 2025</p>
+            <p>Todos os direitos reservados</p>
+        </div>
+    </div>
+
+    <script>
+        // Smooth entrance animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.term-section');
+            
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(10px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Subtle hover effects
+        document.querySelectorAll('.term-section').forEach(section => {
+            section.addEventListener('mouseenter', function() {
+                this.style.borderColor = '#333';
+            });
+            
+            section.addEventListener('mouseleave', function() {
+                this.style.borderColor = '#222';
+            });
+        });
+    </script>
+</body>
+</html>
